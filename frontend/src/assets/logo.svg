@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 90" fill="none">
+  <!-- Hexagon icon -->
+  <polygon points="38,10 62,10 74,30 62,50 38,50 26,30" stroke="#5B4FE8" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+  <!-- Diagonal slash -->
+  <line x1="36" y1="44" x2="64" y2="16" stroke="#5B4FE8" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Left dot -->
+  <circle cx="20" cy="30" r="3.5" fill="#5B4FE8"/>
+  <!-- Right dot -->
+  <circle cx="80" cy="30" r="3.5" fill="#5B4FE8"/>
+  <!-- Vertical separator -->
+  <line x1="100" y1="8" x2="100" y2="52" stroke="#CCCCCC" stroke-width="1.5"/>
+  <!-- NEXXUS text -->
+  <text x="116" y="42" font-family="'Montserrat','Arial Black',sans-serif" font-weight="800" font-size="30" fill="#0C1929" letter-spacing="2">NEXXUS</text>
+  <!-- TECH text -->
+  <text x="285" y="42" font-family="'Montserrat','Arial Black',sans-serif" font-weight="800" font-size="30" fill="#1DD4B4" letter-spacing="2">TECH</text>
+  <!-- Tagline -->
+  <text x="116" y="62" font-family="'Montserrat','Arial',sans-serif" font-weight="500" font-size="9.5" fill="#666666" letter-spacing="3.5">CONSULTING · CLOUD · SECURITY · AI</text>
+</svg>

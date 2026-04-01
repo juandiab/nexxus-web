@@ -1,0 +1,3 @@
+# Private key — NEVER commit to version control
+ssl/*.key
+ssl/*.pfx
