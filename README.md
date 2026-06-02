@@ -1,14 +1,31 @@
 # Nexxus Tech Website
 
-Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.03** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
 |---|---|
 | Frontend | Vue 3 + PrimeVue 4 + Vite |
 | Backend | Python 3.12 + FastAPI |
-| Web Server | Nginx (SSL termination + reverse proxy) |
+| Web Server | Nginx stable-alpine (SSL termination + reverse proxy) |
 | Runtime | Docker Compose |
+
+---
+
+## Changelog
+
+### v0.03 — 2026-06-02
+- **SSL: complete certificate chain** — `ssl_certificate` now serves `fullchain.crt` (leaf + SSL2BUY intermediate + Sectigo/USERTrust cross-cert), resolving the SSL Labs "incomplete chain / grade capped to B" finding
+- **SSL: Post-Quantum Cryptography** — enabled `X25519MLKEM768` hybrid key exchange via `ssl_conf_command Curves`; upgraded nginx base image to `stable-alpine` (OpenSSL 3.3+) which includes ML-KEM support
+- **Server: GitHub SSH access** — generated Ed25519 deploy key (`github_nexxus`), configured `/root/.ssh/config`, and switched git remote from HTTPS to SSH (`git@github.com:juandiab/nexxus-web.git`)
+
+### v0.02
+- Blog articles rewritten from official docs; PQC article added
+- OWASP NetScaler WAF article with accurate technical content
+- Guided JPilot workflows (LB, AppFW, CSR, auth, Gateway)
+
+### v0.01
+- Initial release
 
 ---
 
@@ -21,10 +38,18 @@ cp .env.example .env
 ```
 
 ### 2. Ensure SSL certs are in place
-Your wildcard certificate is already at `../SSL_Cert/`:
-- `wildcard.nexxus-tech.com.crt` — domain certificate
+Certificates live at `nginx/ssl/`. Nginx serves `fullchain.crt` (built from leaf + intermediates):
+- `fullchain.crt` — leaf + SSL2BUY intermediate + Sectigo/USERTrust cross-cert (served by nginx)
 - `wildcard.nexxus-tech.com.key` — private key
-- `ca-chain.crt` — CA chain
+- Individual source certs: `wildcard.nexxus-tech.com.crt`, `SSL2BUYEMEARSADomainValidationSecureServerCA.crt`, `SectigoPublicServerAuthenticationRootR46_USERTrust.crt`
+
+To rebuild `fullchain.crt` after a cert renewal:
+```bash
+cat nginx/ssl/wildcard.nexxus-tech.com.crt \
+    nginx/ssl/SSL2BUYEMEARSADomainValidationSecureServerCA.crt \
+    nginx/ssl/SectigoPublicServerAuthenticationRootR46_USERTrust.crt \
+    > nginx/ssl/fullchain.crt
+```
 
 ### 3. Build and run
 ```bash
