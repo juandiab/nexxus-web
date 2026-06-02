@@ -7,7 +7,7 @@ CONTENT = r"""# JPilot: NetScaler AI Copilot with Memory-Guided Tools
 
 Managing NetScaler ADC at scale means juggling **Next-Gen API** endpoints, classic **NITRO**, and **SSH CLI** syntax—often under pressure during incidents or migration projects. **JPilot** is Nexxus Tech's name for an open-source NetScaler copilot platform: a unified admin UI plus an AI assistant that registers appliances, connects to your chosen LLM provider, and reads or changes configuration through audited tools—**without credentials ever being sent to the model**.
 
-The current open-source foundation is available on GitHub ([juandiab/nsagent](https://github.com/juandiab/nsagent), release **v0.02**). We use the **JPilot** name in product and roadmap discussions to keep branding distinct from third-party trademarks.
+The current open-source foundation is on GitHub: [github.com/juandiab/nsagent](https://github.com/juandiab/nsagent). We use the **JPilot** name in product and roadmap discussions to keep branding distinct from third-party trademarks.
 
 > JPilot / this open-source stack is an independent project and is not affiliated with Citrix. NetScaler is a trademark of Citrix Systems, Inc.
 
@@ -162,7 +162,7 @@ Enable Next-Gen API on the ADC (`enable ns nextgenapi`) for API tools; SSH (port
 
 ## Roadmap
 
-The following capabilities are planned for JPilot beyond today's v0.02 foundation.
+The following capabilities are planned for JPilot beyond what is available in the repository today.
 
 ### Multi-agent roles
 
@@ -187,7 +187,9 @@ Optional **managed JPilot cloud** for UI, orchestration, and integrations, paire
 
 ### Multi-vendor infrastructure (future)
 
-Later releases will extend JPilot beyond NetScaler to **additional technologies**—**routers**, **firewalls**, **F5**, and other platforms—as long as they expose **APIs** and/or **SSH** access. JPilot will **learn how to interact** with each stack (memory files, tool adapters, and validated command surfaces) so administrators can complete requests **faster and safer** from one copilot: same pattern of guidance, clarifying questions, approval gates, and audited execution—whether you are on ADC, perimeter, or load-balancing gear.
+Later releases will extend JPilot beyond NetScaler to **additional technologies**—**routers**, **firewalls**, **F5**, **Cisco** devices, and other platforms—as long as they expose **APIs** and/or **SSH** access. A dedicated **Cisco management assistant** will help operators work across IOS/XE, NX-OS, and API-driven Cisco estates with the same guardrails as NetScaler.
+
+JPilot will **learn how to interact** with each stack (memory files, tool adapters, and validated command surfaces) so administrators can complete requests **faster and safer** from one copilot: same pattern of guidance, clarifying questions, approval gates, and audited execution—whether you are on ADC, perimeter, routing, or load-balancing gear.
 
 Contributions and feedback are welcome on the [GitHub repository](https://github.com/juandiab/nsagent) as these features land.
 
