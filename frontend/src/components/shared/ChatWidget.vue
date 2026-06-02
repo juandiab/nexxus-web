@@ -36,7 +36,11 @@
           </div>
         </div>
 
-        <div class="chat-messages" ref="messagesEl">
+        <div
+          class="chat-messages"
+          :class="{ 'chat-messages--welcome': phase === 'intake' && intakePanel === 'enquiry_type' }"
+          ref="messagesEl"
+        >
           <div
             v-for="(msg, i) in messages"
             :key="i"
@@ -54,9 +58,13 @@
         </div>
 
         <!-- Intake panels -->
-        <div v-if="phase === 'intake' && intakePanel" class="chat-intake-panel">
+        <div
+          v-if="phase === 'intake' && intakePanel"
+          class="chat-intake-panel"
+          :class="{ 'chat-intake-panel--choices': intakePanel === 'enquiry_type' }"
+        >
           <template v-if="intakePanel === 'enquiry_type'">
-            <label>What do you need help with?</label>
+            <label class="intake-panel-title">What do you need help with?</label>
             <div class="enquiry-options">
               <button
                 v-for="opt in enquiryTypes"
@@ -67,17 +75,22 @@
                 @click="panelValues.enquiry_type = opt.value"
               >
                 <i :class="['pi', opt.icon]"></i>
-                <span class="enquiry-option-label">{{ opt.label }}</span>
-                <span class="enquiry-option-desc">{{ opt.desc }}</span>
+                <span class="enquiry-option-text">
+                  <span class="enquiry-option-label">{{ opt.label }}</span>
+                  <span class="enquiry-option-desc">{{ opt.desc }}</span>
+                </span>
               </button>
             </div>
-            <button
-              class="btn-intake"
-              @click="confirmEnquiryType"
-              :disabled="!panelValues.enquiry_type"
-            >
-              Continue
-            </button>
+            <div class="intake-panel-footer">
+              <button
+                type="button"
+                class="btn-intake btn-intake--continue"
+                @click="confirmEnquiryType"
+                :disabled="!panelValues.enquiry_type"
+              >
+                Continue
+              </button>
+            </div>
           </template>
 
           <template v-else-if="intakePanel === 'service'">
@@ -1015,6 +1028,14 @@ onUnmounted(() => {
   max-height: 280px;
   flex: none;
 }
+.chat-messages--welcome {
+  flex: 0 0 auto;
+  max-height: 5.5rem;
+  padding: 12px 16px;
+}
+.chat-messages--welcome .msg-bubble {
+  font-size: 0.82rem;
+}
 .chat-msg { display: flex; gap: 8px; align-items: flex-end; }
 .chat-msg--user { flex-direction: row-reverse; }
 .msg-avatar {
@@ -1075,11 +1096,19 @@ onUnmounted(() => {
   flex-shrink: 0;
   min-height: 0;
 }
-.chat-window--compact .chat-intake-panel {
+.chat-window--compact .chat-intake-panel:not(.chat-intake-panel--choices) {
   max-height: 200px;
 }
-.chat-window--expanded .chat-intake-panel {
-  max-height: min(42vh, 420px);
+.chat-intake-panel--choices {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  padding: 14px 16px 12px;
+  gap: 10px;
+}
+.intake-panel-title {
+  flex-shrink: 0;
+  margin: 0;
 }
 .chat-intake-panel label {
   font-size: 0.72rem;
@@ -1111,32 +1140,22 @@ onUnmounted(() => {
 .tech-check input { accent-color: var(--nt-primary); }
 .tech-other { margin-top: 4px; }
 .enquiry-options {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
-  overflow-y: auto;
-}
-.chat-window--compact .enquiry-options {
-  max-height: 220px;
-}
-.chat-window--expanded .enquiry-options {
-  max-height: none;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  align-content: start;
 }
-.chat-window--expanded .enquiry-option {
-  padding: 14px 16px;
-}
-.chat-window--expanded .enquiry-option-label {
-  font-size: 0.95rem;
-}
-.chat-window--expanded .enquiry-option-desc {
-  font-size: 0.8rem;
+.chat-intake-panel--choices .enquiry-options {
+  overflow-y: auto;
 }
 .enquiry-option {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
-  gap: 2px;
+  gap: 10px;
   text-align: left;
   padding: 10px 12px;
   border-radius: 10px;
@@ -1146,11 +1165,23 @@ onUnmounted(() => {
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
   width: 100%;
+  min-height: 0;
+}
+.enquiry-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 .enquiry-option .pi {
   color: var(--nt-secondary);
-  font-size: 0.95rem;
-  margin-bottom: 2px;
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.intake-panel-footer {
+  flex-shrink: 0;
+  padding-top: 4px;
 }
 .enquiry-option.selected {
   border-color: var(--nt-primary);
@@ -1178,14 +1209,23 @@ onUnmounted(() => {
   font-size: 0.85rem;
 }
 .btn-intake {
-  flex: 1;
+  flex: none;
+  width: 100%;
   background: var(--nt-primary);
   border: none;
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px 16px;
   color: white;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
+  line-height: 1.2;
+}
+.panel-actions .btn-intake {
+  flex: 1;
+}
+.btn-intake--continue {
+  max-height: 48px;
 }
 .btn-intake:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -1310,6 +1350,12 @@ onUnmounted(() => {
     border-left: none;
     border-right: none;
     border-bottom: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .enquiry-options {
+    grid-template-columns: 1fr;
   }
 }
 
