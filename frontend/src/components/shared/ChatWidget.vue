@@ -38,7 +38,7 @@
 
         <div
           class="chat-messages"
-          :class="{ 'chat-messages--welcome': phase === 'intake' && intakePanel === 'enquiry_type' }"
+          :class="{ 'chat-messages--compact-top': phase === 'intake' && compactMessageArea }"
           ref="messagesEl"
         >
           <div
@@ -49,7 +49,14 @@
             <div class="msg-avatar" v-if="msg.role === 'assistant'">
               <i class="pi pi-bolt"></i>
             </div>
-            <div class="msg-bubble"><p>{{ msg.content }}</p></div>
+            <div class="msg-bubble">
+              <div
+                v-if="msg.role === 'assistant'"
+                class="msg-content"
+                v-html="formatChatMessage(msg.content)"
+              ></div>
+              <p v-else>{{ msg.content }}</p>
+            </div>
           </div>
           <div v-if="loading" class="chat-msg chat-msg--assistant">
             <div class="msg-avatar"><i class="pi pi-bolt"></i></div>
@@ -61,7 +68,10 @@
         <div
           v-if="phase === 'intake' && intakePanel"
           class="chat-intake-panel"
-          :class="{ 'chat-intake-panel--choices': intakePanel === 'enquiry_type' }"
+          :class="{
+            'chat-intake-panel--choices': intakePanel === 'enquiry_type',
+            'chat-intake-panel--contact': intakePanel === 'contact',
+          }"
         >
           <template v-if="intakePanel === 'enquiry_type'">
             <label class="intake-panel-title">What do you need help with?</label>
@@ -91,6 +101,45 @@
                 Continue
               </button>
             </div>
+          </template>
+
+          <template v-else-if="intakePanel === 'contact'">
+            <label class="intake-panel-title">Your contact details</label>
+            <form class="jpbot-contact-form" @submit.prevent="confirmContact">
+              <div class="form-field">
+                <label for="jpbot-name">Full name <span class="req">*</span></label>
+                <input
+                  id="jpbot-name"
+                  v-model="panelValues.name"
+                  type="text"
+                  autocomplete="name"
+                  placeholder="John Smith"
+                />
+                <span v-if="contactErrors.name" class="field-error">{{ contactErrors.name }}</span>
+              </div>
+              <div class="form-field">
+                <label for="jpbot-email">Email <span class="req">*</span></label>
+                <input
+                  id="jpbot-email"
+                  v-model="panelValues.email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="you@company.com"
+                />
+                <span v-if="contactErrors.email" class="field-error">{{ contactErrors.email }}</span>
+              </div>
+              <div class="form-field">
+                <label for="jpbot-company">Company / organization</label>
+                <input
+                  id="jpbot-company"
+                  v-model="panelValues.company"
+                  type="text"
+                  autocomplete="organization"
+                  placeholder="Optional if personal"
+                />
+              </div>
+              <button type="submit" class="btn-intake btn-intake--continue">Continue</button>
+            </form>
           </template>
 
           <template v-else-if="intakePanel === 'service'">
@@ -181,28 +230,11 @@
           <p>Enquiry sent! Check your inbox for a summary.</p>
         </div>
 
-        <div
-          v-if="phase !== 'submitted' && phase === 'intake' && !intakePanel && intakeTextStep <= 2"
-          class="chat-input-area"
-        >
-          <input
-            v-model="inputText"
-            :type="intakeTextStep === 1 ? 'email' : 'text'"
-            :placeholder="textPlaceholder"
-            @keydown.enter="handleEnter"
-            :disabled="loading || submitting"
-            ref="inputEl"
-          />
-          <button class="chat-send" @click="handleEnter" :disabled="loading || !inputText.trim()">
-            <i class="pi pi-send"></i>
-          </button>
-        </div>
-
         <div v-else-if="phase === 'discovery' && !submitted" class="chat-input-area">
           <input
             v-model="inputText"
             type="text"
-            placeholder="Describe your issue..."
+            :placeholder="discoveryPlaceholder"
             @keydown.enter="handleEnter"
             :disabled="loading || submitting"
             ref="inputEl"
@@ -263,6 +295,7 @@
 import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
+import { formatChatMessage } from '@/utils/formatChatMessage.js'
 
 const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
 const CHAT_SIZE_KEY = 'nexxus-jpbot-chat-size'
@@ -357,15 +390,18 @@ const technologyOptions = TECHNOLOGIES
 const enquiryTypes = ENQUIRY_TYPES
 
 const phase = ref('intake')
-const intakeTextStep = ref(0)
 const intakePanel = ref('enquiry_type')
 const intakeQueue = ref([])
 const canSubmit = ref(false)
+const contactErrors = ref({ name: '', email: '' })
 let inviteTimer = null
 let remindTimer = null
 
 const panelValues = ref({
   enquiry_type: '',
+  name: '',
+  email: '',
+  company: '',
   service: '',
   criticality: '',
   users_affected: '',
@@ -395,13 +431,21 @@ const messages = ref([
   {
     role: 'assistant',
     content:
-      "Hi! I'm JPbot — the fastest way to contact Nexxus Tech. First, tell us what kind of help you need using the options below.",
+      "Hi! I'm **JPbot** — the fastest way to contact {{Nexxus Tech}}. First, choose **what kind of help** you need below.",
   },
 ])
 
-const textPlaceholder = computed(() => {
-  const p = ['Your full name', 'you@company.com', 'Company (or type "none")']
-  return p[intakeTextStep.value] || ''
+const compactMessageArea = computed(
+  () => phase.value === 'intake' && (intakePanel.value === 'enquiry_type' || intakePanel.value === 'contact')
+)
+
+const discoveryPlaceholder = computed(() => {
+  const t = profile.value.enquiry_type
+  if (t === 'New project / implementation') return 'Describe your project, migration, or goals...'
+  if (t === 'Assessment / discovery') return 'What should we assess or advise on?'
+  if (t === 'Troubleshooting / incident') return 'Describe symptoms, errors, impact...'
+  if (t === 'Support request') return 'What do you need help with?'
+  return 'Type your message...'
 })
 
 const scrollToBottom = async () => {
@@ -457,14 +501,14 @@ const toggleChatSize = () => {
 const discoveryPromptForType = (type) => {
   const prompts = {
     'Troubleshooting / incident':
-      'Describe what is happening — symptoms, error messages, and when it started.',
+      '*Describe what is happening* — **symptoms**, error messages, and **when it started**.',
     'Support request':
-      'What do you need help with in your environment? Include any recent changes if relevant.',
+      '**What do you need help with** in your environment? Include any *recent changes* if relevant.',
     'New project / implementation':
-      'Tell us about the project — goals, scope, timeline, and what success looks like.',
+      'Tell us about the **project** — goals, scope, timeline, and what *success* looks like.',
     'Assessment / discovery':
-      'What would you like us to assess or advise on? Any constraints or deadlines?',
-    'General enquiry': 'How can our team help you today?',
+      '**What should we assess** or advise on? Any constraints or *deadlines*?',
+    'General enquiry': '**How can our team help** you today?',
   }
   return prompts[type] || 'Please share a few more details so we can route you to the right specialist.'
 }
@@ -485,11 +529,12 @@ const applyIntakeDefaults = () => {
 
 const panelPrompt = (panel) => {
   const prompts = {
-    criticality: 'How critical is this right now?',
-    users: 'How many users or systems are affected?',
-    technologies: 'Which technologies are involved? Select all that apply.',
-    version: 'Platform version? (optional — you can skip.)',
-    model: 'Platform model? (optional — you can skip.)',
+    service: '**Which service** are you most interested in? Choose below.',
+    criticality: '**How critical** is this right now?',
+    users: '**How many users or systems** are affected?',
+    technologies: '**Which technologies** are involved? Select all that apply.',
+    version: '*Platform version?* (optional — you can skip.)',
+    model: '*Platform model?* (optional — you can skip.)',
   }
   return prompts[panel] || ''
 }
@@ -510,19 +555,44 @@ const goToNextIntakePanel = () => {
 
 const startDiscovery = () => {
   phase.value = 'discovery'
-  pushAssistant(
-    `Thanks, ${profile.value.name}! ${discoveryPromptForType(profile.value.enquiry_type)}`
-  )
-  discoveryMessages.value = []
+  const opener = `Thanks, ${profile.value.name}! ${discoveryPromptForType(profile.value.enquiry_type)}`
+  pushAssistant(opener)
+  discoveryMessages.value = [{ role: 'assistant', content: opener }]
   canSubmit.value = false
 }
 
 const confirmEnquiryType = () => {
   profile.value.enquiry_type = panelValues.value.enquiry_type
   pushUser(profile.value.enquiry_type)
-  intakePanel.value = null
-  intakeTextStep.value = 0
-  pushAssistant("Great. What's your full name?")
+  intakePanel.value = 'contact'
+  pushAssistant(
+    'Great. **Fill in your contact details** below — *name*, *email*, and company if you have one.'
+  )
+  scrollToBottom()
+}
+
+const confirmContact = () => {
+  contactErrors.value = { name: '', email: '' }
+  const name = panelValues.value.name.trim()
+  const email = panelValues.value.email.trim()
+  let valid = true
+  if (name.length < 2) {
+    contactErrors.value.name = 'Please enter your full name'
+    valid = false
+  }
+  if (!isValidEmail(email)) {
+    contactErrors.value.email = 'Please enter a valid email'
+    valid = false
+  }
+  if (!valid) return
+
+  profile.value.name = name
+  profile.value.email = email
+  profile.value.company = panelValues.value.company.trim()
+  const companyLabel = profile.value.company || '(personal / not provided)'
+  pushUser(`${name} · ${email} · ${companyLabel}`)
+  intakePanel.value = 'service'
+  pushAssistant(panelPrompt('service'))
   scrollToBottom()
 }
 
@@ -577,38 +647,6 @@ const confirmModel = () => {
   goToNextIntakePanel()
 }
 
-const handleTextIntake = (text) => {
-  if (intakeTextStep.value === 0) {
-    if (text.length < 2) {
-      pushAssistant('Please enter your full name.')
-      return
-    }
-    profile.value.name = text
-    pushUser(text)
-    intakeTextStep.value = 1
-    pushAssistant('What email should we use to follow up?')
-    return
-  }
-  if (intakeTextStep.value === 1) {
-    if (!isValidEmail(text)) {
-      pushAssistant('Please enter a valid email address.')
-      return
-    }
-    profile.value.email = text
-    pushUser(text)
-    intakeTextStep.value = 2
-    pushAssistant('Which company or organization? (Type "none" if personal.)')
-    return
-  }
-  if (intakeTextStep.value === 2) {
-    profile.value.company = text.toLowerCase() === 'none' ? '' : text
-    pushUser(profile.value.company || '(not provided)')
-    intakePanel.value = 'service'
-    pushAssistant('Which service are you interested in?')
-    scrollToBottom()
-  }
-}
-
 const handleDiscovery = async (text) => {
   pushUser(text)
   discoveryMessages.value.push({ role: 'user', content: text })
@@ -653,12 +691,6 @@ const prefillContact = () => {
 const handleEnter = async () => {
   const text = inputText.value.trim()
   if (!text || loading.value || submitting.value) return
-  if (phase.value === 'intake' && !intakePanel.value) {
-    inputText.value = ''
-    handleTextIntake(text)
-    await scrollToBottom()
-    return
-  }
   if (phase.value === 'discovery') {
     inputText.value = ''
     await handleDiscovery(text)
@@ -1028,14 +1060,27 @@ onUnmounted(() => {
   max-height: 280px;
   flex: none;
 }
-.chat-messages--welcome {
+.chat-messages--compact-top {
   flex: 0 0 auto;
   max-height: 5.5rem;
   padding: 12px 16px;
 }
-.chat-messages--welcome .msg-bubble {
+.chat-messages--compact-top .msg-bubble {
   font-size: 0.82rem;
 }
+.msg-content :deep(strong) {
+  font-weight: 700;
+  color: var(--nt-white);
+}
+.msg-content :deep(em) {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.92);
+}
+.msg-content :deep(.msg-accent) {
+  color: var(--nt-secondary);
+  font-weight: 600;
+}
+.msg-bubble p { margin: 0; }
 .chat-msg { display: flex; gap: 8px; align-items: flex-end; }
 .chat-msg--user { flex-direction: row-reverse; }
 .msg-avatar {
@@ -1099,12 +1144,52 @@ onUnmounted(() => {
 .chat-window--compact .chat-intake-panel:not(.chat-intake-panel--choices) {
   max-height: 200px;
 }
-.chat-intake-panel--choices {
+.chat-intake-panel--choices,
+.chat-intake-panel--contact {
   flex: 1;
   min-height: 0;
   max-height: none;
   padding: 14px 16px 12px;
   gap: 10px;
+}
+.jpbot-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+.jpbot-contact-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.jpbot-contact-form .form-field label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nt-text-muted);
+}
+.jpbot-contact-form .req {
+  color: var(--nt-secondary);
+}
+.jpbot-contact-form input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 11px 12px;
+  color: var(--nt-text);
+  font-size: 0.9rem;
+  width: 100%;
+}
+.jpbot-contact-form input:focus {
+  outline: none;
+  border-color: var(--nt-primary);
+}
+.field-error {
+  font-size: 0.72rem;
+  color: #f87171;
 }
 .intake-panel-title {
   flex-shrink: 0;
