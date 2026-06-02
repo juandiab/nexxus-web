@@ -1,8 +1,5 @@
 <template>
-  <component
-    :is="variant === 'icons' ? 'div' : 'div'"
-    :class="variant === 'icons' ? 'social-icons' : 'social-labels'"
-  >
+  <div :class="variant === 'icons' ? 'social-icons' : 'social-labels'">
     <a
       v-for="link in socialLinks"
       :key="link.id"
@@ -13,16 +10,24 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <SocialIconX v-if="link.icon === 'x'" :class="{ 'social-icon-x': variant === 'labels' }" />
+      <svg
+        v-if="link.icon === 'x'"
+        class="icon-x"
+        :class="variant === 'icons' ? 'icon-x--footer' : 'icon-x--inline'"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        fill="currentColor"
+      >
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
       <i v-else :class="`pi pi-${link.icon}`"></i>
       <span v-if="variant === 'labels'">{{ link.label }}</span>
     </a>
-  </component>
+  </div>
 </template>
 
 <script setup>
 import { socialLinks } from '@/config/socialLinks.js'
-import SocialIconX from '@/components/shared/SocialIconX.vue'
 
 defineProps({
   variant: {
@@ -76,9 +81,18 @@ defineProps({
   transform: translateY(-2px);
 }
 
-.social-icon-x {
-  width: 0.95rem;
-  height: 0.95rem;
+.icon-x {
+  display: block;
   flex-shrink: 0;
+}
+
+.icon-x--footer {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-x--inline {
+  width: 15px;
+  height: 15px;
 }
 </style>
