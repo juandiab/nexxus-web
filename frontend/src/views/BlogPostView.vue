@@ -214,6 +214,36 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
 }
 .markdown-body :deep(a) { color: var(--nt-secondary); }
 .markdown-body :deep(strong) { color: var(--nt-white); font-weight: 700; }
+.markdown-body :deep(blockquote) {
+  margin: 24px 0;
+  padding: 16px 20px;
+  border-left: 4px solid var(--nt-secondary);
+  background: rgba(91, 79, 232, 0.08);
+  border-radius: 0 var(--nt-radius) var(--nt-radius) 0;
+  color: var(--nt-text-muted);
+  font-size: 0.95rem;
+}
+.markdown-body :deep(table.md-table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.9rem;
+}
+.markdown-body :deep(table.md-table th),
+.markdown-body :deep(table.md-table td) {
+  border: 1px solid var(--nt-border);
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+.markdown-body :deep(table.md-table th) {
+  background: rgba(91, 79, 232, 0.12);
+  color: var(--nt-white);
+  font-weight: 600;
+}
+.markdown-body :deep(table.md-table tr:nth-child(even) td) {
+  background: rgba(255, 255, 255, 0.02);
+}
 
 .post-footer { display: flex; gap: 16px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--nt-border); }
 
