@@ -89,6 +89,46 @@ JPilot supports **OpenAI**, **Anthropic**, **Gemini**, **Grok**, **LM Studio**, 
 - Create applications via Next-Gen API or multi-step LB setup via CLI (service groups, binds, `save ns config`)
 - Read-only NITRO and Next-Gen GET/POST/PUT/DELETE with memory search first
 
+### Guided workflows — ask in plain language
+
+JPilot is built for **conversational delivery**: you describe the outcome, it consults best practices and implementation guides in memory, asks for anything still missing, shows you the plan, and **only pushes configuration after you confirm and approve**.
+
+**Load balancing for Microsoft Outlook / Exchange**
+
+> *"Can you configure LB for Outlook? Here is the VIP and here are the backend servers."*
+
+JPilot searches **best-practice and implementation guidance** (health monitors, persistence, SSL/offload, port expectations), then asks targeted follow-ups—endpoints, subnets, certificate needs, and any remaining design choices. When you are satisfied, it applies the approved config via Next-Gen API or CLI and runs `save ns config` where required.
+
+**Protect applications — or aim for A+**
+
+> *"Protect this application"* or *"Make it A+"*
+
+JPilot reviews **AppFW** profiles, signatures, TLS settings, and exposure, recommends hardening (and optional WAF tuning), and can implement changes once you sign off—so security uplift is guided, not guessed.
+
+**Generate a new CSR**
+
+> *"Generate a new CSR for `www.example.com`"* (or a list of SANs)
+
+JPilot walks through key size, binding context, and certificate request details, then produces the CSR workflow on the appliance you select.
+
+**Authentication for specific websites**
+
+Configure user-facing auth on virtual servers using the method your IdP supports:
+
+- **SAML** (metadata, ACS URLs, attribute maps)
+- **LDAP** / **Active Directory**
+- **RADIUS**
+- **n-factor** (step-up and combined policies)
+- **TACACS** (administrative or delegated scenarios)
+
+You name the site or vserver; JPilot asks for server endpoints, groups, and policy intent, then builds and applies the bind chain after approval.
+
+**NetScaler Gateway — simplified setup**
+
+Provide **Gateway server information** (VIP, certificates, authentication servers, session policies). JPilot translates that into a structured Gateway configuration—virtual server, policies, and integrations—without forcing you through every low-level screen first. Review the proposed config, confirm, and deploy.
+
+Across all of these flows, the pattern is the same: **memory-backed guidance → clarifying questions → proposed config → your approval → push**.
+
 ### Diagnostics
 
 Built for the “is it the network or NetScaler?” moment:
@@ -175,7 +215,7 @@ def main():
                 "Automation",
                 "Roadmap",
             ]
-            post["read_time"] = 8
+            post["read_time"] = 9
             break
     else:
         raise SystemExit("Post id 5 not found")
