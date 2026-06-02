@@ -3,7 +3,7 @@ export const socialLinks = [
     id: 'linkedin',
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/jotalvaro/',
-    icon: 'pi-linkedin',
+    icon: 'linkedin',
   },
   {
     id: 'x',
@@ -15,6 +15,6 @@ export const socialLinks = [
     id: 'github',
     label: 'GitHub',
     href: 'https://github.com/juandiab',
-    icon: 'pi-github',
+    icon: 'github',
   },
 ]
