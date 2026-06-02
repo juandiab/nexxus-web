@@ -25,6 +25,11 @@ ALLOWED_TECHNOLOGIES = [
     "Citrix Virtual Apps & Desktops",
     "Citrix Cloud",
     "Okta / Identity",
+    "Active Directory",
+    "AWS",
+    "Google Cloud",
+    "Azure",
+    "AI Deployments",
     "Other",
 ]
 

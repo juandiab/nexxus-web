@@ -280,6 +280,11 @@ const TECHNOLOGIES = [
   'Citrix Virtual Apps & Desktops',
   'Citrix Cloud',
   'Okta / Identity',
+  'Active Directory',
+  'AWS',
+  'Google Cloud',
+  'Azure',
+  'AI Deployments',
   'Other',
 ]
 
@@ -668,6 +673,11 @@ const submitEnquiry = async () => {
   }
 }
 
+watch([isOpen, chatSize], ([open, size]) => {
+  if (typeof document === 'undefined') return
+  document.body.style.overflow = open && size === 'expanded' ? 'hidden' : ''
+})
+
 onMounted(() => {
   try {
     const saved = sessionStorage.getItem(CHAT_SIZE_KEY)
@@ -679,6 +689,7 @@ onMounted(() => {
 onUnmounted(() => {
   clearTimeout(inviteTimer)
   clearTimeout(remindTimer)
+  if (typeof document !== 'undefined') document.body.style.overflow = ''
 })
 </script>
 
