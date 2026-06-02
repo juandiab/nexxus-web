@@ -1,7 +1,14 @@
 <template>
-  <div class="chat-widget">
+  <div class="chat-widget" :class="{ 'is-expanded': isOpen && chatSize === 'expanded' }">
+    <div
+      v-if="isOpen && chatSize === 'expanded'"
+      class="chat-backdrop"
+      aria-hidden="true"
+      @click="closeChat"
+    ></div>
+
     <Transition name="chat-window">
-      <div v-if="isOpen" class="chat-window">
+      <div v-if="isOpen" class="chat-window" :class="`chat-window--${chatSize}`">
         <div class="chat-header">
           <div class="chat-header-info">
             <div class="chat-avatar"><i class="pi pi-bolt"></i></div>
@@ -13,9 +20,20 @@
               </span>
             </div>
           </div>
-          <button class="chat-close" @click="closeChat" aria-label="Close chat">
-            <i class="pi pi-times"></i>
-          </button>
+          <div class="chat-header-actions">
+            <button
+              type="button"
+              class="chat-resize"
+              @click="toggleChatSize"
+              :aria-label="chatSize === 'expanded' ? 'Use smaller chat window' : 'Use full screen chat'"
+              :title="chatSize === 'expanded' ? 'Smaller window' : 'Full screen'"
+            >
+              <i :class="chatSize === 'expanded' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'"></i>
+            </button>
+            <button class="chat-close" @click="closeChat" aria-label="Close chat">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
         </div>
 
         <div class="chat-messages" ref="messagesEl">
@@ -229,11 +247,12 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
 
 const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
+const CHAT_SIZE_KEY = 'nexxus-jpbot-chat-size'
 const INVITE_REMIND_MS = 90_000
 
 const SERVICES = [
@@ -306,6 +325,7 @@ const INTAKE_PANELS_BY_TYPE = {
 }
 
 const isOpen = ref(false)
+const chatSize = ref('expanded') // expanded | compact
 const showInvite = ref(false)
 const inputText = ref('')
 const loading = ref(false)
@@ -406,6 +426,14 @@ const closeChat = () => {
 const toggleChat = () => {
   if (isOpen.value) closeChat()
   else openFromInvite()
+}
+
+const toggleChatSize = () => {
+  chatSize.value = chatSize.value === 'expanded' ? 'compact' : 'expanded'
+  try {
+    sessionStorage.setItem(CHAT_SIZE_KEY, chatSize.value)
+  } catch { /* ignore */ }
+  scrollToBottom()
 }
 
 const discoveryPromptForType = (type) => {
@@ -641,6 +669,10 @@ const submitEnquiry = async () => {
 }
 
 onMounted(() => {
+  try {
+    const saved = sessionStorage.getItem(CHAT_SIZE_KEY)
+    if (saved === 'compact' || saved === 'expanded') chatSize.value = saved
+  } catch { /* ignore */ }
   inviteTimer = setTimeout(showInvitePopup, 2500)
 })
 
@@ -841,16 +873,54 @@ onUnmounted(() => {
   50% { transform: scale(1.18); opacity: 0; }
 }
 
+.chat-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.chat-widget.is-expanded {
+  inset: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding:
+    max(8px, env(safe-area-inset-top, 0px))
+    max(8px, env(safe-area-inset-right, 0px))
+    max(8px, env(safe-area-inset-bottom, 0px))
+    max(8px, env(safe-area-inset-left, 0px));
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 0;
+}
+
 .chat-window {
-  width: 360px;
-  max-height: 580px;
   background: var(--nt-dark-2);
   border: 1px solid var(--nt-border);
-  border-radius: 20px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 16px 60px rgba(0, 0, 0, 0.5);
   overflow: hidden;
+  min-height: 0;
+}
+
+.chat-window--expanded {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 16px;
+}
+
+.chat-window--compact {
+  width: 360px;
+  max-height: min(580px, calc(100dvh - 100px));
+  border-radius: 20px;
 }
 
 .chat-header {
@@ -896,14 +966,29 @@ onUnmounted(() => {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chat-resize,
 .chat-close {
   background: rgba(255, 255, 255, 0.15);
   border: none;
   border-radius: 6px;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   color: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+.chat-resize:hover,
+.chat-close:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .chat-messages {
@@ -913,7 +998,11 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0;
+}
+.chat-window--compact .chat-messages {
   max-height: 280px;
+  flex: none;
 }
 .chat-msg { display: flex; gap: 8px; align-items: flex-end; }
 .chat-msg--user { flex-direction: row-reverse; }
@@ -971,8 +1060,15 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 200px;
   overflow-y: auto;
+  flex-shrink: 0;
+  min-height: 0;
+}
+.chat-window--compact .chat-intake-panel {
+  max-height: 200px;
+}
+.chat-window--expanded .chat-intake-panel {
+  max-height: min(42vh, 420px);
 }
 .chat-intake-panel label {
   font-size: 0.72rem;
@@ -1007,8 +1103,23 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 220px;
   overflow-y: auto;
+}
+.chat-window--compact .enquiry-options {
+  max-height: 220px;
+}
+.chat-window--expanded .enquiry-options {
+  max-height: none;
+  flex: 1;
+}
+.chat-window--expanded .enquiry-option {
+  padding: 14px 16px;
+}
+.chat-window--expanded .enquiry-option-label {
+  font-size: 0.95rem;
+}
+.chat-window--expanded .enquiry-option-desc {
+  font-size: 0.8rem;
 }
 .enquiry-option {
   display: flex;
@@ -1166,10 +1277,44 @@ onUnmounted(() => {
   transform: rotate(90deg) scale(0.8);
 }
 
+@media (min-width: 768px) {
+  .chat-widget.is-expanded {
+    padding: 20px 24px;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+  .chat-window--expanded {
+    width: min(560px, calc(100vw - 48px));
+    height: min(92dvh, 880px);
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .chat-widget.is-expanded {
+    padding: 0;
+  }
+  .chat-window--expanded {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+}
+
 @media (max-width: 480px) {
-  .chat-widget { bottom: 16px; right: 16px; }
-  .chat-window { width: calc(100vw - 32px); }
-  .chat-invite-card { width: calc(100vw - 100px); max-width: 300px; }
+  .chat-widget:not(.is-expanded) {
+    bottom: 16px;
+    right: 16px;
+  }
+  .chat-window--compact {
+    width: calc(100vw - 32px);
+    max-height: calc(100dvh - 88px);
+  }
+  .chat-invite-card {
+    width: calc(100vw - 100px);
+    max-width: 300px;
+  }
   .bubble-hint { display: none; }
 }
 </style>
