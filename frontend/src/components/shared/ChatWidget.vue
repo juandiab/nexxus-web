@@ -215,12 +215,22 @@
         </div>
 
         <div v-else-if="phase === 'discovery' && !submitted" class="chat-submit-bar">
-          <button class="btn-submit-enquiry" :disabled="!canSubmit || submitting" @click="submitEnquiry">
+          <button
+            class="btn-submit-enquiry"
+            :disabled="!canSendEnquiry || submitting"
+            @click="submitEnquiry"
+          >
             <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-send'"></i>
             {{ submitting ? 'Sending...' : 'Send enquiry to Nexxus' }}
           </button>
-          <p v-if="!canSubmit" class="submit-hint">JPbot will enable this once your needs are clear.</p>
-          <router-link v-if="canSubmit" to="/contact" class="contact-link" @click="prefillContact">
+          <p v-if="canSubmit" class="submit-hint submit-hint--ready">
+            You're all set — send when ready.
+          </p>
+          <p v-else-if="allowEarlySubmit" class="submit-hint">
+            Done for now? You can send now — we'll email you if we need more.
+          </p>
+          <p v-else class="submit-hint">Share a brief description to continue.</p>
+          <router-link v-if="canSendEnquiry" to="/contact" class="contact-link" @click="prefillContact">
             Or review on the contact page
           </router-link>
         </div>
@@ -393,6 +403,7 @@ const phase = ref('intake')
 const intakePanel = ref('enquiry_type')
 const intakeQueue = ref([])
 const canSubmit = ref(false)
+const allowEarlySubmit = ref(false)
 const contactErrors = ref({ name: '', email: '' })
 let inviteTimer = null
 let remindTimer = null
@@ -438,6 +449,8 @@ const messages = ref([
 const compactMessageArea = computed(
   () => phase.value === 'intake' && (intakePanel.value === 'enquiry_type' || intakePanel.value === 'contact')
 )
+
+const canSendEnquiry = computed(() => canSubmit.value || allowEarlySubmit.value)
 
 const discoveryPlaceholder = computed(() => {
   const t = profile.value.enquiry_type
@@ -559,6 +572,12 @@ const startDiscovery = () => {
   pushAssistant(opener)
   discoveryMessages.value = [{ role: 'assistant', content: opener }]
   canSubmit.value = false
+  allowEarlySubmit.value = false
+}
+
+const updateSubmitEligibility = () => {
+  const users = discoveryMessages.value.filter((m) => m.role === 'user')
+  allowEarlySubmit.value = users.length >= 1 && users.some((m) => m.content.trim().length > 10)
 }
 
 const confirmEnquiryType = () => {
@@ -660,6 +679,7 @@ const handleDiscovery = async (text) => {
     discoveryMessages.value.push({ role: 'assistant', content: data.reply })
     pushAssistant(data.reply)
     canSubmit.value = Boolean(data.ready_to_submit)
+    updateSubmitEligibility()
     if (canSubmit.value) saveDraft()
   } catch {
     pushAssistant('Sorry, connection failed. Email contact@nexxus-tech.com or use our contact form.')
@@ -698,7 +718,7 @@ const handleEnter = async () => {
 }
 
 const submitEnquiry = async () => {
-  if (!canSubmit.value || submitting.value) return
+  if ((!canSubmit.value && !allowEarlySubmit.value) || submitting.value) return
   submitting.value = true
   try {
     await axios.post('/api/chat/submit', {
