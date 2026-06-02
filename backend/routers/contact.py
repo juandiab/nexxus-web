@@ -6,7 +6,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from fastapi import APIRouter, HTTPException
 
+from models.chat import ChatProfile
 from models.contact import ContactRequest, ContactResponse
+from services.jpbot_email import (
+    build_team_jpbot_html,
+    build_team_plain_text,
+    build_visitor_jpbot_html,
+)
 
 router = APIRouter()
 
@@ -233,6 +239,81 @@ async def deliver_contact_enquiry(data: ContactRequest) -> ContactResponse:
             status_code=500,
             detail="Failed to send message. Please try again or email contact@nexxus-tech.com directly.",
         )
+
+
+async def deliver_jpbot_enquiry(
+    profile: ChatProfile,
+    *,
+    situation: str,
+    pain_points: list[str],
+    urgency: str,
+    next_steps: list[str],
+    visitor_summary: str,
+    transcript: str,
+) -> ContactResponse:
+    priority = "CRITICAL" if "critical" in profile.criticality.lower() else "New"
+    subject = f"[JPbot · {priority}] {profile.name} — {profile.service}"
+
+    team_html = build_team_jpbot_html(
+        profile,
+        situation=situation,
+        pain_points=pain_points,
+        urgency=urgency,
+        next_steps=next_steps,
+        transcript=transcript,
+    )
+    team_plain = build_team_plain_text(
+        profile,
+        situation=situation,
+        pain_points=pain_points,
+        urgency=urgency,
+        next_steps=next_steps,
+        transcript=transcript,
+    )
+    visitor_html = build_visitor_jpbot_html(
+        profile,
+        visitor_summary=visitor_summary,
+        service=profile.service,
+        criticality=profile.criticality,
+    )
+    visitor_plain = (
+        f"Hi {profile.name.split()[0] if profile.name.strip() else 'there'},\n\n"
+        f"Thank you for contacting Nexxus Tech via JPbot.\n\n"
+        f"{visitor_summary}\n\n"
+        f"Service: {profile.service}\n"
+        f"Priority: {profile.criticality}\n\n"
+        "A specialist will respond within one business day.\n\n"
+        "— The Nexxus Tech Team\n"
+        "contact@nexxus-tech.com"
+    )
+
+    if not SMTP_USER or not SMTP_PASS:
+        print(f"[JPBOT] (dev) Team → {CONTACT_TO}\n{team_plain[:400]}...")
+        print(f"[JPBOT] (dev) Visitor → {profile.email}")
+        return ContactResponse(success=True, message=SUCCESS_MESSAGE)
+
+    try:
+        await _send_email(
+            to=CONTACT_TO,
+            subject=subject,
+            html=team_html,
+            plain=team_plain,
+            reply_to=str(profile.email),
+        )
+        await _send_email(
+            to=str(profile.email),
+            subject="Your Nexxus Tech enquiry — summary",
+            html=visitor_html,
+            plain=visitor_plain,
+            reply_to=CONTACT_TO,
+        )
+        return ContactResponse(success=True, message=SUCCESS_MESSAGE)
+    except Exception as exc:
+        print(f"[JPBOT ERROR] {exc}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to send enquiry. Please try again or email contact@nexxus-tech.com directly.",
+        ) from exc
 
 
 @router.post("/contact", response_model=ContactResponse)

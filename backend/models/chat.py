@@ -10,6 +10,24 @@ ALLOWED_SERVICES = [
     "Other / Discovery Call",
 ]
 
+ALLOWED_CRITICALITY = [
+    "Planning — not happening yet",
+    "Low — minor impact",
+    "Medium — degraded service",
+    "High — major impact",
+    "Critical — production down",
+]
+
+ALLOWED_TECHNOLOGIES = [
+    "NetScaler ADC",
+    "NetScaler Gateway",
+    "F5 BIG-IP",
+    "Citrix Virtual Apps & Desktops",
+    "Citrix Cloud",
+    "Okta / Identity",
+    "Other",
+]
+
 MAX_MESSAGE_LEN = 2000
 MAX_HISTORY_MESSAGES = 40
 
@@ -41,6 +59,12 @@ class ChatProfile(BaseModel):
     email: EmailStr
     company: str = ""
     service: str
+    criticality: str
+    users_affected: str
+    technologies: list[str] = Field(default_factory=list)
+    technology_other: str = ""
+    platform_version: str = ""
+    platform_model: str = ""
 
     @field_validator("name")
     @classmethod
@@ -52,10 +76,20 @@ class ChatProfile(BaseModel):
             raise ValueError("Name is too long")
         return name
 
-    @field_validator("company")
+    @field_validator("company", "technology_other", "platform_version", "platform_model")
     @classmethod
-    def company_ok(cls, v: str) -> str:
+    def strip_bounded(cls, v: str) -> str:
         return v.strip()[:200]
+
+    @field_validator("users_affected")
+    @classmethod
+    def users_ok(cls, v: str) -> str:
+        text = v.strip()
+        if len(text) < 1:
+            raise ValueError("Users affected is required")
+        if len(text) > 200:
+            raise ValueError("Users affected is too long")
+        return text
 
     @field_validator("service")
     @classmethod
@@ -64,6 +98,28 @@ class ChatProfile(BaseModel):
         if service not in ALLOWED_SERVICES:
             raise ValueError("Invalid service selection")
         return service
+
+    @field_validator("criticality")
+    @classmethod
+    def criticality_ok(cls, v: str) -> str:
+        c = v.strip()
+        if c not in ALLOWED_CRITICALITY:
+            raise ValueError("Invalid criticality selection")
+        return c
+
+    @field_validator("technologies")
+    @classmethod
+    def technologies_ok(cls, v: list[str]) -> list[str]:
+        if not v:
+            raise ValueError("Select at least one technology")
+        cleaned = []
+        for t in v:
+            t = t.strip()
+            if t not in ALLOWED_TECHNOLOGIES:
+                raise ValueError(f"Invalid technology: {t}")
+            if t not in cleaned:
+                cleaned.append(t)
+        return cleaned
 
 
 class ChatRequest(BaseModel):
@@ -85,4 +141,9 @@ class ChatSubmitRequest(BaseModel):
 class ChatSubmitResponse(BaseModel):
     success: bool
     message: str
-    contact_message: str = ""
+
+
+class ChatOptionsResponse(BaseModel):
+    services: list[str]
+    criticality: list[str]
+    technologies: list[str]

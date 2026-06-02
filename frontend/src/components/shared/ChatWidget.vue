@@ -4,18 +4,16 @@
       <div v-if="isOpen" class="chat-window">
         <div class="chat-header">
           <div class="chat-header-info">
-            <div class="chat-avatar">
-              <i class="pi pi-bolt"></i>
-            </div>
+            <div class="chat-avatar"><i class="pi pi-bolt"></i></div>
             <div>
               <span class="chat-name">JPbot</span>
               <span class="chat-status">
                 <span class="status-dot"></span>
-                Intake Assistant · Nexxus Tech
+                Contact us · Nexxus Tech
               </span>
             </div>
           </div>
-          <button class="chat-close" @click="isOpen = false" aria-label="Close chat">
+          <button class="chat-close" @click="closeChat" aria-label="Close chat">
             <i class="pi pi-times"></i>
           </button>
         </div>
@@ -29,95 +27,173 @@
             <div class="msg-avatar" v-if="msg.role === 'assistant'">
               <i class="pi pi-bolt"></i>
             </div>
-            <div class="msg-bubble">
-              <p>{{ msg.content }}</p>
-            </div>
+            <div class="msg-bubble"><p>{{ msg.content }}</p></div>
           </div>
           <div v-if="loading" class="chat-msg chat-msg--assistant">
             <div class="msg-avatar"><i class="pi pi-bolt"></i></div>
-            <div class="msg-bubble typing">
-              <span></span><span></span><span></span>
-            </div>
+            <div class="msg-bubble typing"><span></span><span></span><span></span></div>
           </div>
         </div>
 
-        <!-- Intake: service picker -->
-        <div v-if="phase === 'intake' && intakeStep === 3" class="chat-intake-panel">
-          <label for="jpbot-service">Service of interest</label>
-          <select id="jpbot-service" v-model="serviceChoice">
-            <option value="">Select a service...</option>
-            <option v-for="s in services" :key="s" :value="s">{{ s }}</option>
-          </select>
-          <button
-            class="btn-intake"
-            @click="finishService"
-            :disabled="!serviceChoice"
-          >
-            Continue
-          </button>
+        <!-- Intake panels -->
+        <div v-if="phase === 'intake' && intakePanel" class="chat-intake-panel">
+          <template v-if="intakePanel === 'service'">
+            <label for="jpbot-service">Service of interest</label>
+            <select id="jpbot-service" v-model="panelValues.service">
+              <option value="">Select...</option>
+              <option v-for="s in services" :key="s" :value="s">{{ s }}</option>
+            </select>
+            <button class="btn-intake" @click="confirmService" :disabled="!panelValues.service">Continue</button>
+          </template>
+
+          <template v-else-if="intakePanel === 'criticality'">
+            <label for="jpbot-crit">How critical is this?</label>
+            <select id="jpbot-crit" v-model="panelValues.criticality">
+              <option value="">Select...</option>
+              <option v-for="c in criticalityOptions" :key="c" :value="c">{{ c }}</option>
+            </select>
+            <button class="btn-intake" @click="confirmCriticality" :disabled="!panelValues.criticality">Continue</button>
+          </template>
+
+          <template v-else-if="intakePanel === 'users'">
+            <label for="jpbot-users">Users affected</label>
+            <input
+              id="jpbot-users"
+              v-model="panelValues.users_affected"
+              type="text"
+              placeholder="e.g. All staff (~200), admins only..."
+            />
+            <button class="btn-intake" @click="confirmUsers" :disabled="!panelValues.users_affected.trim()">Continue</button>
+          </template>
+
+          <template v-else-if="intakePanel === 'technologies'">
+            <label>Technologies involved</label>
+            <div class="tech-checkboxes">
+              <label v-for="t in technologyOptions" :key="t" class="tech-check">
+                <input type="checkbox" :value="t" v-model="panelValues.technologies" />
+                <span>{{ t }}</span>
+              </label>
+            </div>
+            <input
+              v-if="panelValues.technologies.includes('Other')"
+              v-model="panelValues.technology_other"
+              type="text"
+              placeholder="Describe other technology..."
+              class="tech-other"
+            />
+            <button
+              class="btn-intake"
+              @click="confirmTechnologies"
+              :disabled="!panelValues.technologies.length"
+            >
+              Continue
+            </button>
+          </template>
+
+          <template v-else-if="intakePanel === 'version'">
+            <label for="jpbot-ver">Platform version <span class="optional">(optional)</span></label>
+            <input id="jpbot-ver" v-model="panelValues.platform_version" type="text" placeholder="e.g. 14.1, 13.1-48.47..." />
+            <div class="panel-actions">
+              <button type="button" class="btn-skip" @click="skipVersion">Skip</button>
+              <button class="btn-intake" @click="confirmVersion">Continue</button>
+            </div>
+          </template>
+
+          <template v-else-if="intakePanel === 'model'">
+            <label for="jpbot-model">Platform model <span class="optional">(optional)</span></label>
+            <input id="jpbot-model" v-model="panelValues.platform_model" type="text" placeholder="e.g. VPX, MPX, SDX..." />
+            <div class="panel-actions">
+              <button type="button" class="btn-skip" @click="skipModel">Skip</button>
+              <button class="btn-intake" @click="confirmModel">Continue</button>
+            </div>
+          </template>
         </div>
 
-        <!-- Discovery submit -->
         <div v-else-if="phase === 'discovery' && !submitted" class="chat-submit-bar">
-          <button
-            class="btn-submit-enquiry"
-            :disabled="!canSubmit || submitting"
-            @click="submitEnquiry"
-          >
+          <button class="btn-submit-enquiry" :disabled="!canSubmit || submitting" @click="submitEnquiry">
             <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-send'"></i>
             {{ submitting ? 'Sending...' : 'Send enquiry to Nexxus' }}
           </button>
-          <p v-if="!canSubmit" class="submit-hint">
-            JPbot will enable this once your needs are clear.
-          </p>
-          <router-link
-            v-if="canSubmit"
-            to="/contact"
-            class="contact-link"
-            @click="prefillContact"
-          >
+          <p v-if="!canSubmit" class="submit-hint">JPbot will enable this once your needs are clear.</p>
+          <router-link v-if="canSubmit" to="/contact" class="contact-link" @click="prefillContact">
             Or review on the contact page
           </router-link>
         </div>
 
         <div v-if="submitted" class="chat-success">
           <i class="pi pi-check-circle"></i>
-          <p>Enquiry sent! Check your inbox for a confirmation.</p>
+          <p>Enquiry sent! Check your inbox for a summary.</p>
         </div>
 
-        <div v-if="phase !== 'submitted' && !(phase === 'intake' && intakeStep === 3)" class="chat-input-area">
+        <div
+          v-if="phase !== 'submitted' && phase === 'intake' && !intakePanel && intakeTextStep <= 2"
+          class="chat-input-area"
+        >
           <input
             v-model="inputText"
-            :type="intakeStep === 1 ? 'email' : 'text'"
-            :placeholder="inputPlaceholder"
+            :type="intakeTextStep === 1 ? 'email' : 'text'"
+            :placeholder="textPlaceholder"
             @keydown.enter="handleEnter"
-            :disabled="loading || submitting || submitted"
+            :disabled="loading || submitting"
             ref="inputEl"
           />
-          <button
-            class="chat-send"
-            @click="handleEnter"
-            :disabled="loading || submitting || submitted || !inputText.trim()"
-          >
+          <button class="chat-send" @click="handleEnter" :disabled="loading || !inputText.trim()">
             <i class="pi pi-send"></i>
           </button>
         </div>
+
+        <div v-else-if="phase === 'discovery' && !submitted" class="chat-input-area">
+          <input
+            v-model="inputText"
+            type="text"
+            placeholder="Describe your issue..."
+            @keydown.enter="handleEnter"
+            :disabled="loading || submitting"
+            ref="inputEl"
+          />
+          <button class="chat-send" @click="handleEnter" :disabled="loading || submitting || !inputText.trim()">
+            <i class="pi pi-send"></i>
+          </button>
+        </div>
+
         <p class="chat-disclaimer">
-          JPbot collects details to route your enquiry. A consultant will follow up — not a substitute for professional advice.
+          Chat with JPbot to reach our team — WAF, NetScaler, Zero-Trust &amp; cloud security.
         </p>
       </div>
     </Transition>
 
-    <Transition name="bubble-pulse">
-      <div class="chat-notification" v-if="!isOpen && hasNotification">
-        <span>{{ notificationText }}</span>
-        <button @click="hasNotification = false" class="notif-close">
+    <!-- Prominent contact invitation -->
+    <Transition name="invite-pop">
+      <div
+        v-if="showInvite && !isOpen"
+        class="chat-invite-card"
+        role="dialog"
+        aria-label="Contact us via chat"
+      >
+        <button class="invite-close" @click="dismissInvite" aria-label="Dismiss">
           <i class="pi pi-times"></i>
+        </button>
+        <div class="invite-icon"><i class="pi pi-comments"></i></div>
+        <p class="invite-eyebrow">Contact us</p>
+        <h3 class="invite-title">Chat with JPbot</h3>
+        <p class="invite-body">
+          Tell us about your project or issue — we'll collect the details and a Nexxus specialist will follow up.
+        </p>
+        <button class="invite-cta" @click="openFromInvite">
+          <i class="pi pi-arrow-right"></i>
+          Start chat
         </button>
       </div>
     </Transition>
 
-    <button class="chat-bubble" @click="toggleChat" :class="{ active: isOpen }" aria-label="Open chat">
+    <button
+      class="chat-bubble"
+      @click="toggleChat"
+      :class="{ active: isOpen, 'has-invite': showInvite && !isOpen }"
+      aria-label="Open chat to contact Nexxus Tech"
+    >
+      <span v-if="showInvite && !isOpen" class="bubble-badge" aria-hidden="true">1</span>
+      <span v-if="!isOpen" class="bubble-hint">Chat</span>
       <Transition name="icon-flip" mode="out-in">
         <i v-if="isOpen" key="close" class="pi pi-times"></i>
         <i v-else key="open" class="pi pi-comments"></i>
@@ -128,9 +204,12 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
+
+const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
+const INVITE_REMIND_MS = 90_000
 
 const SERVICES = [
   'WAF & API Protection',
@@ -142,27 +221,64 @@ const SERVICES = [
   'Other / Discovery Call',
 ]
 
+const CRITICALITY = [
+  'Planning — not happening yet',
+  'Low — minor impact',
+  'Medium — degraded service',
+  'High — major impact',
+  'Critical — production down',
+]
+
+const TECHNOLOGIES = [
+  'NetScaler ADC',
+  'NetScaler Gateway',
+  'F5 BIG-IP',
+  'Citrix Virtual Apps & Desktops',
+  'Citrix Cloud',
+  'Okta / Identity',
+  'Other',
+]
+
 const isOpen = ref(false)
+const showInvite = ref(false)
 const inputText = ref('')
 const loading = ref(false)
 const submitting = ref(false)
 const submitted = ref(false)
 const messagesEl = ref(null)
 const inputEl = ref(null)
-const hasNotification = ref(false)
-const notificationText = ref("Hi! I'm JPbot — tell us what you need and we'll follow up 👋")
-
-const phase = ref('intake') // intake | discovery | submitted
-const intakeStep = ref(0) // 0 name, 1 email, 2 company, 3 service
-const serviceChoice = ref('')
 const services = SERVICES
+const criticalityOptions = CRITICALITY
+const technologyOptions = TECHNOLOGIES
+
+const phase = ref('intake')
+const intakeTextStep = ref(0)
+const intakePanel = ref(null)
 const canSubmit = ref(false)
+let inviteTimer = null
+let remindTimer = null
+
+const panelValues = ref({
+  service: '',
+  criticality: '',
+  users_affected: '',
+  technologies: [],
+  technology_other: '',
+  platform_version: '',
+  platform_model: '',
+})
 
 const profile = ref({
   name: '',
   email: '',
   company: '',
   service: '',
+  criticality: '',
+  users_affected: '',
+  technologies: [],
+  technology_other: '',
+  platform_version: '',
+  platform_model: '',
 })
 
 const discoveryMessages = ref([])
@@ -171,84 +287,165 @@ const messages = ref([
   {
     role: 'assistant',
     content:
-      "Hi! I'm JPbot, Nexxus Tech's intake assistant. I'll ask a few quick questions, then learn about your project so our team can help. What's your full name?",
+      "Hi! I'm JPbot — the fastest way to contact Nexxus Tech. I'll ask a few quick questions, then learn about your needs. What's your full name?",
   },
 ])
 
-const inputPlaceholder = computed(() => {
-  if (phase.value !== 'intake') return 'Describe your project or challenge...'
-  const placeholders = [
-    'Your full name',
-    'you@company.com',
-    'Company name (or type "none")',
-  ]
-  return placeholders[intakeStep.value] || ''
+const textPlaceholder = computed(() => {
+  const p = ['Your full name', 'you@company.com', 'Company (or type "none")']
+  return p[intakeTextStep.value] || ''
 })
 
 const scrollToBottom = async () => {
   await nextTick()
-  if (messagesEl.value) {
-    messagesEl.value.scrollTop = messagesEl.value.scrollHeight
+  if (messagesEl.value) messagesEl.value.scrollTop = messagesEl.value.scrollHeight
+}
+
+const pushAssistant = (content) => messages.value.push({ role: 'assistant', content })
+const pushUser = (content) => messages.value.push({ role: 'user', content })
+const isValidEmail = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)
+
+const showInvitePopup = () => {
+  if (!isOpen.value) showInvite.value = true
+}
+
+const dismissInvite = () => {
+  showInvite.value = false
+  try {
+    sessionStorage.setItem(INVITE_DISMISS_KEY, String(Date.now()))
+  } catch { /* ignore */ }
+  remindTimer = setTimeout(showInvitePopup, INVITE_REMIND_MS)
+}
+
+const openFromInvite = () => {
+  showInvite.value = false
+  isOpen.value = true
+  nextTick(() => {
+    inputEl.value?.focus()
+    scrollToBottom()
+  })
+}
+
+const closeChat = () => {
+  isOpen.value = false
+  if (!submitted.value) {
+    setTimeout(showInvitePopup, 800)
   }
 }
 
-const pushAssistant = (content) => {
-  messages.value.push({ role: 'assistant', content })
+const toggleChat = () => {
+  if (isOpen.value) closeChat()
+  else openFromInvite()
 }
-
-const pushUser = (content) => {
-  messages.value.push({ role: 'user', content })
-}
-
-const isValidEmail = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)
 
 const startDiscovery = () => {
   phase.value = 'discovery'
+  const techLabel = profile.value.technologies.join(', ')
   pushAssistant(
-    `Thanks, ${profile.value.name}! You're interested in ${profile.value.service}. ` +
-      'What challenge or goal should our team know about? (environment, timeline, or pain points help.)'
+    `Thanks, ${profile.value.name}! You're looking at ${profile.value.service} ` +
+      `(${profile.value.criticality.toLowerCase()}). ` +
+      `Technologies: ${techLabel}. ` +
+      'Briefly describe the issue or goal — error messages and when it started help.'
   )
   discoveryMessages.value = []
   canSubmit.value = false
 }
 
-const finishService = () => {
-  if (!serviceChoice.value) return
-  profile.value.service = serviceChoice.value
+const confirmService = () => {
+  profile.value.service = panelValues.value.service
   pushUser(profile.value.service)
+  intakePanel.value = 'criticality'
+  pushAssistant('How critical is this issue right now?')
+  scrollToBottom()
+}
+
+const confirmCriticality = () => {
+  profile.value.criticality = panelValues.value.criticality
+  pushUser(profile.value.criticality)
+  intakePanel.value = 'users'
+  pushAssistant('How many users or systems are affected?')
+  scrollToBottom()
+}
+
+const confirmUsers = () => {
+  profile.value.users_affected = panelValues.value.users_affected.trim()
+  pushUser(profile.value.users_affected)
+  intakePanel.value = 'technologies'
+  pushAssistant('Which technologies are involved? Select all that apply.')
+  scrollToBottom()
+}
+
+const confirmTechnologies = () => {
+  profile.value.technologies = [...panelValues.value.technologies]
+  profile.value.technology_other = panelValues.value.technology_other.trim()
+  const label = profile.value.technologies.join(', ')
+  pushUser(label + (profile.value.technology_other ? ` (${profile.value.technology_other})` : ''))
+  intakePanel.value = 'version'
+  pushAssistant('Platform version? (optional — you can skip.)')
+  scrollToBottom()
+}
+
+const skipVersion = () => {
+  profile.value.platform_version = ''
+  pushUser('(version skipped)')
+  intakePanel.value = 'model'
+  pushAssistant('Platform model? (optional — you can skip.)')
+  scrollToBottom()
+}
+
+const confirmVersion = () => {
+  profile.value.platform_version = panelValues.value.platform_version.trim()
+  pushUser(profile.value.platform_version || '(not provided)')
+  intakePanel.value = 'model'
+  pushAssistant('Platform model? (optional — you can skip.)')
+  scrollToBottom()
+}
+
+const skipModel = () => {
+  profile.value.platform_model = ''
+  pushUser('(model skipped)')
+  intakePanel.value = null
   startDiscovery()
   scrollToBottom()
 }
 
-const handleIntake = (text) => {
-  if (intakeStep.value === 0) {
+const confirmModel = () => {
+  profile.value.platform_model = panelValues.value.platform_model.trim()
+  pushUser(profile.value.platform_model || '(not provided)')
+  intakePanel.value = null
+  startDiscovery()
+  scrollToBottom()
+}
+
+const handleTextIntake = (text) => {
+  if (intakeTextStep.value === 0) {
     if (text.length < 2) {
-      pushAssistant('Please enter your full name so we can address you correctly.')
+      pushAssistant('Please enter your full name.')
       return
     }
     profile.value.name = text
     pushUser(text)
-    intakeStep.value = 1
+    intakeTextStep.value = 1
     pushAssistant('What email should we use to follow up?')
     return
   }
-  if (intakeStep.value === 1) {
+  if (intakeTextStep.value === 1) {
     if (!isValidEmail(text)) {
       pushAssistant('Please enter a valid email address.')
       return
     }
     profile.value.email = text
     pushUser(text)
-    intakeStep.value = 2
-    pushAssistant('Which company or organization are you with? (Type "none" if personal.)')
+    intakeTextStep.value = 2
+    pushAssistant('Which company or organization? (Type "none" if personal.)')
     return
   }
-  if (intakeStep.value === 2) {
+  if (intakeTextStep.value === 2) {
     profile.value.company = text.toLowerCase() === 'none' ? '' : text
     pushUser(profile.value.company || '(not provided)')
-    intakeStep.value = 3
-    pushAssistant('Which service are you most interested in? Choose below.')
-    return
+    intakePanel.value = 'service'
+    pushAssistant('Which service are you interested in?')
+    scrollToBottom()
   }
 }
 
@@ -257,7 +454,6 @@ const handleDiscovery = async (text) => {
   discoveryMessages.value.push({ role: 'user', content: text })
   loading.value = true
   await scrollToBottom()
-
   try {
     const { data } = await axios.post('/api/chat', {
       profile: profile.value,
@@ -268,9 +464,7 @@ const handleDiscovery = async (text) => {
     canSubmit.value = Boolean(data.ready_to_submit)
     if (canSubmit.value) saveDraft()
   } catch {
-    pushAssistant(
-      "Sorry, I'm having trouble connecting. You can email contact@nexxus-tech.com or use our contact form."
-    )
+    pushAssistant('Sorry, connection failed. Email contact@nexxus-tech.com or use our contact form.')
   } finally {
     loading.value = false
     await scrollToBottom()
@@ -298,19 +492,17 @@ const prefillContact = () => {
 
 const handleEnter = async () => {
   const text = inputText.value.trim()
-  if (!text || loading.value || submitting.value || submitted.value) return
-
-  if (phase.value === 'intake') {
-    if (intakeStep.value === 3) return
+  if (!text || loading.value || submitting.value) return
+  if (phase.value === 'intake' && !intakePanel.value) {
     inputText.value = ''
-    handleIntake(text)
+    handleTextIntake(text)
     await scrollToBottom()
-    if (intakeStep.value === 3) await scrollToBottom()
     return
   }
-
-  inputText.value = ''
-  await handleDiscovery(text)
+  if (phase.value === 'discovery') {
+    inputText.value = ''
+    await handleDiscovery(text)
+  }
 }
 
 const submitEnquiry = async () => {
@@ -323,33 +515,24 @@ const submitEnquiry = async () => {
     })
     submitted.value = true
     phase.value = 'submitted'
+    showInvite.value = false
   } catch (err) {
     const detail = err.response?.data?.detail
-    const msg = Array.isArray(detail)
-      ? detail.map((d) => d.msg || d).join(', ')
-      : detail
-    pushAssistant(
-      msg || 'Could not send your enquiry. Please try the contact form or email contact@nexxus-tech.com.'
-    )
+    const msg = Array.isArray(detail) ? detail.map((d) => d.msg || d).join(', ') : detail
+    pushAssistant(msg || 'Could not send. Try contact@nexxus-tech.com.')
   } finally {
     submitting.value = false
     await scrollToBottom()
   }
 }
 
-const toggleChat = () => {
-  isOpen.value = !isOpen.value
-  hasNotification.value = false
-  if (isOpen.value) {
-    nextTick(() => inputEl.value?.focus())
-    scrollToBottom()
-  }
-}
-
 onMounted(() => {
-  setTimeout(() => {
-    if (!isOpen.value) hasNotification.value = true
-  }, 5000)
+  inviteTimer = setTimeout(showInvitePopup, 2500)
+})
+
+onUnmounted(() => {
+  clearTimeout(inviteTimer)
+  clearTimeout(remindTimer)
 })
 </script>
 
@@ -362,93 +545,251 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 12px;
+  gap: 14px;
 }
 
+/* Invitation card */
+.chat-invite-card {
+  position: relative;
+  width: 300px;
+  background: linear-gradient(160deg, var(--nt-dark-2) 0%, var(--nt-dark-3) 100%);
+  border: 1px solid rgba(0, 168, 224, 0.35);
+  border-radius: 16px;
+  padding: 20px 20px 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 123, 167, 0.15);
+  animation: inviteAttention 2.5s ease-in-out infinite;
+}
+@keyframes inviteAttention {
+  0%, 100% { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 123, 167, 0.15); }
+  50% { box-shadow: 0 12px 48px rgba(0, 123, 167, 0.35), 0 0 0 2px rgba(0, 168, 224, 0.4); }
+}
+.invite-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  color: var(--nt-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.invite-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--nt-primary), var(--nt-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+.invite-eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--nt-secondary);
+}
+.invite-title {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--nt-white);
+  font-family: var(--font-heading);
+}
+.invite-body {
+  margin: 0 0 16px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--nt-text-muted);
+}
+.invite-cta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--nt-primary), var(--nt-secondary));
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.invite-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 123, 167, 0.45);
+}
+
+.invite-pop-enter-active,
+.invite-pop-leave-active {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.invite-pop-enter-from,
+.invite-pop-leave-to {
+  opacity: 0;
+  transform: translateY(16px) scale(0.92);
+}
+
+/* Bubble */
 .chat-bubble {
-  width: 60px; height: 60px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--nt-primary), var(--nt-secondary));
   border: none;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; color: white;
-  box-shadow: 0 4px 24px rgba(0,123,167,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: white;
+  box-shadow: 0 4px 24px rgba(0, 123, 167, 0.5);
   transition: var(--nt-transition);
   position: relative;
 }
-.chat-bubble:hover { transform: scale(1.08); box-shadow: 0 6px 30px rgba(0,123,167,0.6); }
-.chat-bubble.active { background: linear-gradient(135deg, #005F7F, #005F7F); }
+.chat-bubble.has-invite {
+  animation: bubbleWiggle 3s ease-in-out infinite;
+}
+@keyframes bubbleWiggle {
+  0%, 88%, 100% { transform: rotate(0); }
+  90% { transform: rotate(-8deg); }
+  94% { transform: rotate(8deg); }
+}
+.bubble-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--nt-dark);
+  z-index: 2;
+}
+.bubble-hint {
+  position: absolute;
+  right: calc(100% + 10px);
+  white-space: nowrap;
+  background: var(--nt-dark-3);
+  border: 1px solid var(--nt-border);
+  color: var(--nt-text-light);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: var(--nt-shadow);
+  pointer-events: none;
+}
+.bubble-hint::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-left-color: var(--nt-border);
+}
+.chat-bubble:hover {
+  transform: scale(1.08);
+}
+.chat-bubble.active {
+  background: linear-gradient(135deg, #005f7f, #005f7f);
+  animation: none;
+}
 .bubble-ring {
-  position: absolute; inset: -6px;
+  position: absolute;
+  inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(0,123,167,0.3);
+  border: 2px solid rgba(0, 123, 167, 0.35);
   animation: bubbleRing 2s ease-in-out infinite;
 }
 @keyframes bubbleRing {
   0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.15); opacity: 0; }
-}
-
-.chat-notification {
-  background: var(--nt-dark-3);
-  border: 1px solid var(--nt-border);
-  border-radius: 12px;
-  padding: 10px 14px;
-  max-width: 260px;
-  font-size: 0.82rem;
-  color: var(--nt-text-light);
-  display: flex; align-items: center; gap: 8px;
-  box-shadow: var(--nt-shadow);
-}
-.notif-close {
-  background: none; border: none; cursor: pointer;
-  color: var(--nt-text-muted); font-size: 0.7rem;
-  padding: 2px; flex-shrink: 0;
+  50% { transform: scale(1.18); opacity: 0; }
 }
 
 .chat-window {
   width: 360px;
-  max-height: 560px;
+  max-height: 580px;
   background: var(--nt-dark-2);
   border: 1px solid var(--nt-border);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,123,167,0.1);
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
 .chat-header {
   background: linear-gradient(135deg, var(--nt-primary), var(--nt-primary-d));
   padding: 16px 20px;
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .chat-header-info { display: flex; align-items: center; gap: 12px; }
 .chat-avatar {
-  width: 38px; height: 38px;
-  background: rgba(255,255,255,0.2);
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
-.chat-name { display: block; font-weight: 700; color: white; font-size: 0.9rem; font-family: var(--font-heading); }
+.chat-name {
+  display: block;
+  font-weight: 700;
+  color: white;
+  font-size: 0.9rem;
+  font-family: var(--font-heading);
+}
 .chat-status {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 0.72rem; color: rgba(255,255,255,0.75);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.75);
 }
 .status-dot {
-  width: 7px; height: 7px;
+  width: 7px;
+  height: 7px;
   background: var(--nt-secondary);
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
 .chat-close {
-  background: rgba(255,255,255,0.15); border: none; border-radius: 6px;
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  color: white; cursor: pointer; font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  color: white;
+  cursor: pointer;
 }
 
 .chat-messages {
@@ -458,17 +799,21 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 300px;
-  scroll-behavior: smooth;
+  max-height: 280px;
 }
-
 .chat-msg { display: flex; gap: 8px; align-items: flex-end; }
 .chat-msg--user { flex-direction: row-reverse; }
 .msg-avatar {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   background: linear-gradient(135deg, var(--nt-primary), var(--nt-secondary));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; color: white; flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: white;
+  flex-shrink: 0;
 }
 .msg-bubble {
   max-width: 76%;
@@ -490,9 +835,10 @@ onMounted(() => {
 }
 .msg-bubble p { margin: 0; }
 
-.typing { display: flex; align-items: center; gap: 4px; padding: 12px 16px; }
+.typing { display: flex; gap: 4px; padding: 12px 16px; }
 .typing span {
-  width: 7px; height: 7px;
+  width: 7px;
+  height: 7px;
   background: var(--nt-text-muted);
   border-radius: 50%;
   animation: typingBounce 1.2s infinite;
@@ -511,6 +857,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 .chat-intake-panel label {
   font-size: 0.72rem;
@@ -519,15 +867,41 @@ onMounted(() => {
   letter-spacing: 0.06em;
   color: var(--nt-text-muted);
 }
-.chat-intake-panel select {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+.optional { font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.8; }
+.chat-intake-panel select,
+.chat-intake-panel input[type='text'] {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 10px 12px;
   color: var(--nt-text);
   font-size: 0.85rem;
+  width: 100%;
+}
+.tech-checkboxes { display: flex; flex-direction: column; gap: 6px; }
+.tech-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--nt-text-light);
+  cursor: pointer;
+}
+.tech-check input { accent-color: var(--nt-primary); }
+.tech-other { margin-top: 4px; }
+.panel-actions { display: flex; gap: 8px; }
+.btn-skip {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--nt-border);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--nt-text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
 }
 .btn-intake {
+  flex: 1;
   background: var(--nt-primary);
   border: none;
   border-radius: 10px;
@@ -569,16 +943,15 @@ onMounted(() => {
   text-align: center;
   text-decoration: none;
 }
-.contact-link:hover { text-decoration: underline; }
 
 .chat-success {
   padding: 16px;
   text-align: center;
-  color: #4ADE80;
+  color: #4ade80;
   font-size: 0.85rem;
   border-top: 1px solid var(--nt-border);
 }
-.chat-success .pi { font-size: 1.5rem; margin-bottom: 8px; }
+.chat-success .pi { font-size: 1.5rem; margin-bottom: 8px; display: block; }
 
 .chat-input-area {
   display: flex;
@@ -589,8 +962,8 @@ onMounted(() => {
 }
 .chat-input-area input {
   flex: 1;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 10px 14px;
   color: var(--nt-text);
@@ -598,11 +971,16 @@ onMounted(() => {
   outline: none;
 }
 .chat-send {
-  width: 38px; height: 38px;
+  width: 38px;
+  height: 38px;
   background: var(--nt-primary);
-  border: none; border-radius: 10px;
-  color: white; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -614,19 +992,29 @@ onMounted(() => {
   background: var(--nt-dark-3);
 }
 
-.chat-window-enter-active, .chat-window-leave-active {
+.chat-window-enter-active,
+.chat-window-leave-active {
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.chat-window-enter-from, .chat-window-leave-to {
-  opacity: 0; transform: translateY(20px) scale(0.95);
+.chat-window-enter-from,
+.chat-window-leave-to {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
-.bubble-pulse-enter-active, .bubble-pulse-leave-active { transition: all 0.25s ease; }
-.bubble-pulse-enter-from, .bubble-pulse-leave-to { opacity: 0; transform: translateX(10px); }
-.icon-flip-enter-active, .icon-flip-leave-active { transition: all 0.2s ease; }
-.icon-flip-enter-from, .icon-flip-leave-to { opacity: 0; transform: rotate(90deg) scale(0.8); }
+.icon-flip-enter-active,
+.icon-flip-leave-active {
+  transition: all 0.2s ease;
+}
+.icon-flip-enter-from,
+.icon-flip-leave-to {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
+}
 
 @media (max-width: 480px) {
   .chat-widget { bottom: 16px; right: 16px; }
   .chat-window { width: calc(100vw - 32px); }
+  .chat-invite-card { width: calc(100vw - 100px); max-width: 300px; }
+  .bubble-hint { display: none; }
 }
 </style>
