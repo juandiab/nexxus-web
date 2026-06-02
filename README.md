@@ -77,22 +77,24 @@ website/
     ├── routers/
     │   ├── contact.py        ← Contact form → email
     │   ├── blog.py           ← Blog API (JSON-backed)
-    │   └── chat.py           ← AI chat (Anthropic/OpenAI)
+    │   └── chat.py           ← JPbot chat (DeepSeek)
     └── data/
         └── blog_posts.json   ← Add posts here
 ```
 
 ---
 
-## Configuring the AI Chat
+## Configuring JPbot (chat widget)
 
-1. Set in `.env`:
+1. Create a [DeepSeek API](https://platform.deepseek.com/) key and set in `.env`:
    ```
-   AI_PROVIDER=anthropic          # or openai
-   AI_API_KEY=your-key-here
-   AI_MODEL=claude-3-5-haiku-20241022
+   AI_PROVIDER=deepseek
+   AI_API_KEY=your-deepseek-api-key-here
+   AI_MODEL=deepseek-chat
    ```
 2. Restart the backend: `docker compose restart backend`
+
+JPbot collects name, email, company, and service, then discusses the visitor's needs. When ready, they submit an enquiry (same email flow as the contact form). Draft details can pre-fill `/contact` via session storage.
 
 ---
 

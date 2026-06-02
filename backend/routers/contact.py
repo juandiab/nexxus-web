@@ -205,8 +205,7 @@ async def _send_email(
     )
 
 
-@router.post("/contact", response_model=ContactResponse)
-async def send_contact(data: ContactRequest):
+async def deliver_contact_enquiry(data: ContactRequest) -> ContactResponse:
     if not SMTP_USER or not SMTP_PASS:
         print(f"[CONTACT] (dev) Team notification → {CONTACT_TO}")
         print(f"[CONTACT] (dev) Auto-reply → {data.email}")
@@ -234,3 +233,8 @@ async def send_contact(data: ContactRequest):
             status_code=500,
             detail="Failed to send message. Please try again or email contact@nexxus-tech.com directly.",
         )
+
+
+@router.post("/contact", response_model=ContactResponse)
+async def send_contact(data: ContactRequest):
+    return await deliver_contact_enquiry(data)

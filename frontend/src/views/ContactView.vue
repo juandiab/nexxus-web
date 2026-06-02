@@ -157,9 +157,10 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import SocialLinks from '@/components/shared/SocialLinks.vue'
+import { loadJpbotDraft, clearJpbotDraft } from '@/utils/jpbotDraft.js'
 
 const form = reactive({ name: '', email: '', company: '', service: '', message: '' })
 const errors = reactive({ name: '', email: '', message: '' })
@@ -187,6 +188,19 @@ const validate = () => {
   return valid
 }
 
+onMounted(() => {
+  const draft = loadJpbotDraft()
+  if (!draft) return
+  if (draft.name) form.name = draft.name
+  if (draft.email) form.email = draft.email
+  if (draft.company) form.company = draft.company
+  if (draft.service) form.service = draft.service
+  if (draft.message) {
+    form.message =
+      `[From JPbot — please review and edit before sending]\n\n${draft.message}`
+  }
+})
+
 const handleSubmit = async () => {
   if (!validate()) return
   submitting.value = true
@@ -194,6 +208,7 @@ const handleSubmit = async () => {
   try {
     await axios.post('/api/contact', { ...form })
     submitStatus.value = 'success'
+    clearJpbotDraft()
     form.name = form.email = form.company = form.service = form.message = ''
   } catch (err) {
     submitStatus.value = 'error'
