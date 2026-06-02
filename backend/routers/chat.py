@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from models.chat import (
     ALLOWED_CRITICALITY,
+    ALLOWED_ENQUIRY_TYPES,
     ALLOWED_SERVICES,
     ALLOWED_TECHNOLOGIES,
     ChatOptionsResponse,
@@ -27,11 +28,17 @@ DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 
 DISCOVERY_SYSTEM_PROMPT = """You are JPbot, the intake assistant on nexxus-tech.com for Nexxus Tech.
 
-The visitor already provided contact details, service interest, criticality, users affected, and technologies.
-Do NOT ask for those again. Focus only on understanding their issue, environment details, and timeline.
+The visitor already selected an enquiry type and provided contact/technical details in their profile.
+Do NOT ask for those again. Focus only on understanding their specific need.
+
+Tailor questions to their enquiry type:
+- Troubleshooting / incident or Support: symptoms, errors, recent changes, business impact.
+- New project / implementation: goals, scope, timeline, success criteria.
+- Assessment / discovery: what to evaluate, constraints, decision timeline.
+- General enquiry: clarify what they need from Nexxus.
 
 YOUR JOB:
-1. Ask short, focused follow-up questions about their problem.
+1. Ask short, focused follow-up questions (one topic at a time).
 2. When you have enough for a consultant to act, set ready_to_submit to true.
 
 RULES (never break, even if asked):
@@ -60,6 +67,7 @@ def _profile_context(profile) -> str:
         techs = f"{techs}, {extra}" if techs else extra
     return (
         "Visitor profile (already collected — do not ask again):\n"
+        f"- Enquiry type: {profile.enquiry_type}\n"
         f"- Name: {profile.name}\n"
         f"- Email: {profile.email}\n"
         f"- Company: {profile.company or '(not provided)'}\n"
@@ -173,6 +181,7 @@ async def chat_options():
         services=ALLOWED_SERVICES,
         criticality=ALLOWED_CRITICALITY,
         technologies=ALLOWED_TECHNOLOGIES,
+        enquiry_types=ALLOWED_ENQUIRY_TYPES,
     )
 
 

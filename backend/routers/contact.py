@@ -252,7 +252,7 @@ async def deliver_jpbot_enquiry(
     transcript: str,
 ) -> ContactResponse:
     priority = "CRITICAL" if "critical" in profile.criticality.lower() else "New"
-    subject = f"[JPbot · {priority}] {profile.name} — {profile.service}"
+    subject = f"[JPbot · {priority}] {profile.enquiry_type} — {profile.name}"
 
     team_html = build_team_jpbot_html(
         profile,

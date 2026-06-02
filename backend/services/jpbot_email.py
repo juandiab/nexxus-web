@@ -98,6 +98,7 @@ def build_team_jpbot_html(
     version = escape(profile.platform_version) if profile.platform_version else "—"
     model = escape(profile.platform_model) if profile.platform_model else "—"
     users = escape(profile.users_affected) if profile.users_affected else "—"
+    enquiry_type = escape(profile.enquiry_type)
 
     return f"""
     <!DOCTYPE html>
@@ -110,12 +111,14 @@ def build_team_jpbot_html(
               <td style="background:linear-gradient(135deg,{_BRAND_DARK} 0%,#2E2E32 100%);padding:28px 32px;">
                 <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{_BRAND_PRIMARY_LIGHT};">JPbot Enquiry</p>
                 <h1 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#FFFFFF;">{name}</h1>
+                <p style="margin:0 0 10px;font-size:13px;color:rgba(255,255,255,0.85);">{enquiry_type}</p>
                 {_badge_html(profile.criticality)}
               </td>
             </tr>
             <tr><td style="padding:32px;">
               {_section_title("Contact")}
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+                {_row("Enquiry type", enquiry_type)}
                 {_row("Name", name)}
                 {_row("Email", f'<a href="mailto:{email}" style="color:{_BRAND_PRIMARY};text-decoration:none;">{email}</a>')}
                 {_row("Company", company)}
@@ -189,7 +192,8 @@ def build_visitor_jpbot_html(
                 <tr><td style="padding:20px 24px;">
                   <p style="margin:0 0 10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:{_BRAND_GREY};">Your request</p>
                   {summary_html}
-                  <p style="margin:16px 0 8px;font-size:12px;color:{_BRAND_GREY};"><strong>Service:</strong> {escape(service)}</p>
+                  <p style="margin:16px 0 8px;font-size:12px;color:{_BRAND_GREY};"><strong>Type:</strong> {escape(profile.enquiry_type)}</p>
+                  <p style="margin:0 0 8px;font-size:12px;color:{_BRAND_GREY};"><strong>Service:</strong> {escape(service)}</p>
                   <p style="margin:0;font-size:12px;color:{_BRAND_GREY};"><strong>Priority:</strong> {crit_badge}</p>
                 </td></tr>
               </table>
@@ -231,6 +235,7 @@ def build_team_plain_text(
         techs = f"{techs}, Other: {profile.technology_other}" if techs else f"Other: {profile.technology_other}"
     lines = [
         f"JPbot enquiry from {profile.name} <{profile.email}>",
+        f"Enquiry type: {profile.enquiry_type}",
         f"Criticality: {profile.criticality}",
         f"Service: {profile.service}",
         f"Users affected: {profile.users_affected or '—'}",

@@ -28,6 +28,14 @@ ALLOWED_TECHNOLOGIES = [
     "Other",
 ]
 
+ALLOWED_ENQUIRY_TYPES = [
+    "Troubleshooting / incident",
+    "Support request",
+    "New project / implementation",
+    "Assessment / discovery",
+    "General enquiry",
+]
+
 MAX_MESSAGE_LEN = 2000
 MAX_HISTORY_MESSAGES = 40
 
@@ -55,16 +63,25 @@ class ChatMessage(BaseModel):
 
 
 class ChatProfile(BaseModel):
+    enquiry_type: str
     name: str
     email: EmailStr
     company: str = ""
     service: str
-    criticality: str
-    users_affected: str
+    criticality: str = ""
+    users_affected: str = ""
     technologies: list[str] = Field(default_factory=list)
     technology_other: str = ""
     platform_version: str = ""
     platform_model: str = ""
+
+    @field_validator("enquiry_type")
+    @classmethod
+    def enquiry_type_ok(cls, v: str) -> str:
+        t = v.strip()
+        if t not in ALLOWED_ENQUIRY_TYPES:
+            raise ValueError("Invalid enquiry type")
+        return t
 
     @field_validator("name")
     @classmethod
@@ -85,11 +102,19 @@ class ChatProfile(BaseModel):
     @classmethod
     def users_ok(cls, v: str) -> str:
         text = v.strip()
-        if len(text) < 1:
-            raise ValueError("Users affected is required")
         if len(text) > 200:
             raise ValueError("Users affected is too long")
-        return text
+        return text or "Not specified"
+
+    @field_validator("criticality")
+    @classmethod
+    def criticality_default(cls, v: str) -> str:
+        c = v.strip()
+        if not c:
+            return "Planning — not happening yet"
+        if c not in ALLOWED_CRITICALITY:
+            raise ValueError("Invalid criticality selection")
+        return c
 
     @field_validator("service")
     @classmethod
@@ -98,14 +123,6 @@ class ChatProfile(BaseModel):
         if service not in ALLOWED_SERVICES:
             raise ValueError("Invalid service selection")
         return service
-
-    @field_validator("criticality")
-    @classmethod
-    def criticality_ok(cls, v: str) -> str:
-        c = v.strip()
-        if c not in ALLOWED_CRITICALITY:
-            raise ValueError("Invalid criticality selection")
-        return c
 
     @field_validator("technologies")
     @classmethod
@@ -147,3 +164,4 @@ class ChatOptionsResponse(BaseModel):
     services: list[str]
     criticality: list[str]
     technologies: list[str]
+    enquiry_types: list[str]

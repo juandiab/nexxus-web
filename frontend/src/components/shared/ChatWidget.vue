@@ -37,7 +37,32 @@
 
         <!-- Intake panels -->
         <div v-if="phase === 'intake' && intakePanel" class="chat-intake-panel">
-          <template v-if="intakePanel === 'service'">
+          <template v-if="intakePanel === 'enquiry_type'">
+            <label>What do you need help with?</label>
+            <div class="enquiry-options">
+              <button
+                v-for="opt in enquiryTypes"
+                :key="opt.value"
+                type="button"
+                class="enquiry-option"
+                :class="{ selected: panelValues.enquiry_type === opt.value }"
+                @click="panelValues.enquiry_type = opt.value"
+              >
+                <i :class="['pi', opt.icon]"></i>
+                <span class="enquiry-option-label">{{ opt.label }}</span>
+                <span class="enquiry-option-desc">{{ opt.desc }}</span>
+              </button>
+            </div>
+            <button
+              class="btn-intake"
+              @click="confirmEnquiryType"
+              :disabled="!panelValues.enquiry_type"
+            >
+              Continue
+            </button>
+          </template>
+
+          <template v-else-if="intakePanel === 'service'">
             <label for="jpbot-service">Service of interest</label>
             <select id="jpbot-service" v-model="panelValues.service">
               <option value="">Select...</option>
@@ -239,6 +264,47 @@ const TECHNOLOGIES = [
   'Other',
 ]
 
+const ENQUIRY_TYPES = [
+  {
+    value: 'Troubleshooting / incident',
+    label: 'Troubleshooting',
+    desc: 'Something is broken or urgent',
+    icon: 'pi-exclamation-triangle',
+  },
+  {
+    value: 'Support request',
+    label: 'Support',
+    desc: 'Help with an existing setup',
+    icon: 'pi-wrench',
+  },
+  {
+    value: 'New project / implementation',
+    label: 'New project',
+    desc: 'Rollout or new implementation',
+    icon: 'pi-plus-circle',
+  },
+  {
+    value: 'Assessment / discovery',
+    label: 'Assessment',
+    desc: 'Explore options or get guidance',
+    icon: 'pi-search',
+  },
+  {
+    value: 'General enquiry',
+    label: 'General',
+    desc: 'Other questions for our team',
+    icon: 'pi-question-circle',
+  },
+]
+
+const INTAKE_PANELS_BY_TYPE = {
+  'Troubleshooting / incident': ['criticality', 'users', 'technologies', 'version', 'model'],
+  'Support request': ['criticality', 'users', 'technologies', 'version', 'model'],
+  'New project / implementation': ['technologies', 'version', 'model'],
+  'Assessment / discovery': ['technologies'],
+  'General enquiry': ['technologies', 'version', 'model'],
+}
+
 const isOpen = ref(false)
 const showInvite = ref(false)
 const inputText = ref('')
@@ -250,15 +316,18 @@ const inputEl = ref(null)
 const services = SERVICES
 const criticalityOptions = CRITICALITY
 const technologyOptions = TECHNOLOGIES
+const enquiryTypes = ENQUIRY_TYPES
 
 const phase = ref('intake')
 const intakeTextStep = ref(0)
-const intakePanel = ref(null)
+const intakePanel = ref('enquiry_type')
+const intakeQueue = ref([])
 const canSubmit = ref(false)
 let inviteTimer = null
 let remindTimer = null
 
 const panelValues = ref({
+  enquiry_type: '',
   service: '',
   criticality: '',
   users_affected: '',
@@ -269,6 +338,7 @@ const panelValues = ref({
 })
 
 const profile = ref({
+  enquiry_type: '',
   name: '',
   email: '',
   company: '',
@@ -287,7 +357,7 @@ const messages = ref([
   {
     role: 'assistant',
     content:
-      "Hi! I'm JPbot — the fastest way to contact Nexxus Tech. I'll ask a few quick questions, then learn about your needs. What's your full name?",
+      "Hi! I'm JPbot — the fastest way to contact Nexxus Tech. First, tell us what kind of help you need using the options below.",
   },
 ])
 
@@ -321,7 +391,7 @@ const openFromInvite = () => {
   showInvite.value = false
   isOpen.value = true
   nextTick(() => {
-    inputEl.value?.focus()
+    if (!intakePanel.value) inputEl.value?.focus()
     scrollToBottom()
   })
 }
@@ -338,41 +408,95 @@ const toggleChat = () => {
   else openFromInvite()
 }
 
+const discoveryPromptForType = (type) => {
+  const prompts = {
+    'Troubleshooting / incident':
+      'Describe what is happening — symptoms, error messages, and when it started.',
+    'Support request':
+      'What do you need help with in your environment? Include any recent changes if relevant.',
+    'New project / implementation':
+      'Tell us about the project — goals, scope, timeline, and what success looks like.',
+    'Assessment / discovery':
+      'What would you like us to assess or advise on? Any constraints or deadlines?',
+    'General enquiry': 'How can our team help you today?',
+  }
+  return prompts[type] || 'Please share a few more details so we can route you to the right specialist.'
+}
+
+const applyIntakeDefaults = () => {
+  if (!profile.value.criticality) {
+    profile.value.criticality = 'Planning — not happening yet'
+  }
+  if (!profile.value.users_affected) {
+    const preEngagement =
+      profile.value.enquiry_type === 'New project / implementation' ||
+      profile.value.enquiry_type === 'Assessment / discovery'
+    profile.value.users_affected = preEngagement
+      ? 'Not applicable (pre-engagement)'
+      : 'Not specified'
+  }
+}
+
+const panelPrompt = (panel) => {
+  const prompts = {
+    criticality: 'How critical is this right now?',
+    users: 'How many users or systems are affected?',
+    technologies: 'Which technologies are involved? Select all that apply.',
+    version: 'Platform version? (optional — you can skip.)',
+    model: 'Platform model? (optional — you can skip.)',
+  }
+  return prompts[panel] || ''
+}
+
+const goToNextIntakePanel = () => {
+  if (intakeQueue.value.length) {
+    const next = intakeQueue.value.shift()
+    intakePanel.value = next
+    pushAssistant(panelPrompt(next))
+    scrollToBottom()
+    return
+  }
+  applyIntakeDefaults()
+  intakePanel.value = null
+  startDiscovery()
+  scrollToBottom()
+}
+
 const startDiscovery = () => {
   phase.value = 'discovery'
-  const techLabel = profile.value.technologies.join(', ')
   pushAssistant(
-    `Thanks, ${profile.value.name}! You're looking at ${profile.value.service} ` +
-      `(${profile.value.criticality.toLowerCase()}). ` +
-      `Technologies: ${techLabel}. ` +
-      'Briefly describe the issue or goal — error messages and when it started help.'
+    `Thanks, ${profile.value.name}! ${discoveryPromptForType(profile.value.enquiry_type)}`
   )
   discoveryMessages.value = []
   canSubmit.value = false
 }
 
+const confirmEnquiryType = () => {
+  profile.value.enquiry_type = panelValues.value.enquiry_type
+  pushUser(profile.value.enquiry_type)
+  intakePanel.value = null
+  intakeTextStep.value = 0
+  pushAssistant("Great. What's your full name?")
+  scrollToBottom()
+}
+
 const confirmService = () => {
   profile.value.service = panelValues.value.service
   pushUser(profile.value.service)
-  intakePanel.value = 'criticality'
-  pushAssistant('How critical is this issue right now?')
-  scrollToBottom()
+  intakeQueue.value = [...(INTAKE_PANELS_BY_TYPE[profile.value.enquiry_type] || ['technologies'])]
+  goToNextIntakePanel()
 }
 
 const confirmCriticality = () => {
   profile.value.criticality = panelValues.value.criticality
   pushUser(profile.value.criticality)
-  intakePanel.value = 'users'
-  pushAssistant('How many users or systems are affected?')
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const confirmUsers = () => {
   profile.value.users_affected = panelValues.value.users_affected.trim()
   pushUser(profile.value.users_affected)
-  intakePanel.value = 'technologies'
-  pushAssistant('Which technologies are involved? Select all that apply.')
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const confirmTechnologies = () => {
@@ -380,41 +504,31 @@ const confirmTechnologies = () => {
   profile.value.technology_other = panelValues.value.technology_other.trim()
   const label = profile.value.technologies.join(', ')
   pushUser(label + (profile.value.technology_other ? ` (${profile.value.technology_other})` : ''))
-  intakePanel.value = 'version'
-  pushAssistant('Platform version? (optional — you can skip.)')
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const skipVersion = () => {
   profile.value.platform_version = ''
   pushUser('(version skipped)')
-  intakePanel.value = 'model'
-  pushAssistant('Platform model? (optional — you can skip.)')
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const confirmVersion = () => {
   profile.value.platform_version = panelValues.value.platform_version.trim()
   pushUser(profile.value.platform_version || '(not provided)')
-  intakePanel.value = 'model'
-  pushAssistant('Platform model? (optional — you can skip.)')
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const skipModel = () => {
   profile.value.platform_model = ''
   pushUser('(model skipped)')
-  intakePanel.value = null
-  startDiscovery()
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const confirmModel = () => {
   profile.value.platform_model = panelValues.value.platform_model.trim()
   pushUser(profile.value.platform_model || '(not provided)')
-  intakePanel.value = null
-  startDiscovery()
-  scrollToBottom()
+  goToNextIntakePanel()
 }
 
 const handleTextIntake = (text) => {
@@ -889,6 +1003,47 @@ onUnmounted(() => {
 }
 .tech-check input { accent-color: var(--nt-primary); }
 .tech-other { margin-top: 4px; }
+.enquiry-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.enquiry-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--nt-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--nt-text-light);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+}
+.enquiry-option .pi {
+  color: var(--nt-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+.enquiry-option.selected {
+  border-color: var(--nt-primary);
+  background: rgba(0, 123, 167, 0.15);
+}
+.enquiry-option-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--nt-white);
+}
+.enquiry-option-desc {
+  font-size: 0.72rem;
+  color: var(--nt-text-muted);
+  line-height: 1.35;
+}
 .panel-actions { display: flex; gap: 8px; }
 .btn-skip {
   flex: 1;
