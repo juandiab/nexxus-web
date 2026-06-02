@@ -96,6 +96,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import { renderMarkdown } from '@/utils/renderMarkdown.js'
 
 const route = useRoute()
 const post = ref(null)
