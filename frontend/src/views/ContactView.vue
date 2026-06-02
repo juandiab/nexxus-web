@@ -81,7 +81,7 @@
             <!-- Success / Error alert -->
             <div v-if="submitStatus === 'success'" class="alert alert-success">
               <i class="pi pi-check-circle"></i>
-              Message sent! We'll be in touch within 24 hours.
+              {{ successMessage }}
             </div>
             <div v-if="submitStatus === 'error'" class="alert alert-error">
               <i class="pi pi-times-circle"></i>
@@ -175,6 +175,7 @@ const errors = reactive({ name: '', email: '', message: '' })
 const submitting = ref(false)
 const submitStatus = ref('')
 const errorMessage = ref('')
+const successMessage = ref('')
 
 const expertise = [
   'WAF Policy Design', 'NetScaler ADC', 'F5 BIG-IP',
@@ -201,8 +202,9 @@ const handleSubmit = async () => {
   submitting.value = true
   submitStatus.value = ''
   try {
-    await axios.post('/api/contact', { ...form })
+    const { data } = await axios.post('/api/contact', { ...form })
     submitStatus.value = 'success'
+    successMessage.value = data.message || 'Thank you — your message has been received. We will be in touch within one business day.'
     form.name = form.email = form.company = form.service = form.message = ''
   } catch (err) {
     submitStatus.value = 'error'
@@ -221,7 +223,7 @@ const handleSubmit = async () => {
 }
 .page-hero-bg {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 40% 60%, rgba(0,123,167,0.12) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 40% 60%, rgba(91,79,232,0.12) 0%, transparent 60%);
 }
 .page-hero-content { position: relative; z-index: 1; }
 .page-hero-subtitle { font-size: 1.05rem; color: var(--nt-text-muted); margin-top: 16px; max-width: 540px; line-height: 1.75; }
@@ -252,7 +254,7 @@ input, select, textarea {
 input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.25); }
 input:focus, select:focus, textarea:focus {
   border-color: var(--nt-primary);
-  box-shadow: 0 0 0 3px rgba(0,123,167,0.15);
+  box-shadow: 0 0 0 3px rgba(91,79,232,0.15);
 }
 input.error, textarea.error { border-color: #EF4444; }
 select { appearance: none; cursor: pointer; }
@@ -286,8 +288,8 @@ textarea { resize: vertical; min-height: 140px; }
 .info-item { display: flex; align-items: flex-start; gap: 14px; }
 .info-icon {
   width: 40px; height: 40px;
-  background: rgba(0,123,167,0.12);
-  border: 1px solid rgba(0,123,167,0.25);
+  background: rgba(91,79,232,0.12);
+  border: 1px solid rgba(91,79,232,0.25);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   color: var(--nt-primary-l); flex-shrink: 0;
@@ -308,11 +310,11 @@ textarea { resize: vertical; min-height: 140px; }
   text-decoration: none;
   transition: var(--nt-transition);
 }
-.social-btn:hover { background: rgba(0,123,167,0.15); border-color: var(--nt-primary); color: var(--nt-primary-l); }
+.social-btn:hover { background: rgba(91,79,232,0.15); border-color: var(--nt-primary); color: var(--nt-primary-l); }
 
 .response-card {
-  background: rgba(0,168,224,0.06);
-  border: 1px solid rgba(0,168,224,0.2);
+  background: rgba(29,212,180,0.06);
+  border: 1px solid rgba(29,212,180,0.2);
   border-radius: var(--nt-radius);
   padding: 20px;
   display: flex; gap: 14px; align-items: flex-start;

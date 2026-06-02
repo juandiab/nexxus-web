@@ -84,6 +84,17 @@ website/
 
 ---
 
+## Contact Form Email
+
+The contact form sends two emails when SMTP is configured in `.env`:
+
+1. **Team notification** → `CONTACT_TO` (default: `contact@nexxus-tech.com`) with the enquiry details
+2. **Auto-reply** → the visitor's email with a branded confirmation
+
+Set `SMTP_USER`, `SMTP_PASS`, and optionally `CONTACT_FROM` (must be allowed by your mail provider).
+
+---
+
 ## Configuring the AI Chat
 
 1. Set in `.env`:
