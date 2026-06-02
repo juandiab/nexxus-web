@@ -131,13 +131,16 @@ Across all of these flows, the pattern is the same: **memory-backed guidance →
 
 ### Diagnostics
 
-Built for the “is it the network or NetScaler?” moment:
+Built for the “is it the network or NetScaler?” moment. JPilot does not only answer in chat—it can **recommend and run the right diagnostic tools** on the appliance (read-only unless you approve a change), aligned with how senior ADC engineers triage incidents.
 
 | Question | Tooling |
 |----------|---------|
 | Can the appliance reach a host? | `ping`, `ping6`, `traceroute` via diagnostics |
 | Is **TCP port** open on a backend? | Telnet / TCP port check from the appliance |
-| Counters, events, performance | Read-only counter collection |
+| Counters, events, performance snapshot | **`nsconmsg`** — collect and summarize counter/event output for review |
+| Packet-level or flow troubleshooting | **`nstrace`** — guided capture filters and interpretation (with guardrails on scope and duration) |
+
+**Recommended diagnostic toolkit:** for deeper incidents, JPilot steers you toward **`nsconmsg`** (fast health/counter picture) and **`nstrace`** (targeted captures) when symptoms point to drops, resets, or policy hits—instead of dumping raw CLI on you without context.
 
 **Auto port check:** messages that include `host:port` can trigger a telnet check from the appliance and return **open**, **refused**, or **no_response** before the model picks a tool—speeding up triage.
 
@@ -182,6 +185,10 @@ Optional **managed JPilot cloud** for UI, orchestration, and integrations, paire
 
 **ChatOps** in the channels your NOC and application teams already use: ask questions, trigger approved diagnostics, and receive structured summaries without opening the full admin UI.
 
+### Multi-vendor infrastructure (future)
+
+Later releases will extend JPilot beyond NetScaler to **additional technologies**—**routers**, **firewalls**, **F5**, and other platforms—as long as they expose **APIs** and/or **SSH** access. JPilot will **learn how to interact** with each stack (memory files, tool adapters, and validated command surfaces) so administrators can complete requests **faster and safer** from one copilot: same pattern of guidance, clarifying questions, approval gates, and audited execution—whether you are on ADC, perimeter, or load-balancing gear.
+
 Contributions and feedback are welcome on the [GitHub repository](https://github.com/juandiab/nsagent) as these features land.
 
 ## How this fits Nexxus engagements
@@ -215,7 +222,7 @@ def main():
                 "Automation",
                 "Roadmap",
             ]
-            post["read_time"] = 9
+            post["read_time"] = 10
             break
     else:
         raise SystemExit("Post id 5 not found")
