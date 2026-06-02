@@ -32,6 +32,23 @@ cd website/
 docker compose up -d --build
 ```
 
+### Frontend-only deploy (after `git pull`)
+If UI changes do not appear, rebuild without cache and verify the bundle:
+
+```bash
+./scripts/deploy-frontend.sh
+```
+
+Or manually:
+
+```bash
+git pull origin main
+docker compose build --no-cache --build-arg GIT_SHA=$(git rev-parse --short HEAD) frontend
+docker compose up -d frontend
+```
+
+Then hard-refresh the browser (Ctrl+Shift+R) or use a private window.
+
 The site will be available at:
 - **https://nexxus-tech.com** (port 443)
 - **http://nexxus-tech.com** → redirects to HTTPS (port 80)
@@ -81,17 +98,6 @@ website/
     └── data/
         └── blog_posts.json   ← Add posts here
 ```
-
----
-
-## Contact Form Email
-
-The contact form sends two emails when SMTP is configured in `.env`:
-
-1. **Team notification** → `CONTACT_TO` (default: `contact@nexxus-tech.com`) with the enquiry details
-2. **Auto-reply** → the visitor's email with a branded confirmation
-
-Set `SMTP_USER`, `SMTP_PASS`, and optionally `CONTACT_FROM` (must be allowed by your mail provider).
 
 ---
 

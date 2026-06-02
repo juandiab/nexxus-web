@@ -12,36 +12,7 @@
             Deployed across 54+ countries.
           </p>
           <div class="footer-social">
-            <a
-              href="https://www.linkedin.com/in/jotalvaro/"
-              class="social-btn"
-              aria-label="LinkedIn"
-              title="LinkedIn"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i class="pi pi-linkedin"></i>
-            </a>
-            <a
-              href="https://x.com/NexxusTech"
-              class="social-btn"
-              aria-label="X"
-              title="X"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIconX />
-            </a>
-            <a
-              href="https://github.com/juandiab"
-              class="social-btn"
-              aria-label="GitHub"
-              title="GitHub"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i class="pi pi-github"></i>
-            </a>
+            <SocialLinks variant="icons" />
           </div>
         </div>
 
@@ -99,6 +70,10 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+import SocialLinks from '@/components/shared/SocialLinks.vue'
+</script>
 
 <style scoped>
 .footer {

@@ -132,17 +132,7 @@
 
             <div class="social-section">
               <span class="info-label">Social Media</span>
-              <div class="social-row">
-                <a href="#" class="social-btn" title="LinkedIn (coming soon)">
-                  <i class="pi pi-linkedin"></i> LinkedIn
-                </a>
-                <a href="#" class="social-btn" title="Twitter (coming soon)">
-                  <i class="pi pi-twitter"></i> Twitter
-                </a>
-                <a href="#" class="social-btn" title="GitHub (coming soon)">
-                  <i class="pi pi-github"></i> GitHub
-                </a>
-              </div>
+              <SocialLinks variant="labels" />
             </div>
           </div>
 
@@ -169,6 +159,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import axios from 'axios'
+import SocialLinks from '@/components/shared/SocialLinks.vue'
 
 const form = reactive({ name: '', email: '', company: '', service: '', message: '' })
 const errors = reactive({ name: '', email: '', message: '' })
@@ -297,17 +288,6 @@ textarea { resize: vertical; min-height: 140px; }
 .info-item a:hover { color: var(--nt-secondary); }
 
 .social-section .info-label { margin-bottom: 10px; }
-.social-row { display: flex; gap: 8px; flex-wrap: wrap; }
-.social-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
-  color: var(--nt-text-muted); font-size: 0.8rem; font-weight: 600;
-  text-decoration: none;
-  transition: var(--nt-transition);
-}
 .social-btn:hover { background: rgba(91,79,232,0.15); border-color: var(--nt-primary); color: var(--nt-primary-l); }
 
 .response-card {
