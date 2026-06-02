@@ -105,28 +105,6 @@ const loading = ref(true)
 const formatDate = (d) =>
   new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
-// Very simple Markdown → HTML renderer
-const renderMarkdown = (md) => {
-  if (!md) return ''
-  return md
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/```[\w]*\n([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/^(?!<[h|u|o|l|p|c])/gm, '<p>')
-    .replace(/(<p>[\s\S]*?)(?=<h[1-6]|<ul|<pre|$)/g, '$1</p>')
-    .replace(/<p><\/p>/g, '')
-    .replace(/<p>(<[hup])/g, '$1')
-    .replace(/(<\/[hup][^>]*>)<\/p>/g, '$1')
-}
-
 const renderedContent = computed(() => post.value ? renderMarkdown(post.value.content) : '')
 
 const relatedPosts = computed(() => {
@@ -213,8 +191,8 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
 .markdown-body :deep(ul) { padding-left: 24px; margin: 12px 0 20px; }
 .markdown-body :deep(li) { margin: 6px 0; color: var(--nt-text-light); }
 .markdown-body :deep(code) {
-  background: rgba(0,123,167,0.15);
-  border: 1px solid rgba(0,123,167,0.25);
+  background: rgba(91,79,232,0.15);
+  border: 1px solid rgba(91,79,232,0.25);
   border-radius: 4px;
   padding: 2px 8px;
   font-size: 0.875em;
@@ -268,7 +246,7 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
   border: 1px solid rgba(255,255,255,0.05);
   transition: var(--nt-transition);
 }
-.related-post:hover { border-color: var(--nt-border); background: rgba(0,123,167,0.08); }
+.related-post:hover { border-color: var(--nt-border); background: rgba(91,79,232,0.08); }
 .related-post p { font-size: 0.82rem; color: var(--nt-text-light); margin: 6px 0 0; line-height: 1.4; }
 
 @media (max-width: 1024px) {

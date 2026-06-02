@@ -1,0 +1,15 @@
+{
+  "id": "REPLACE_ID",
+  "slug": "your-article-slug-here",
+  "title": "Your Article Title",
+  "excerpt": "One or two sentences summarizing the article for the blog listing card. Plain text only.",
+  "content": "# Your Article Title\n\nOpening paragraph that sets context for the reader.\n\n## Section heading\n\nExplain the topic in clear, practitioner-focused language.\n\n### Subsection\n\n- Key point one\n- Key point two\n\n## Example configuration\n\n```\n# CLI or config snippet\nadd appfw profile EXAMPLE -type HTML\n```\n\n## Conclusion\n\nSummarize outcomes and next steps.\n\n*[Contact us](/contact) to discuss your environment.*",
+  "category": "WAF & Security",
+  "tags": ["NetScaler", "Security"],
+  "author": "Juan Pablo Otalvaro",
+  "author_role": "Principal Cloud & Security Architect",
+  "date": "2026-06-02",
+  "read_time": 5,
+  "featured": false,
+  "cover_color": "#007BA7"
+}

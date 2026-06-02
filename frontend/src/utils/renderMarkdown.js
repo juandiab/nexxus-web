@@ -1,0 +1,39 @@
+/**
+ * Renders blog Markdown with consistent site styling.
+ * Uses the same rules as existing posts (GFM-style subset).
+ */
+export function renderMarkdown(md) {
+  if (!md) return ''
+
+  let html = md
+    .replace(/\r\n/g, '\n')
+    // Fenced code blocks (before inline transforms)
+    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, _lang, code) => {
+      const escaped = code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+      return `<pre><code>${escaped}</code></pre>`
+    })
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)+/g, (block) => `<ul>${block}</ul>`)
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+
+  const blocks = html.split(/\n\n+/)
+  html = blocks
+    .map((block) => {
+      const trimmed = block.trim()
+      if (!trimmed) return ''
+      if (/^<(h[1-6]|ul|pre|blockquote)/.test(trimmed)) return trimmed
+      return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`
+    })
+    .join('\n')
+
+  return html
+}

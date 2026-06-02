@@ -15,4 +15,4 @@ class BlogPost(BaseModel):
     date: str
     read_time: int
     featured: bool = False
-    cover_color: str = "#5B4FE8"
+    cover_color: str = "#007BA7"

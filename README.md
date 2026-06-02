@@ -32,23 +32,6 @@ cd website/
 docker compose up -d --build
 ```
 
-### Frontend-only deploy (after `git pull`)
-If UI changes do not appear, rebuild without cache and verify the bundle:
-
-```bash
-./scripts/deploy-frontend.sh
-```
-
-Or manually:
-
-```bash
-git pull origin main
-docker compose build --no-cache --build-arg GIT_SHA=$(git rev-parse --short HEAD) frontend
-docker compose up -d frontend
-```
-
-Then hard-refresh the browser (Ctrl+Shift+R) or use a private window.
-
 The site will be available at:
 - **https://nexxus-tech.com** (port 443)
 - **http://nexxus-tech.com** → redirects to HTTPS (port 80)
@@ -113,9 +96,22 @@ website/
 
 ---
 
-## Adding Blog Posts
+## Managing the blog
 
-Edit `backend/data/blog_posts.json` — follow the existing post format. No restart needed.
+Articles live in `backend/data/blog_posts.json` as Markdown. Full guide: **[docs/BLOG.md](docs/BLOG.md)**.
+
+**Add a new post:**
+
+```bash
+python3 scripts/new-blog-post.py \
+  --title "Your Article Title" \
+  --category "WAF & Security" \
+  --content-file path/to/draft.md
+```
+
+Then on the server: `docker compose restart backend` (no frontend rebuild needed).
+
+Copy `backend/data/blog_post.template.json` if you prefer to edit JSON by hand.
 
 ---
 
