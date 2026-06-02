@@ -12,13 +12,34 @@
             Deployed across 54+ countries.
           </p>
           <div class="footer-social">
-            <a href="#" class="social-btn" aria-label="LinkedIn" title="LinkedIn (coming soon)">
+            <a
+              href="https://www.linkedin.com/in/jotalvaro/"
+              class="social-btn"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i class="pi pi-linkedin"></i>
             </a>
-            <a href="#" class="social-btn" aria-label="Twitter" title="Twitter/X (coming soon)">
-              <i class="pi pi-twitter"></i>
+            <a
+              href="https://x.com/NexxusTech"
+              class="social-btn"
+              aria-label="X"
+              title="X"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SocialIconX />
             </a>
-            <a href="#" class="social-btn" aria-label="GitHub" title="GitHub (coming soon)">
+            <a
+              href="https://github.com/juandiab"
+              class="social-btn"
+              aria-label="GitHub"
+              title="GitHub"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i class="pi pi-github"></i>
             </a>
           </div>
@@ -92,7 +113,7 @@
   top: -100px; left: 50%;
   transform: translateX(-50%);
   width: 600px; height: 200px;
-  background: radial-gradient(ellipse, rgba(0,123,167,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(91,79,232,0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 .footer-grid {

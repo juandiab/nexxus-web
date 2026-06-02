@@ -81,7 +81,7 @@
             <!-- Success / Error alert -->
             <div v-if="submitStatus === 'success'" class="alert alert-success">
               <i class="pi pi-check-circle"></i>
-              {{ successMessage }}
+              Message sent! We'll be in touch within 24 hours.
             </div>
             <div v-if="submitStatus === 'error'" class="alert alert-error">
               <i class="pi pi-times-circle"></i>
@@ -175,7 +175,6 @@ const errors = reactive({ name: '', email: '', message: '' })
 const submitting = ref(false)
 const submitStatus = ref('')
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const expertise = [
   'WAF Policy Design', 'NetScaler ADC', 'F5 BIG-IP',
@@ -202,9 +201,8 @@ const handleSubmit = async () => {
   submitting.value = true
   submitStatus.value = ''
   try {
-    const { data } = await axios.post('/api/contact', { ...form })
+    await axios.post('/api/contact', { ...form })
     submitStatus.value = 'success'
-    successMessage.value = data.message || 'Thank you — your message has been received. We will be in touch within one business day.'
     form.name = form.email = form.company = form.service = form.message = ''
   } catch (err) {
     submitStatus.value = 'error'
@@ -301,7 +299,7 @@ textarea { resize: vertical; min-height: 140px; }
 .social-section .info-label { margin-bottom: 10px; }
 .social-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .social-btn {
-  display: flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 14px;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
