@@ -78,7 +78,7 @@ const services = [
     id: 'waf',
     label: 'WAF & API Protection',
     icon: 'pi pi-shield',
-    iconBg: 'linear-gradient(135deg,#5B4FE8,#3D33C0)',
+    iconBg: 'linear-gradient(135deg,#007BA7,#005F7F)',
     light: false,
     reverse: false,
     title: 'Web Application Firewall & API Protection',
@@ -103,7 +103,7 @@ const services = [
     id: 'netscaler',
     label: 'Application Delivery Controllers',
     icon: 'pi pi-server',
-    iconBg: 'linear-gradient(135deg,#1DD4B4,#0BA892)',
+    iconBg: 'linear-gradient(135deg,#007BA7,#005F7F)',
     light: true,
     reverse: true,
     title: 'NetScaler ADC & Application Delivery',
@@ -128,7 +128,7 @@ const services = [
     id: 'zerotrust',
     label: 'Zero-Trust Architecture',
     icon: 'pi pi-lock',
-    iconBg: 'linear-gradient(135deg,#5B4FE8,#1DD4B4)',
+    iconBg: 'linear-gradient(135deg,#007BA7,#007BA7)',
     light: false,
     reverse: false,
     title: 'Zero-Trust Architecture & IAM',
@@ -153,7 +153,7 @@ const services = [
     id: 'cloud',
     label: 'Cloud & Multicloud Security',
     icon: 'pi pi-cloud',
-    iconBg: 'linear-gradient(135deg,#0C3A6B,#5B4FE8)',
+    iconBg: 'linear-gradient(135deg,#38383D,#007BA7)',
     light: true,
     reverse: true,
     title: 'Multicloud Security Architecture',
@@ -178,7 +178,7 @@ const services = [
     id: 'ai',
     label: 'AI & Automation',
     icon: 'pi pi-bolt',
-    iconBg: 'linear-gradient(135deg,#1DD4B4,#5B4FE8)',
+    iconBg: 'linear-gradient(135deg,#007BA7,#007BA7)',
     light: false,
     reverse: false,
     title: 'AI-Powered Infrastructure & Automation',
@@ -215,7 +215,7 @@ const services = [
 .page-hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 50%, rgba(91,79,232,0.15) 0%, transparent 65%);
+  background: radial-gradient(ellipse at 30% 50%, rgba(0,123,167,0.15) 0%, transparent 65%);
 }
 .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
 .page-hero-subtitle {
@@ -315,7 +315,7 @@ const services = [
   position: absolute; top: -60px; left: 50%;
   transform: translateX(-50%);
   width: 300px; height: 150px;
-  background: radial-gradient(ellipse, rgba(91,79,232,0.2) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(0,123,167,0.2) 0%, transparent 70%);
   pointer-events: none;
 }
 .cta-box h2 { margin: 12px 0 16px; }

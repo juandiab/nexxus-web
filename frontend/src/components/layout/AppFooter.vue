@@ -92,7 +92,7 @@
   top: -100px; left: 50%;
   transform: translateX(-50%);
   width: 600px; height: 200px;
-  background: radial-gradient(ellipse, rgba(91,79,232,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(0,123,167,0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 .footer-grid {

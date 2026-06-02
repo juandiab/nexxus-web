@@ -258,7 +258,7 @@ const services = [
   {
     id: 'waf',
     icon: 'pi pi-shield',
-    bg: 'linear-gradient(135deg,rgba(91,79,232,0.2),rgba(91,79,232,0.05))',
+    bg: 'linear-gradient(135deg,rgba(0,123,167,0.2),rgba(0,123,167,0.05))',
     title: 'WAF & API Protection',
     desc: 'Enterprise-grade Web Application Firewall design, deployment, and tuning for NetScaler ADC and F5 BIG-IP. Bot management, OWASP Top 10, and API gateway security.',
     tags: ['NetScaler WAF', 'F5', 'OWASP', 'Bot Management'],
@@ -266,7 +266,7 @@ const services = [
   {
     id: 'netscaler',
     icon: 'pi pi-server',
-    bg: 'linear-gradient(135deg,rgba(29,212,180,0.18),rgba(29,212,180,0.04))',
+    bg: 'linear-gradient(135deg,rgba(0,168,224,0.18),rgba(0,168,224,0.04))',
     title: 'NetScaler / ADC',
     desc: 'Full lifecycle NetScaler ADC services — high availability, SSL offload, GSLB, content switching, and performance optimization at any scale.',
     tags: ['NetScaler', 'ADC', 'GSLB', 'SSL Offload'],
@@ -274,7 +274,7 @@ const services = [
   {
     id: 'zerotrust',
     icon: 'pi pi-lock',
-    bg: 'linear-gradient(135deg,rgba(91,79,232,0.2),rgba(29,212,180,0.08))',
+    bg: 'linear-gradient(135deg,rgba(0,123,167,0.2),rgba(0,168,224,0.08))',
     title: 'Zero-Trust Architecture',
     desc: 'End-to-end Zero-Trust transformations combining NetScaler Gateway, Okta, Azure AD, and DUO — proven across Fortune 500 and government deployments.',
     tags: ['Zero-Trust', 'Okta', 'Azure AD', 'DUO'],
@@ -282,7 +282,7 @@ const services = [
   {
     id: 'cloud',
     icon: 'pi pi-cloud',
-    bg: 'linear-gradient(135deg,rgba(12,58,107,0.5),rgba(91,79,232,0.1))',
+    bg: 'linear-gradient(135deg,rgba(56,56,61,0.5),rgba(0,123,167,0.1))',
     title: 'Multicloud Security',
     desc: 'Unified security posture across AWS, Azure, and on-premises. Cloud Security Posture Management, cloud-native WAF, and secure access service edge (SASE).',
     tags: ['AWS', 'Azure', 'CSPM', 'SASE'],
@@ -290,7 +290,7 @@ const services = [
   {
     id: 'ai',
     icon: 'pi pi-bolt',
-    bg: 'linear-gradient(135deg,rgba(29,212,180,0.18),rgba(91,79,232,0.12))',
+    bg: 'linear-gradient(135deg,rgba(0,168,224,0.18),rgba(0,123,167,0.12))',
     title: 'AI & Automation',
     desc: 'AI-powered NetScaler administration, automated WAF policy generation, configuration drift detection, and LLM-driven security operations.',
     tags: ['Python', 'LLM', 'NITRO API', 'Automation'],
@@ -298,7 +298,7 @@ const services = [
   {
     id: 'citrix',
     icon: 'pi pi-desktop',
-    bg: 'linear-gradient(135deg,rgba(91,79,232,0.15),rgba(12,25,41,0.3))',
+    bg: 'linear-gradient(135deg,rgba(0,123,167,0.15),rgba(38,38,42,0.3))',
     title: 'Citrix Virtual Apps & Desktops',
     desc: 'Expert design and delivery of Citrix Virtual Apps & Desktops environments, Citrix Cloud, and DaaS migrations with security-first architecture.',
     tags: ['Citrix Cloud', 'VAD', 'DaaS', 'CVAD'],
@@ -389,7 +389,7 @@ function initHeroCanvas() {
         const dist = Math.sqrt(dx * dx + dy * dy)
         if (dist < 150) {
           const alpha = (1 - dist / 150) * 0.25
-          ctx.strokeStyle = `rgba(91,79,232,${alpha})`
+          ctx.strokeStyle = `rgba(0,123,167,${alpha})`
           ctx.lineWidth = 0.8
           ctx.beginPath()
           ctx.moveTo(nodes[i].x, nodes[i].y)
@@ -403,7 +403,7 @@ function initHeroCanvas() {
     nodes.forEach((n) => {
       ctx.beginPath()
       ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
-      ctx.fillStyle = 'rgba(123,111,255,0.7)'
+      ctx.fillStyle = 'rgba(0,168,224,0.7)'
       ctx.fill()
     })
 
@@ -437,7 +437,7 @@ onUnmounted(() => {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 60% 50%, rgba(91,79,232,0.12) 0%, transparent 65%),
+  background: radial-gradient(ellipse at 60% 50%, rgba(0,123,167,0.12) 0%, transparent 65%),
               linear-gradient(180deg, transparent 60%, var(--nt-dark) 100%);
 }
 .hero-content {
@@ -451,8 +451,8 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: rgba(91,79,232,0.1);
-  border: 1px solid rgba(91,79,232,0.3);
+  background: rgba(0,123,167,0.1);
+  border: 1px solid rgba(0,123,167,0.3);
   border-radius: 100px;
   padding: 8px 18px;
   font-size: 0.8rem;
@@ -505,7 +505,7 @@ onUnmounted(() => {
 .tech-pill:hover {
   border-color: var(--nt-primary);
   color: var(--nt-primary-l);
-  background: rgba(91,79,232,0.08);
+  background: rgba(0,123,167,0.08);
 }
 .hero-scroll-hint {
   position: absolute;
@@ -627,8 +627,8 @@ onUnmounted(() => {
 }
 .why-check {
   width: 28px; height: 28px;
-  background: rgba(29,212,180,0.12);
-  border: 1px solid rgba(29,212,180,0.3);
+  background: rgba(0,168,224,0.12);
+  border: 1px solid rgba(0,168,224,0.3);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
@@ -675,7 +675,7 @@ onUnmounted(() => {
   text-align: center;
   padding: 28px 24px;
 }
-.industry-card:hover { box-shadow: 0 8px 32px rgba(91,79,232,0.12); border-color: rgba(91,79,232,0.3); transform: translateY(-3px); }
+.industry-card:hover { box-shadow: 0 8px 32px rgba(0,123,167,0.12); border-color: rgba(0,123,167,0.3); transform: translateY(-3px); }
 .industry-icon {
   width: 52px; height: 52px;
   background: linear-gradient(135deg, var(--nt-primary), var(--nt-secondary));
@@ -755,7 +755,7 @@ onUnmounted(() => {
   top: -60px; left: 50%;
   transform: translateX(-50%);
   width: 400px; height: 200px;
-  background: radial-gradient(ellipse, rgba(91,79,232,0.2) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(0,123,167,0.2) 0%, transparent 70%);
   pointer-events: none;
 }
 .cta-title {

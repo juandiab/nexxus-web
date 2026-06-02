@@ -132,7 +132,7 @@ onMounted(async () => {
 }
 .page-hero-bg {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 70%, rgba(29,212,180,0.1) 0%, transparent 65%);
+  background: radial-gradient(ellipse at 50% 70%, rgba(0,168,224,0.1) 0%, transparent 65%);
 }
 .page-hero-content { position: relative; z-index: 1; }
 .page-hero-subtitle { font-size: 1.05rem; color: var(--nt-text-muted); margin-top: 16px; max-width: 560px; line-height: 1.75; }

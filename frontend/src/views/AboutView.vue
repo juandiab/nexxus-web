@@ -175,7 +175,7 @@ const presence = [
 }
 .page-hero-bg {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 70% 50%, rgba(91,79,232,0.15) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 70% 50%, rgba(0,123,167,0.15) 0%, transparent 60%);
 }
 .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
 .page-hero-subtitle { font-size: 1.1rem; color: var(--nt-text-muted); margin-top: 16px; max-width: 560px; line-height: 1.75; }
@@ -185,8 +185,8 @@ const presence = [
 .value-item { display: flex; gap: 16px; align-items: flex-start; }
 .value-icon {
   width: 44px; height: 44px; border-radius: 12px;
-  background: rgba(91,79,232,0.12);
-  border: 1px solid rgba(91,79,232,0.25);
+  background: rgba(0,123,167,0.12);
+  border: 1px solid rgba(0,123,167,0.25);
   display: flex; align-items: center; justify-content: center;
   color: var(--nt-primary-l); font-size: 1rem; flex-shrink: 0;
 }
@@ -215,7 +215,7 @@ const presence = [
   font-size: 2.5rem;
   font-weight: 900;
   color: white;
-  box-shadow: 0 8px 32px rgba(91,79,232,0.35);
+  box-shadow: 0 8px 32px rgba(0,123,167,0.35);
 }
 .team-badges { display: flex; flex-direction: column; gap: 8px; align-items: center; }
 .team-name { font-size: 1.8rem; color: var(--nt-navy); margin-bottom: 4px; }

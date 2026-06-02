@@ -170,16 +170,16 @@ onMounted(() => {
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.3rem; color: white;
-  box-shadow: 0 4px 24px rgba(91,79,232,0.5);
+  box-shadow: 0 4px 24px rgba(0,123,167,0.5);
   transition: var(--nt-transition);
   position: relative;
 }
-.chat-bubble:hover { transform: scale(1.08); box-shadow: 0 6px 30px rgba(91,79,232,0.6); }
-.chat-bubble.active { background: linear-gradient(135deg, #3D33C0, #0BA892); }
+.chat-bubble:hover { transform: scale(1.08); box-shadow: 0 6px 30px rgba(0,123,167,0.6); }
+.chat-bubble.active { background: linear-gradient(135deg, #005F7F, #005F7F); }
 .bubble-ring {
   position: absolute; inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(91,79,232,0.3);
+  border: 2px solid rgba(0,123,167,0.3);
   animation: bubbleRing 2s ease-in-out infinite;
 }
 @keyframes bubbleRing {
@@ -216,7 +216,7 @@ onMounted(() => {
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(91,79,232,0.1);
+  box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,123,167,0.1);
   overflow: hidden;
 }
 
@@ -267,7 +267,7 @@ onMounted(() => {
   scroll-behavior: smooth;
 }
 .chat-messages::-webkit-scrollbar { width: 4px; }
-.chat-messages::-webkit-scrollbar-thumb { background: rgba(91,79,232,0.3); border-radius: 2px; }
+.chat-messages::-webkit-scrollbar-thumb { background: rgba(0,123,167,0.3); border-radius: 2px; }
 
 .chat-msg { display: flex; gap: 8px; align-items: flex-end; }
 .chat-msg--user { flex-direction: row-reverse; }

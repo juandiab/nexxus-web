@@ -213,8 +213,8 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
 .markdown-body :deep(ul) { padding-left: 24px; margin: 12px 0 20px; }
 .markdown-body :deep(li) { margin: 6px 0; color: var(--nt-text-light); }
 .markdown-body :deep(code) {
-  background: rgba(91,79,232,0.15);
-  border: 1px solid rgba(91,79,232,0.25);
+  background: rgba(0,123,167,0.15);
+  border: 1px solid rgba(0,123,167,0.25);
   border-radius: 4px;
   padding: 2px 8px;
   font-size: 0.875em;
@@ -268,7 +268,7 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
   border: 1px solid rgba(255,255,255,0.05);
   transition: var(--nt-transition);
 }
-.related-post:hover { border-color: var(--nt-border); background: rgba(91,79,232,0.08); }
+.related-post:hover { border-color: var(--nt-border); background: rgba(0,123,167,0.08); }
 .related-post p { font-size: 0.82rem; color: var(--nt-text-light); margin: 6px 0 0; line-height: 1.4; }
 
 @media (max-width: 1024px) {
