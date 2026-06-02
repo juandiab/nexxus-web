@@ -193,7 +193,7 @@
             @click="$router.push(`/blog/${post.slug}`)"
           >
             <div class="blog-card-header" :style="{ background: post.cover_color }">
-              <span class="tag tag-teal">{{ post.category }}</span>
+              <span class="tag tag-on-cover">{{ post.category }}</span>
             </div>
             <div class="blog-card-body">
               <h3 class="blog-title">{{ post.title }}</h3>

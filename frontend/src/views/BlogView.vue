@@ -37,7 +37,7 @@
           >
             <div class="blog-card-header" :style="{ background: post.cover_color }">
               <div class="blog-card-overlay"></div>
-              <span class="tag tag-teal">{{ post.category }}</span>
+              <span class="tag tag-on-cover">{{ post.category }}</span>
               <div v-if="post.featured" class="featured-badge">
                 <i class="pi pi-star-fill"></i> Featured
               </div>
@@ -172,6 +172,10 @@ onMounted(async () => {
 .blog-card-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.4) 100%);
+}
+.blog-card-header .tag-on-cover {
+  position: relative;
+  z-index: 1;
 }
 .featured-badge {
   position: absolute; top: 12px; right: 12px;

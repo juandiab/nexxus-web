@@ -8,7 +8,7 @@
       <section class="post-hero" :style="{ background: post.cover_color }">
         <div class="post-hero-overlay"></div>
         <div class="container post-hero-content">
-          <span class="tag tag-teal">{{ post.category }}</span>
+          <span class="tag tag-on-cover">{{ post.category }}</span>
           <h1>{{ post.title }}</h1>
           <div class="post-meta">
             <div class="post-author">
