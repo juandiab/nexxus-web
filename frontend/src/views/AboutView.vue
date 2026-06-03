@@ -128,17 +128,17 @@ const values = [
 const teamMembers = [
   {
     initials: 'JP',
-    name: 'Juan Pablo Otalvaro Aguirre',
+    name: 'Juan Pablo Otalvaro',
     role: 'Founder & Principal Cloud & Security Architect',
-    tagline: 'Zero-Trust · WAF & API Protection · Multicloud Security · IAM',
+    tagline: 'Zero-Trust · WAF & API Protection · Multicloud Security · AI & LLM Engineering',
     badges: [
       { label: 'Citrix SME' },
       { label: 'AWS Security', highlight: true },
-      { label: 'Zero-Trust' },
+      { label: 'AI & LLM Engineering' },
     ],
     bio: [
       'Principal Cloud & Security Architect with <strong>15+ years</strong> leading large-scale multicloud, hybrid, and on-premises security transformations across <strong>50+ countries</strong>. Recognized Subject Matter Expert in Web Application Firewall and API protection (Citrix NetScaler/ADC, F5), Zero-Trust Architecture, and secure application delivery for finance, defense, telecom, and government sectors.',
-      'Co-authored NetScaler certification exams (versions 10 and 11), recipient of the <em>Citrix SME of the Year 2013 & 2014</em> award, and a Citrix Education MVP. Delivered security transformations for UAE Ministry of Defense, Barclays, Emirates Airlines, Central Bank of Oman, United Nations, and Smart Dubai.',
+      'Designs, deploys, and customizes <strong>AI and LLM solutions</strong> for production—model selection, guardrails, RAG, and agent workflows integrated with enterprise infrastructure (including JPilot and NetScaler automation). Co-authored NetScaler certification exams (versions 10 and 11), recipient of the <em>Citrix SME of the Year 2013 & 2014</em> award, and a Citrix Education MVP. Delivered security transformations for UAE Ministry of Defense, Barclays, Emirates Airlines, Central Bank of Oman, United Nations, and Smart Dubai.',
     ],
     certs: [
       'AWS Certified Security – Specialty',
@@ -154,7 +154,8 @@ const teamMembers = [
       { category: 'Security', items: ['WAF', 'Zero-Trust', 'API Security', 'IAM', 'MFA', 'SASE', 'Bot Management'] },
       { category: 'ADC / Networking', items: ['NetScaler', 'F5 BIG-IP', 'GSLB', 'SD-WAN', 'SSL Offload'] },
       { category: 'Cloud', items: ['AWS', 'Azure', 'Azure AD', 'Okta', 'DUO', 'CSPM'] },
-      { category: 'Automation', items: ['Python', 'Node.js', 'GraphQL', 'OpenAI', 'NITRO API', 'Docker'] },
+      { category: 'AI & Automation', items: ['LLM Deployment', 'Model Customization', 'RAG & Agents', 'OpenAI', 'Python', 'Node.js', 'Docker'] },
+      { category: 'ADC Tooling', items: ['NITRO API', 'GraphQL', 'NetScaler Automation'] },
     ],
   },
   {
