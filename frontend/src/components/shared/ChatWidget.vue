@@ -7,7 +7,7 @@
       @click="closeChat"
     ></div>
 
-    <Transition name="chat-window">
+    <Transition name="chat-window" @after-enter="onChatWindowEntered">
       <div v-if="isOpen" class="chat-window" :class="`chat-window--${chatSize}`">
         <div class="chat-header">
           <div class="chat-header-info">
@@ -466,6 +466,19 @@ const scrollToBottom = async () => {
   if (messagesEl.value) messagesEl.value.scrollTop = messagesEl.value.scrollHeight
 }
 
+/** Force flex/grid to settle after open animation (avoids collapsed enquiry buttons). */
+const settleChatLayout = async () => {
+  await nextTick()
+  requestAnimationFrame(() => {
+    if (messagesEl.value) void messagesEl.value.offsetHeight
+    scrollToBottom()
+  })
+}
+
+const onChatWindowEntered = () => {
+  settleChatLayout()
+}
+
 const pushAssistant = (content) => messages.value.push({ role: 'assistant', content })
 const pushUser = (content) => messages.value.push({ role: 'user', content })
 const isValidEmail = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)
@@ -487,7 +500,7 @@ const openFromInvite = () => {
   isOpen.value = true
   nextTick(() => {
     if (!intakePanel.value) inputEl.value?.focus()
-    scrollToBottom()
+    settleChatLayout()
   })
 }
 
@@ -1171,6 +1184,7 @@ onUnmounted(() => {
   max-height: none;
   padding: 14px 16px 12px;
   gap: 10px;
+  overflow-y: auto;
 }
 .jpbot-contact-form {
   display: flex;
@@ -1247,14 +1261,10 @@ onUnmounted(() => {
 .enquiry-options {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(3.75rem, auto);
   gap: 8px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  flex: 0 0 auto;
   align-content: start;
-}
-.chat-intake-panel--choices .enquiry-options {
-  overflow-y: auto;
 }
 .enquiry-option {
   display: flex;
@@ -1270,7 +1280,7 @@ onUnmounted(() => {
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
   width: 100%;
-  min-height: 0;
+  min-height: 3.75rem;
 }
 .enquiry-option-text {
   display: flex;
@@ -1421,7 +1431,7 @@ onUnmounted(() => {
 .chat-window-enter-from,
 .chat-window-leave-to {
   opacity: 0;
-  transform: translateY(20px) scale(0.95);
+  transform: translateY(12px);
 }
 .icon-flip-enter-active,
 .icon-flip-leave-active {
