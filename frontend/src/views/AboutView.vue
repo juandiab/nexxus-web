@@ -185,6 +185,33 @@ const teamMembers = [
       { category: 'Emerging Tech', items: ['AI Data Modeling', 'Prompt Validation', 'AI Agent Testing'] },
     ],
   },
+  {
+    initials: 'VC',
+    name: 'Vanessa Cabrera Figueredo',
+    role: 'Principal Product Experience Designer · AI & Enterprise UX',
+    tagline: 'AI-Driven Experience · Human-Centered Design · Fintech & HealthTech · Data-Informed UX',
+    badges: [
+      { label: 'AI-Driven UX', highlight: true },
+      { label: 'Fintech & Payments' },
+      { label: 'Enterprise Platforms' },
+    ],
+    bio: [
+      'Product Experience Designer with <strong>10+ years</strong> of professional experience and <strong>6+ years</strong> specializing in product experience and digital product design. Expert in Design Thinking, AI-enabled experiences, and data-informed UX across payments, fintech, healthtech, proptech, and enterprise platforms—translating complex systems into clear experience strategies and actionable concepts that drive business outcomes.',
+      'Led human-centered digital experiences at Publicis Sapient for global enterprise clients including Invesco and Verizon, designing GenAI-powered workflows and data-intensive financial platforms. At Osigu, owned product experience strategy for RCM and payments SaaS across LATAM—including a Visa healthcare payments partnership and a payments platform that increased processing efficiency by <strong>40%</strong>. At Nueva EPS, designed experiences impacting <strong>8+ million users</strong> and raised NPS to <strong>80+</strong>. Based in Colombia; bilingual (Spanish native, English C1).',
+    ],
+    certs: [
+      'Certified Scrum Master (2020)',
+      'Customer Experience Certification – Umuntu (2020)',
+      "Master's Degree in Design & Innovation – IED (2019)",
+      'Postgraduate Degree in Design Management – Universidad Jorge Tadeo Lozano (2016)',
+    ],
+    skills: [
+      { category: 'Product & UX', items: ['Product Experience Strategy', 'Design Thinking', 'Service Design', 'Visual Storytelling', 'Prototyping'] },
+      { category: 'AI & Data', items: ['AI-Driven Experience Design', 'GenAI Workflows', 'Data-Informed Design', 'Decision Support UX'] },
+      { category: 'Domains', items: ['Fintech', 'Payments', 'HealthTech', 'PropTech', 'Enterprise Platforms'] },
+      { category: 'Tools & Leadership', items: ['Figma', 'Miro', 'Design Systems', 'Cross-Functional Leadership', 'Jira', 'Confluence'] },
+    ],
+  },
 ]
 
 const presence = [
