@@ -41,23 +41,12 @@ cp .env.example .env
 ```
 
 ### 2. Ensure SSL certs are in place
-Same layout as NSAgent — place PEM files in `nginx/ssl/` (mounted into the container at `/etc/nginx/ssl/`):
-
-| File | Purpose |
-|------|---------|
-| `cert.crt` | Server certificate **with full chain** (leaf + intermediates) |
-| `cert.key` | Private key matching the leaf |
+Same layout as NSAgent — place `cert.crt` (full chain) and `cert.key` in `nginx/ssl/`. See **[nginx/ssl/README.md](nginx/ssl/README.md)** for conversion steps, verification commands, and Docker volume notes.
 
 ```bash
 chmod 600 nginx/ssl/cert.key
 chmod 644 nginx/ssl/cert.crt
-```
-
-After updating certs, `docker compose restart nginx` is enough (no image rebuild). Override the host path with `SSL_CERTS_PATH` if needed.
-
-If you have separate CA files, concatenate into `cert.crt`:
-```bash
-cat leaf.crt intermediate.crt > nginx/ssl/cert.crt
+docker compose restart nginx   # after cert updates (no image rebuild)
 ```
 
 ### 3. Build and run
