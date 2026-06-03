@@ -53,12 +53,11 @@
         </div>
         <div class="team-carousel reveal">
           <Carousel
+            v-model:page="teamPage"
             :value="teamMembers"
             :numVisible="1"
             :numScroll="1"
-            :responsiveOptions="teamCarouselOptions"
             circular
-            :autoplayInterval="3000"
           >
             <template #item="{ data: member }">
               <div class="team-card">
@@ -129,13 +128,29 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted, ref } from 'vue'
 import Carousel from 'primevue/carousel'
 
-const teamCarouselOptions = [
-  { breakpoint: '1024px', numVisible: 1, numScroll: 1 },
-  { breakpoint: '767px', numVisible: 1, numScroll: 1 },
-  { breakpoint: '575px', numVisible: 1, numScroll: 1 },
-]
+const TEAM_AUTOPLAY_MS = 3000
+const teamPage = ref(0)
+let teamAutoplayTimer = null
+
+function startTeamAutoplay() {
+  stopTeamAutoplay()
+  teamAutoplayTimer = setInterval(() => {
+    teamPage.value = (teamPage.value + 1) % teamMembers.length
+  }, TEAM_AUTOPLAY_MS)
+}
+
+function stopTeamAutoplay() {
+  if (teamAutoplayTimer) {
+    clearInterval(teamAutoplayTimer)
+    teamAutoplayTimer = null
+  }
+}
+
+onMounted(startTeamAutoplay)
+onUnmounted(stopTeamAutoplay)
 
 const values = [
   { icon: 'pi pi-star', title: 'Principal-Only Delivery', desc: 'Every engagement is led by a principal-level architect. No juniors, no handoffs.' },
