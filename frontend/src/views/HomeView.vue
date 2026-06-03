@@ -249,7 +249,7 @@ const blogPosts = ref([])
 const stats = [
   { value: '15+',  label: 'Years of Experience' },
   { value: '54+',  label: 'Countries Served' },
-  { value: '500+', label: 'Projects Delivered' },
+  { value: '100+', label: 'Projects Delivered' },
   { value: '100%', label: 'Remote Capable' },
 ]
 
