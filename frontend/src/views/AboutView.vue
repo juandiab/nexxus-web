@@ -64,6 +64,9 @@
             <div class="team-card-right">
               <h2 class="team-name">{{ member.name }}</h2>
               <p class="team-role">{{ member.role }}</p>
+              <p v-if="member.email" class="team-email">
+                <a :href="`mailto:${member.email}`"><i class="pi pi-envelope"></i> {{ member.email }}</a>
+              </p>
               <p class="team-tagline">{{ member.tagline }}</p>
               <p v-for="(paragraph, pIndex) in member.bio" :key="pIndex" class="team-bio" v-html="paragraph"></p>
 
@@ -160,6 +163,7 @@ const teamMembers = [
   {
     initials: 'JL',
     name: 'Jhonny León',
+    email: 'jhonny.leon@nexxus-tech.com',
     role: 'Principal Engineer · Telecom & Cloud Solutions Architect',
     tagline: 'SS7 · Diameter · STP (EAGLE/EPAP) · DSR/DIH · OCI · vPIC · AI Data Modeling',
     badges: [
@@ -249,6 +253,10 @@ const presence = [
 .team-badges { display: flex; flex-direction: column; gap: 8px; align-items: center; }
 .team-name { font-size: 1.8rem; color: var(--nt-navy); margin-bottom: 4px; }
 .team-role { font-size: 1rem; font-weight: 600; color: var(--nt-primary); margin-bottom: 4px; }
+.team-email { font-size: 0.875rem; margin-bottom: 4px; }
+.team-email a { color: #64748B; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.team-email a:hover { color: var(--nt-primary); }
+.team-email .pi { font-size: 0.8rem; }
 .team-tagline { font-size: 0.82rem; color: #64748B; margin-bottom: 20px; letter-spacing: 0.03em; }
 .team-bio { font-size: 0.9rem; color: #374151; line-height: 1.75; margin-bottom: 12px; }
 .team-bio strong { color: var(--nt-navy); }
