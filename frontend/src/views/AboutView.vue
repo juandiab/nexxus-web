@@ -51,45 +51,56 @@
           <span class="section-label">The Team</span>
           <h2 class="section-title" style="color:var(--nt-navy)">Meet the Team</h2>
         </div>
-        <div class="team-grid">
-          <div v-for="(member, index) in teamMembers" :key="member.name" class="team-card reveal" :class="{ 'reveal-delay-1': index === 1 }">
-            <div class="team-card-left">
-              <div class="team-avatar">
-                <span>{{ member.initials }}</span>
-              </div>
-              <div class="team-badges">
-                <span v-for="badge in member.badges" :key="badge" class="tag" :class="{ 'tag-teal': badge.highlight }">{{ badge.label }}</span>
-              </div>
-            </div>
-            <div class="team-card-right">
-              <h2 class="team-name">{{ member.name }}</h2>
-              <p class="team-role">{{ member.role }}</p>
-              <p class="team-tagline">{{ member.tagline }}</p>
-              <p v-for="(paragraph, pIndex) in member.bio" :key="pIndex" class="team-bio" v-html="paragraph"></p>
-
-              <div v-if="member.certs?.length" class="team-certs">
-                <h4>Certifications</h4>
-                <div class="cert-grid">
-                  <div v-for="c in member.certs" :key="c" class="cert-item">
-                    <i class="pi pi-verified"></i>
-                    <span>{{ c }}</span>
+        <div class="team-carousel reveal">
+          <Carousel
+            :value="teamMembers"
+            :numVisible="1"
+            :numScroll="1"
+            :responsiveOptions="teamCarouselOptions"
+            circular
+            :autoplayInterval="3000"
+          >
+            <template #item="{ data: member }">
+              <div class="team-card">
+                <div class="team-card-left">
+                  <div class="team-avatar">
+                    <span>{{ member.initials }}</span>
+                  </div>
+                  <div class="team-badges">
+                    <span v-for="badge in member.badges" :key="badge.label" class="tag" :class="{ 'tag-teal': badge.highlight }">{{ badge.label }}</span>
                   </div>
                 </div>
-              </div>
+                <div class="team-card-right">
+                  <h2 class="team-name">{{ member.name }}</h2>
+                  <p class="team-role">{{ member.role }}</p>
+                  <p class="team-tagline">{{ member.tagline }}</p>
+                  <p v-for="(paragraph, pIndex) in member.bio" :key="pIndex" class="team-bio" v-html="paragraph"></p>
 
-              <div class="team-skills">
-                <h4>Core Expertise</h4>
-                <div class="skills-grid">
-                  <div v-for="skill in member.skills" :key="skill.category" class="skill-group">
-                    <span class="skill-category">{{ skill.category }}</span>
-                    <div class="skill-tags">
-                      <span v-for="t in skill.items" :key="t" class="tag">{{ t }}</span>
+                  <div v-if="member.certs?.length" class="team-certs">
+                    <h4>Certifications</h4>
+                    <div class="cert-grid">
+                      <div v-for="c in member.certs" :key="c" class="cert-item">
+                        <i class="pi pi-verified"></i>
+                        <span>{{ c }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="team-skills">
+                    <h4>Core Expertise</h4>
+                    <div class="skills-grid">
+                      <div v-for="skill in member.skills" :key="skill.category" class="skill-group">
+                        <span class="skill-category">{{ skill.category }}</span>
+                        <div class="skill-tags">
+                          <span v-for="t in skill.items" :key="t" class="tag">{{ t }}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </template>
+          </Carousel>
         </div>
       </div>
     </section>
@@ -118,6 +129,14 @@
 </template>
 
 <script setup>
+import Carousel from 'primevue/carousel'
+
+const teamCarouselOptions = [
+  { breakpoint: '1024px', numVisible: 1, numScroll: 1 },
+  { breakpoint: '767px', numVisible: 1, numScroll: 1 },
+  { breakpoint: '575px', numVisible: 1, numScroll: 1 },
+]
+
 const values = [
   { icon: 'pi pi-star', title: 'Principal-Only Delivery', desc: 'Every engagement is led by a principal-level architect. No juniors, no handoffs.' },
   { icon: 'pi pi-globe', title: 'Global Perspective', desc: 'Having worked in 54+ countries, we understand diverse regulatory and cultural environments.' },
@@ -251,7 +270,39 @@ const presence = [
 .value-item p { font-size: 0.875rem; color: var(--nt-text-muted); }
 
 .team-section { background: var(--nt-light-bg); }
-.team-grid { display: flex; flex-direction: column; gap: 32px; margin-top: 48px; }
+.team-carousel { margin-top: 48px; }
+.team-carousel :deep(.p-carousel-content-container) { overflow: visible; }
+.team-carousel :deep(.p-carousel-item) { flex: 1 0 100%; }
+.team-carousel :deep(.p-carousel-prev-button),
+.team-carousel :deep(.p-carousel-next-button) {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #E2E8F0;
+  color: var(--nt-primary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: var(--nt-transition);
+}
+.team-carousel :deep(.p-carousel-prev-button:hover),
+.team-carousel :deep(.p-carousel-next-button:hover) {
+  background: var(--nt-primary);
+  color: white;
+  border-color: var(--nt-primary);
+}
+.team-carousel :deep(.p-carousel-indicator-list) { margin-top: 24px; gap: 8px; }
+.team-carousel :deep(.p-carousel-indicator-button) {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #CBD5E1;
+  transition: var(--nt-transition);
+}
+.team-carousel :deep(.p-carousel-indicator-active .p-carousel-indicator-button) {
+  background: var(--nt-primary);
+  width: 28px;
+  border-radius: 5px;
+}
 .team-card {
   display: grid;
   grid-template-columns: 240px 1fr;
