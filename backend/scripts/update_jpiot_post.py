@@ -11,6 +11,68 @@ The current open-source foundation is on GitHub: [github.com/juandiab/nsagent](h
 
 > JPilot / this open-source stack is an independent project and is not affiliated with Citrix. NetScaler is a trademark of Citrix Systems, Inc.
 
+## Installation
+
+The only prerequisite is **Docker**. The installer downloads the project, generates secrets and a TLS certificate, writes `.env`, launches the stack, and opens JPilot in your browser.
+
+**Prerequisites:** Docker and Docker Compose; NetScaler ADC with **Next-Gen API** enabled (`enable ns nextgenapi`) for API tools; SSH access (port 22) for classic CLI and diagnostics; optional SMTP for password-reset emails.
+
+### Windows
+
+Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/) and [Git for Windows](https://git-scm.com/download/win), then run in **PowerShell**:
+
+```powershell
+irm https://raw.githubusercontent.com/juandiab/nsagent/main/get.ps1 | iex
+```
+
+### macOS
+
+Install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/) (or let the installer set it up via Homebrew), then run in **Terminal**:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/juandiab/nsagent/main/get.sh | bash
+```
+
+### Ubuntu / Linux
+
+Docker Engine is required—the installer offers to install it if missing. Then run:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/juandiab/nsagent/main/get.sh | bash
+```
+
+The script checks for Docker, downloads JPilot, and starts the setup wizard. Then:
+
+1. Open **https://localhost:9443** (self-signed certificate—accept the one-time browser warning).
+2. Complete the wizard: admin account, domain, and TLS (self-signed or your own cert).
+3. On the **Review** step, **save the generated `NSAGENT_ENCRYPTION_KEY`**—required to restore or migrate the install and cannot be recovered.
+4. Click **Install JPilot**. The wizard writes `.env` and `nginx/ssl/`, then launches the stack and opens it in your browser.
+5. Sign in at **https://\<your-domain\>** with the admin account you created.
+
+Already cloned the repo? Run `./install.sh` (macOS/Linux) or `.\install.ps1` (Windows) from the project root instead of the one-liner.
+
+To reconfigure an existing install (overwrites `.env`):
+
+```bash
+./install.sh --reconfigure      # macOS / Linux
+.\install.ps1 -Reconfigure      # Windows (PowerShell)
+```
+
+The installer generates `NSAGENT_ENCRYPTION_KEY` (Fernet) and `JWT_SECRET_KEY` automatically and derives WebAuthn, CORS, and API URL settings from the domain you choose.
+
+**After first login:**
+
+- **NetScalers** — add your appliance (name, host, API/SSH user and password).
+- **AI Providers** — add an LLM provider and set it as default.
+- **Settings → MCP** — tool toggles, **SSH fallback** (required for diagnostics and SSL shell), timeouts.
+- **Settings → Platform** — optional Brave Search API key for JPilot doc augmentation.
+- **Settings → Security** — register an optional passkey after password login.
+- **Users** (admin) — create users with email (for password reset) and initial passwords.
+- **SSL Certificate Tools** — generate CSR or self-signed cert on an appliance.
+- **JPilot** — select an appliance and ask questions or request changes.
+
+For manual `.env` configuration, TLS certificate placement, and advanced setup, see the [NSAgent README on GitHub](https://github.com/juandiab/nsagent#manual-setup-advanced).
+
 ## Why another NetScaler tool?
 
 Most teams already use ADM, automation scripts, or ad-hoc CLI sessions. The gap JPilot targets is **AI-assisted operations with guardrails**:
@@ -150,16 +212,6 @@ Built for the “is it the network or NetScaler?” moment. JPilot does not only
 - Admin user management with roles (`admin` / `user`)
 - Destructive operations require explicit **`confirmed=true`** after user approval
 
-## Quick start (Docker)
-
-1. Generate a Fernet key and copy `.env.example` to `.env`
-2. Set encryption key, `JWT_SECRET_KEY`, and admin bootstrap credentials
-3. Run `docker compose up --build`
-4. Open the UI, add a NetScaler appliance, configure an AI provider, enable **SSH fallback** for diagnostics
-5. Use the copilot with an appliance selected
-
-Enable Next-Gen API on the ADC (`enable ns nextgenapi`) for API tools; SSH (port 22) is required for classic CLI and diagnostics.
-
 ## Roadmap
 
 The following capabilities are planned for JPilot beyond what is available in the repository today.
@@ -224,7 +276,7 @@ def main():
                 "Automation",
                 "Roadmap",
             ]
-            post["read_time"] = 10
+            post["read_time"] = 12
             break
     else:
         raise SystemExit("Post id 5 not found")
