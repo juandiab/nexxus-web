@@ -1,10 +1,7 @@
 FROM nginx:stable-alpine
 
-# Copy Nginx configuration
+# Copy Nginx configuration (certs mounted at runtime — see docker-compose.yml)
 COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy SSL certificates (wildcard.nexxus-tech.com)
-COPY ssl/ /etc/nginx/ssl/
 
 # Remove default site config
 RUN rm -f /etc/nginx/conf.d/default.conf

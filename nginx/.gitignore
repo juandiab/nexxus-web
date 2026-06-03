@@ -1,3 +1,5 @@
-# Private key — NEVER commit to version control
+# Certs and keys — NEVER commit to version control
 ssl/*.key
 ssl/*.pfx
+ssl/cert.crt
+ssl/cert.key
