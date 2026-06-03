@@ -49,42 +49,28 @@
       <div class="container">
         <div class="section-header reveal" style="text-align:center">
           <span class="section-label">The Team</span>
-          <h2 class="section-title" style="color:var(--nt-navy)">Meet the Founders</h2>
+          <h2 class="section-title" style="color:var(--nt-navy)">Meet the Team</h2>
         </div>
-        <div class="team-card-wrapper">
-          <div class="team-card reveal">
+        <div class="team-grid">
+          <div v-for="(member, index) in teamMembers" :key="member.name" class="team-card reveal" :class="{ 'reveal-delay-1': index === 1 }">
             <div class="team-card-left">
               <div class="team-avatar">
-                <span>JP</span>
+                <span>{{ member.initials }}</span>
               </div>
               <div class="team-badges">
-                <span class="tag">Citrix SME</span>
-                <span class="tag tag-teal">AWS Security</span>
-                <span class="tag">Zero-Trust</span>
+                <span v-for="badge in member.badges" :key="badge" class="tag" :class="{ 'tag-teal': badge.highlight }">{{ badge.label }}</span>
               </div>
             </div>
             <div class="team-card-right">
-              <h2 class="team-name">Juan Pablo Otalvaro Aguirre</h2>
-              <p class="team-role">Founder &amp; Principal Cloud &amp; Security Architect</p>
-              <p class="team-tagline">Zero-Trust · WAF &amp; API Protection · Multicloud Security · IAM</p>
-              <p class="team-bio">
-                Principal Cloud &amp; Security Architect with <strong>15+ years</strong> leading large-scale multicloud,
-                hybrid, and on-premises security transformations across <strong>50+ countries</strong>.
-                Recognized Subject Matter Expert in Web Application Firewall and API protection
-                (Citrix NetScaler/ADC, F5), Zero-Trust Architecture, and secure application delivery
-                for finance, defense, telecom, and government sectors.
-              </p>
-              <p class="team-bio">
-                Co-authored NetScaler certification exams (versions 10 and 11), recipient of the
-                <em>Citrix SME of the Year 2013 &amp; 2014</em> award, and a Citrix Education MVP.
-                Delivered security transformations for UAE Ministry of Defense, Barclays, Emirates Airlines,
-                Central Bank of Oman, United Nations, and Smart Dubai.
-              </p>
+              <h2 class="team-name">{{ member.name }}</h2>
+              <p class="team-role">{{ member.role }}</p>
+              <p class="team-tagline">{{ member.tagline }}</p>
+              <p v-for="(paragraph, pIndex) in member.bio" :key="pIndex" class="team-bio" v-html="paragraph"></p>
 
-              <div class="team-certs">
+              <div v-if="member.certs?.length" class="team-certs">
                 <h4>Certifications</h4>
                 <div class="cert-grid">
-                  <div v-for="c in certs" :key="c" class="cert-item">
+                  <div v-for="c in member.certs" :key="c" class="cert-item">
                     <i class="pi pi-verified"></i>
                     <span>{{ c }}</span>
                   </div>
@@ -94,7 +80,7 @@
               <div class="team-skills">
                 <h4>Core Expertise</h4>
                 <div class="skills-grid">
-                  <div v-for="skill in skills" :key="skill.category" class="skill-group">
+                  <div v-for="skill in member.skills" :key="skill.category" class="skill-group">
                     <span class="skill-category">{{ skill.category }}</span>
                     <div class="skill-tags">
                       <span v-for="t in skill.items" :key="t" class="tag">{{ t }}</span>
@@ -139,22 +125,65 @@ const values = [
   { icon: 'pi pi-shield', title: 'Security Above All', desc: 'We never recommend solutions that sacrifice security for convenience.' },
 ]
 
-const certs = [
-  'AWS Certified Security – Specialty',
-  'AWS Solutions Architect – Associate',
-  'Citrix SME – Networking & Project Avalon',
-  'CCP-AppDS – App Delivery and Security',
-  'CCA-AppDS – Citrix Certified Associate',
-  'Citrix Certified Specialist – Networking',
-  'CCP-N – Citrix Certified Professional Networking',
-  'CCI-N – Citrix Certified Instructor Networking',
-]
-
-const skills = [
-  { category: 'Security', items: ['WAF', 'Zero-Trust', 'API Security', 'IAM', 'MFA', 'SASE', 'Bot Management'] },
-  { category: 'ADC / Networking', items: ['NetScaler', 'F5 BIG-IP', 'GSLB', 'SD-WAN', 'SSL Offload'] },
-  { category: 'Cloud', items: ['AWS', 'Azure', 'Azure AD', 'Okta', 'DUO', 'CSPM'] },
-  { category: 'Automation', items: ['Python', 'Node.js', 'GraphQL', 'OpenAI', 'NITRO API', 'Docker'] },
+const teamMembers = [
+  {
+    initials: 'JP',
+    name: 'Juan Pablo Otalvaro Aguirre',
+    role: 'Founder & Principal Cloud & Security Architect',
+    tagline: 'Zero-Trust · WAF & API Protection · Multicloud Security · IAM',
+    badges: [
+      { label: 'Citrix SME' },
+      { label: 'AWS Security', highlight: true },
+      { label: 'Zero-Trust' },
+    ],
+    bio: [
+      'Principal Cloud & Security Architect with <strong>15+ years</strong> leading large-scale multicloud, hybrid, and on-premises security transformations across <strong>50+ countries</strong>. Recognized Subject Matter Expert in Web Application Firewall and API protection (Citrix NetScaler/ADC, F5), Zero-Trust Architecture, and secure application delivery for finance, defense, telecom, and government sectors.',
+      'Co-authored NetScaler certification exams (versions 10 and 11), recipient of the <em>Citrix SME of the Year 2013 & 2014</em> award, and a Citrix Education MVP. Delivered security transformations for UAE Ministry of Defense, Barclays, Emirates Airlines, Central Bank of Oman, United Nations, and Smart Dubai.',
+    ],
+    certs: [
+      'AWS Certified Security – Specialty',
+      'AWS Solutions Architect – Associate',
+      'Citrix SME – Networking & Project Avalon',
+      'CCP-AppDS – App Delivery and Security',
+      'CCA-AppDS – Citrix Certified Associate',
+      'Citrix Certified Specialist – Networking',
+      'CCP-N – Citrix Certified Professional Networking',
+      'CCI-N – Citrix Certified Instructor Networking',
+    ],
+    skills: [
+      { category: 'Security', items: ['WAF', 'Zero-Trust', 'API Security', 'IAM', 'MFA', 'SASE', 'Bot Management'] },
+      { category: 'ADC / Networking', items: ['NetScaler', 'F5 BIG-IP', 'GSLB', 'SD-WAN', 'SSL Offload'] },
+      { category: 'Cloud', items: ['AWS', 'Azure', 'Azure AD', 'Okta', 'DUO', 'CSPM'] },
+      { category: 'Automation', items: ['Python', 'Node.js', 'GraphQL', 'OpenAI', 'NITRO API', 'Docker'] },
+    ],
+  },
+  {
+    initials: 'JL',
+    name: 'Jhonny Leon',
+    role: 'Principal Engineer',
+    tagline: 'Mobile Signaling · Diameter · Oracle Communications · Cloud Infrastructure',
+    badges: [
+      { label: 'SS7 Specialist' },
+      { label: 'Oracle Communications', highlight: true },
+      { label: 'Telecom & Cloud' },
+    ],
+    bio: [
+      'Telecommunications Engineer and <strong>Principal Engineer</strong> specializing in mobile core signaling, Diameter mediation, and Oracle Communications platforms (DSR, DIH, STP/EPAP, PIC). Delivers professional services and technical leadership for tier-one operators across Latin America, including Claro and Movistar.',
+      'Certified Oracle Communications instructor with hands-on experience in SS7, VoIP, and signaling transfer point operations. Extends carrier-grade signaling expertise into <strong>Oracle Cloud Infrastructure (OCI)</strong> and cloud-native architectures—supporting migrations, operational automation, and AI-assisted data modeling for modern telecom estates.',
+    ],
+    certs: [
+      'Oracle Communications DSR – Certified Instructor',
+      'Oracle Communications Diameter Intell Hub (DIH)',
+      'Oracle Communications DSR OAM&P',
+      'Telecommunications Engineer – Professional Degree',
+    ],
+    skills: [
+      { category: 'Signaling', items: ['SS7', 'Diameter', 'STP', 'EPAP', 'PIC', 'VoIP', 'TDM'] },
+      { category: 'Oracle Platforms', items: ['DSR', 'DIH', 'Business Support Systems', 'Mobile Core', 'OCI'] },
+      { category: 'Operations', items: ['Network Operations', 'Fault Management', 'Technical Training', 'PS Engineering'] },
+      { category: 'Cloud & Automation', items: ['OCI Deployments', 'Cloud Architecture', 'AI Data Modeling', 'Solution Design'] },
+    ],
+  },
 ]
 
 const presence = [
@@ -194,7 +223,7 @@ const presence = [
 .value-item p { font-size: 0.875rem; color: var(--nt-text-muted); }
 
 .team-section { background: var(--nt-light-bg); }
-.team-card-wrapper { margin-top: 48px; }
+.team-grid { display: flex; flex-direction: column; gap: 32px; margin-top: 48px; }
 .team-card {
   display: grid;
   grid-template-columns: 240px 1fr;
