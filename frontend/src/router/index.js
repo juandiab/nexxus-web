@@ -38,6 +38,12 @@ const routes = [
     meta: { title: 'Contact — Nexxus Tech' }
   },
   {
+    path: '/adminconsole',
+    name: 'adminconsole',
+    component: () => import('@/views/admin/AdminConsoleView.vue'),
+    meta: { title: 'Admin Console — Nexxus Tech', hideNav: true }
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }

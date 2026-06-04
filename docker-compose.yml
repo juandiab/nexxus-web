@@ -23,6 +23,30 @@ services:
     networks:
       - nexxus-net
 
+  mongodb:
+    image: mongo:7
+    container_name: nexxustech-mongodb
+    restart: unless-stopped
+    volumes:
+      - licensing-mongo-data:/data/db
+    networks:
+      - nexxus-net
+
+  licensing:
+    build:
+      context: ./licensing
+      dockerfile: Dockerfile
+    container_name: nexxustech-licensing
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - mongodb
+    networks:
+      - nexxus-net
+
   nginx:
     build:
       context: ./nginx
@@ -37,9 +61,13 @@ services:
     depends_on:
       - frontend
       - backend
+      - licensing
     networks:
       - nexxus-net
 
 networks:
   nexxus-net:
     driver: bridge
+
+volumes:
+  licensing-mongo-data:
