@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Nexxus Tech Licensing API",
     description="License management and activation API",
-    version="0.1.0",
+    version="0.5.0",
     docs_url="/docs" if settings.environment != "production" else None,
     redoc_url=None,
 )

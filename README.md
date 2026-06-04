@@ -1,18 +1,24 @@
 # Nexxus Tech Website
 
-**Version 0.04** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.05** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
 |---|---|
 | Frontend | Vue 3 + PrimeVue 4 + Vite |
 | Backend | Python 3.12 + FastAPI |
+| Licensing | Python 3.12 + FastAPI + MongoDB 7 |
 | Web Server | Nginx stable-alpine (SSL termination + reverse proxy) |
 | Runtime | Docker Compose |
 
 ---
 
 ## Changelog
+
+### v0.05 — 2026-06-04
+- **Licensing Phase 1** — MongoDB + Python licensing API in Docker Compose, exposed at `/licensing/` via nginx
+- **Admin console** — `/adminconsole` login (env-based credentials, JWT); placeholder dashboard for future license management
+- **Env** — `ADMIN_CONSOLE_USER`, `ADMIN_CONSOLE_PASSWORD`, `ENCRYPTION_KEY`, `JWT_SECRET_KEY`, `MONGODB_URI` (see `.env.example`)
 
 ### v0.04 — 2026-06-03
 - **About: Meet the Team carousel** — team profiles rotate in a PrimeVue Carousel with circular autoplay (3s interval), prev/next controls, and dot indicators
