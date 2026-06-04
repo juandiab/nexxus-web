@@ -1,18 +1,27 @@
-from pydantic import field_validator
+import sys
+
+from pydantic import Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     environment: str = "production"
     cors_origins: str = "https://nexxus-tech.com,https://www.nexxus-tech.com"
 
-    admin_console_user: str
-    admin_console_password: str
-    encryption_key: str
-    jwt_secret_key: str
-    mongodb_uri: str = "mongodb://mongodb:27017/licensing"
+    admin_console_user: str = Field(validation_alias="ADMIN_CONSOLE_USER")
+    admin_console_password: str = Field(validation_alias="ADMIN_CONSOLE_PASSWORD")
+    encryption_key: str = Field(validation_alias="ENCRYPTION_KEY")
+    jwt_secret_key: str = Field(validation_alias="JWT_SECRET_KEY")
+    mongodb_uri: str = Field(
+        default="mongodb://mongodb:27017/licensing",
+        validation_alias="MONGODB_URI",
+    )
 
     jwt_expire_hours: int = 12
 
@@ -24,4 +33,15 @@ class Settings(BaseSettings):
         return v
 
 
-settings = Settings()
+try:
+    settings = Settings()
+except ValidationError as exc:
+    print(
+        "Licensing service: missing or invalid environment variables.\n"
+        "Add to /opt/nexxus-web/.env (see .env.example):\n"
+        "  ADMIN_CONSOLE_USER, ADMIN_CONSOLE_PASSWORD,\n"
+        "  ENCRYPTION_KEY (Fernet key), JWT_SECRET_KEY, MONGODB_URI\n",
+        file=sys.stderr,
+    )
+    print(exc, file=sys.stderr)
+    raise SystemExit(1) from exc

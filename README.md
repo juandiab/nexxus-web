@@ -15,6 +15,9 @@
 
 ## Changelog
 
+### v0.05a — 2026-06-04
+- **Fix: licensing 502** — resilient MongoDB startup retries, healthcheck always returns 200, compose waits for MongoDB/licensing healthy before nginx routes traffic; clearer env validation errors in logs
+
 ### v0.05 — 2026-06-04
 - **Licensing Phase 1** — MongoDB + Python licensing API in Docker Compose, exposed at `/licensing/` via nginx
 - **Admin console** — `/adminconsole` login (env-based credentials, JWT); placeholder dashboard for future license management
@@ -48,8 +51,28 @@
 ### 1. Configure environment
 ```bash
 cp .env.example .env
-# Edit .env with your SMTP credentials and AI API key
+# Edit .env with SMTP, AI API key, and licensing variables (required for /licensing/)
 ```
+
+Generate a valid Fernet `ENCRYPTION_KEY`:
+```bash
+python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+### Licensing 502 troubleshooting
+
+If `curl https://nexxus-tech.com/licensing/health` returns **502**:
+
+```bash
+docker compose ps
+docker compose logs licensing --tail 80
+docker compose logs mongodb --tail 30
+```
+
+Common causes:
+- Missing licensing vars in `.env` (container exits immediately)
+- Invalid `ENCRYPTION_KEY` (must be a Fernet key, not a random string)
+- `nexxustech-licensing` not running — run `docker compose up -d --build mongodb licensing` and rebuild nginx after pulling
 
 ### 2. Ensure SSL certs are in place
 Same layout as NSAgent — place `cert.crt` (full chain) and `cert.key` in `nginx/ssl/`. See **[nginx/ssl/README.md](nginx/ssl/README.md)** for conversion steps, verification commands, and Docker volume notes.
