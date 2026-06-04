@@ -1,42 +1,34 @@
-const BASE = '/licensing'
+async function parseError(res) {
+  const text = await res.text()
+  try {
+    const err = JSON.parse(text)
+    const detail = err.detail
+    if (Array.isArray(detail)) {
+      return detail.map((d) => d.msg || JSON.stringify(d)).join(', ')
+    }
+    if (detail) return detail
+  } catch {
+    /* not JSON */
+  }
+  return text.trim() || `Request failed (${res.status})`
+}
 
-export async function login(username, password) {
-  const res = await fetch(`${BASE}/auth/login`, {
+export async function requestActivation(payload) {
+  const res = await fetch('/licensing/activation/request', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(payload),
   })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    const detail = err.detail
-    const message = Array.isArray(detail)
-      ? detail.map((d) => d.msg).join(', ')
-      : detail || 'Login failed'
-    throw new Error(message)
-  }
+  if (!res.ok) throw new Error(await parseError(res))
   return res.json()
 }
 
-export async function fetchMe(token) {
-  const res = await fetch(`${BASE}/auth/me`, {
-    headers: { Authorization: `Bearer ${token}` },
+export async function verifyActivationOtp(payload) {
+  const res = await fetch('/licensing/activation/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
   })
-  if (!res.ok) {
-    throw new Error('Session invalid')
-  }
-  return res.json()
-}
-
-export async function fetchWithAuth(path, token, options = {}) {
-  const res = await fetch(`${BASE}${path}`, {
-    ...options,
-    headers: {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  if (!res.ok) {
-    throw new Error('Request failed')
-  }
+  if (!res.ok) throw new Error(await parseError(res))
   return res.json()
 }

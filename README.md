@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.05** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.06** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,13 @@
 ---
 
 ## Changelog
+
+### v0.06 — 2026-06-04
+- **Licensing system enabled** — end-to-end activation, sync, and admin management for on-premises products (e.g. JPilot); see [Licensing system overview](#licensing-system-overview) below
+- **Admin console** — standalone Vue app at `/adminconsole`: license list/management, user accounts, passkey sign-in, JWT session
+- **Activation flow** — public page at `/licensing/activate`; email verification before a license is issued and bound to a deployment
+- **Sync API** — client apps periodically sync to refresh license status, expiration, and encrypted license payload
+- **Licensing API v0.7.0** — MongoDB-backed FastAPI service; license CRUD, extend/expire/deactivate, offline license export
 
 ### v0.05a — 2026-06-04
 - **Fix: licensing 502** — resilient MongoDB startup retries, healthcheck always returns 200, compose waits for MongoDB/licensing healthy before nginx routes traffic; clearer env validation errors in logs
@@ -74,6 +81,45 @@ Common causes:
 - Invalid `ENCRYPTION_KEY` (must be a Fernet key, not a random string)
 - `nexxustech-licensing` not running — run `docker compose up -d --build mongodb licensing` and rebuild nginx after pulling
 
+---
+
+## Licensing system overview
+
+Nexxus Tech products can be licensed through this stack. The design keeps sensitive material (license codes, encrypted payloads) out of public docs and admin UI where possible.
+
+| Surface | URL | Purpose |
+|---|---|---|
+| Activation | `/licensing/activate` | End-user registers a deployment (name, email, company, usage type); email OTP confirms identity before a license is created |
+| Sync | `/licensing/sync` | Installed apps report fingerprint + app name; server returns current status, expiration, and an updated encrypted license blob |
+| Admin console | `/adminconsole` | Operators sign in (password + passkey), manage licenses and platform users |
+| Licensing API | `/licensing/` | REST API (health, auth, licenses, activation, sync) — proxied by nginx to the `licensing` container |
+
+**Typical flow**
+
+1. **Activate** — The application opens the activation page (or calls the API). The user completes the form and verifies email. A license is tied to that deployment’s fingerprint and application name.
+2. **Run** — The app stores its license locally and validates expiration and status.
+3. **Sync** — On a schedule (or on demand), the app syncs with the server to pick up admin changes (extended validity, type change, deactivation, forced expiry).
+4. **Administer** — From the admin console, operators can extend validity, change license type, force-expire, deactivate, or delete licenses.
+
+**Admin console capabilities**
+
+- View licenses in a compact table (contact, organization, license type, status, validity)
+- Force-expire (blocks auto-renew for free licenses), deactivate/reactivate, extend days, change type, delete
+- Manage admin users (create, deactivate, password reset, passkey management)
+
+**Configuration**
+
+Required env vars are listed under **Licensing** in `.env.example` (`ENCRYPTION_KEY`, `JWT_SECRET_KEY`, `MONGODB_URI`, WebAuthn/ SMTP settings for email). Generate secrets as described in [Quick Start](#1-configure-environment); do not commit `.env`.
+
+**Operations**
+
+```bash
+docker compose up -d --build mongodb licensing admin-console nginx
+curl -s https://nexxus-tech.com/licensing/health
+```
+
+For local development with hot reload, use `docker-compose.dev.yml` (see repo).
+
 ### 2. Ensure SSL certs are in place
 Same layout as NSAgent — place `cert.crt` (full chain) and `cert.key` in `nginx/ssl/`. See **[nginx/ssl/README.md](nginx/ssl/README.md)** for conversion steps, verification commands, and Docker volume notes.
 
@@ -117,17 +163,21 @@ uvicorn main:app --reload --port 8000
 ```
 website/
 ├── docker-compose.yml
+├── docker-compose.dev.yml    ← Dev stack with Vite hot reload
 ├── .env.example              ← Copy to .env and configure
 ├── nginx/
 │   ├── Dockerfile
 │   └── nginx.conf            ← SSL + reverse proxy config
 ├── frontend/
-│   ├── Dockerfile            ← Multi-stage: build + serve
-│   ├── src/
-│   │   ├── views/            ← Home, Services, About, Blog, Contact
-│   │   ├── components/       ← NavBar, Footer, ChatWidget
-│   │   └── assets/           ← SVG logos (transparent bg)
-│   └── package.json
+│   ├── Dockerfile
+│   ├── src/views/LicensingActivateView.vue
+│   └── …                     ← Home, Services, About, Blog, Contact
+├── admin-console/            ← Operator UI (/adminconsole)
+├── licensing/                ← Licensing + activation + sync API
+│   ├── main.py
+│   ├── routers/
+│   └── services/
+├── activation-portal/        ← Standalone activation UI (optional)
 └── backend/
     ├── Dockerfile
     ├── main.py               ← FastAPI app

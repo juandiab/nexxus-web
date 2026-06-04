@@ -16,6 +16,10 @@ class Settings(BaseSettings):
 
     admin_console_user: str = Field(validation_alias="ADMIN_CONSOLE_USER")
     admin_console_password: str = Field(validation_alias="ADMIN_CONSOLE_PASSWORD")
+    admin_console_url: str = Field(
+        default="https://nexxus-tech.com/adminconsole",
+        validation_alias="ADMIN_CONSOLE_URL",
+    )
     encryption_key: str = Field(validation_alias="ENCRYPTION_KEY")
     jwt_secret_key: str = Field(validation_alias="JWT_SECRET_KEY")
     mongodb_uri: str = Field(
@@ -25,12 +29,36 @@ class Settings(BaseSettings):
 
     jwt_expire_hours: int = 12
 
+    smtp_host: str = Field(default="smtp.gmail.com", validation_alias="SMTP_HOST")
+    smtp_port: int = Field(default=587, validation_alias="SMTP_PORT")
+    smtp_user: str = Field(default="", validation_alias="SMTP_USER")
+    smtp_pass: str = Field(default="", validation_alias="SMTP_PASS")
+    smtp_from: str = Field(default="", validation_alias="CONTACT_FROM")
+    email_log_only: bool = Field(default=True, validation_alias="EMAIL_LOG_ONLY")
+
+    webauthn_rp_id: str = Field(default="nexxus-tech.com", validation_alias="WEBAUTHN_RP_ID")
+    webauthn_rp_name: str = Field(default="Nexxus Tech Admin", validation_alias="WEBAUTHN_RP_NAME")
+    webauthn_origin: str = Field(
+        default="https://nexxus-tech.com",
+        validation_alias="WEBAUTHN_ORIGIN",
+    )
+
     @field_validator("admin_console_user", "admin_console_password", "encryption_key", "jwt_secret_key")
     @classmethod
     def must_not_be_empty(cls, v: str) -> str:
         if not v or not v.strip():
             raise ValueError("must not be empty")
         return v
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def webauthn_origins(self) -> list[str]:
+        origins = set(self.cors_origin_list)
+        origins.add(self.webauthn_origin.strip())
+        return sorted(origins)
 
 
 try:

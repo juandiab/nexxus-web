@@ -5,10 +5,19 @@ import sys
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from auth.router import router as auth_router
 from config import settings
 from crypto import _get_fernet
-from db import close_database, ping_database
+from db import close_database, get_database, ping_database
+from routers.activation import activate_router, router as activation_router
+from routers.auth import router as auth_router
+from routers.licenses import router as licenses_router
+from routers.users import router as users_router
+from routers.sync import router as sync_router
+from routers.webauthn import router as webauthn_router
+from services.activation_service import ensure_activation_pending_indexes
+from services.license_service import ensure_license_indexes
+from services.user_service import ensure_default_admin, ensure_user_indexes
+from services.webauthn_service import ensure_webauthn_indexes
 
 logging.basicConfig(
     level=logging.INFO,
@@ -20,12 +29,12 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Nexxus Tech Licensing API",
     description="License management and activation API",
-    version="0.5.0",
+    version="0.7.0",
     docs_url="/docs" if settings.environment != "production" else None,
     redoc_url=None,
 )
 
-origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+origins = settings.cors_origin_list
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,6 +45,12 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(users_router)
+app.include_router(webauthn_router)
+app.include_router(licenses_router)
+app.include_router(activation_router)
+app.include_router(activate_router)
+app.include_router(sync_router)
 
 
 @app.on_event("startup")
@@ -50,7 +65,13 @@ async def startup():
     for attempt in range(1, 16):
         try:
             await ping_database()
-            logger.info("MongoDB connected")
+            db = get_database()
+            await ensure_user_indexes(db)
+            await ensure_webauthn_indexes(db)
+            await ensure_license_indexes(db)
+            await ensure_activation_pending_indexes(db)
+            await ensure_default_admin(db)
+            logger.info("MongoDB connected and indexes ready")
             return
         except Exception as exc:
             logger.warning("MongoDB not ready (attempt %s/15): %s", attempt, exc)

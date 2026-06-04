@@ -3,15 +3,16 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
+  base: '/adminconsole/',
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 5174,
     watch: {
       usePolling: !!process.env.CHOKIDAR_USEPOLLING,
     },
@@ -28,26 +29,11 @@ export default defineConfig({
       'www.nexxus-tech.com',
     ],
     proxy: {
-      '/api': {
-        target: 'http://backend:8000',
-        changeOrigin: true
-      },
-      '/licensing/activation': {
+      '/licensing': {
         target: 'http://licensing:8001',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/licensing/, '')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/licensing/, ''),
+      },
+    },
   },
-  build: {
-    outDir: 'dist',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['vue', 'vue-router', 'pinia'],
-          primevue: ['primevue']
-        }
-      }
-    }
-  }
 })
