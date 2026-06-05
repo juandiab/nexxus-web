@@ -31,6 +31,8 @@
                   type="text"
                   placeholder="John Smith"
                   :class="{ error: errors.name }"
+                  autocomplete="name"
+                  aria-required="true"
                   required
                 />
                 <span v-if="errors.name" class="error-msg">{{ errors.name }}</span>
@@ -42,6 +44,8 @@
                   type="email"
                   placeholder="john@company.com"
                   :class="{ error: errors.email }"
+                  autocomplete="email"
+                  aria-required="true"
                   required
                 />
                 <span v-if="errors.email" class="error-msg">{{ errors.email }}</span>
@@ -73,17 +77,18 @@
                 rows="6"
                 placeholder="Tell us about your project, environment, or challenge..."
                 :class="{ error: errors.message }"
+                aria-required="true"
                 required
               ></textarea>
               <span v-if="errors.message" class="error-msg">{{ errors.message }}</span>
             </div>
 
             <!-- Success / Error alert -->
-            <div v-if="submitStatus === 'success'" class="alert alert-success">
+            <div v-if="submitStatus === 'success'" class="alert alert-success" role="status" aria-live="polite">
               <i class="pi pi-check-circle"></i>
               Message sent! We'll be in touch within 24 hours.
             </div>
-            <div v-if="submitStatus === 'error'" class="alert alert-error">
+            <div v-if="submitStatus === 'error'" class="alert alert-error" role="alert" aria-live="assertive">
               <i class="pi pi-times-circle"></i>
               {{ errorMessage }}
             </div>

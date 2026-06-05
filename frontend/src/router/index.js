@@ -1,47 +1,62 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { ROUTE_SEO } from '@/config/site.js'
+import { applySeo } from '@/utils/seo.js'
+import { jsonLdForRoute } from '@/data/structuredData.js'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: () => import('@/views/HomeView.vue'),
-    meta: { title: 'Nexxus Tech — WAF · NetScaler · Cloud Security · AI' }
+    meta: { seo: ROUTE_SEO.home }
   },
   {
     path: '/services',
     name: 'services',
     component: () => import('@/views/ServicesView.vue'),
-    meta: { title: 'Services — Nexxus Tech' }
+    meta: { seo: ROUTE_SEO.services }
+  },
+  {
+    path: '/products',
+    name: 'products',
+    component: () => import('@/views/ProductsView.vue'),
+    meta: { seo: ROUTE_SEO.products }
   },
   {
     path: '/about',
     name: 'about',
     component: () => import('@/views/AboutView.vue'),
-    meta: { title: 'About Us — Nexxus Tech' }
+    meta: { seo: ROUTE_SEO.about }
   },
   {
     path: '/blog',
     name: 'blog',
     component: () => import('@/views/BlogView.vue'),
-    meta: { title: 'Blog — Nexxus Tech' }
+    meta: { seo: ROUTE_SEO.blog }
   },
   {
     path: '/blog/:slug',
     name: 'blog-post',
     component: () => import('@/views/BlogPostView.vue'),
-    meta: { title: 'Blog — Nexxus Tech' }
+    meta: { seo: ROUTE_SEO.blog, dynamic: true }
   },
   {
     path: '/contact',
     name: 'contact',
     component: () => import('@/views/ContactView.vue'),
-    meta: { title: 'Contact — Nexxus Tech' }
+    meta: { seo: ROUTE_SEO.contact }
+  },
+  {
+    path: '/faq',
+    name: 'faq',
+    component: () => import('@/views/FaqView.vue'),
+    meta: { seo: ROUTE_SEO.faq }
   },
   {
     path: '/licensing/activate',
     name: 'licensing-activate',
     component: () => import('@/views/LicensingActivateView.vue'),
-    meta: { title: 'License Activation — Nexxus Tech' }
+    meta: { seo: ROUTE_SEO.licensingActivate }
   },
   {
     path: '/:pathMatch(.*)*',
@@ -60,7 +75,19 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title || 'Nexxus Tech'
+  if (to.meta.dynamic) return
+
+  const seo = to.meta.seo
+  if (!seo) return
+
+  applySeo({
+    title: seo.title,
+    description: seo.description,
+    path: seo.path,
+    noindex: seo.noindex,
+    type: 'website',
+    jsonLd: jsonLdForRoute(to.name),
+  })
 })
 
 export default router

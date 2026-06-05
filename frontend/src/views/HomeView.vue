@@ -2,7 +2,7 @@
   <div class="home">
     <!-- ── HERO ─────────────────────────────────────────────────────────────── -->
     <section class="hero">
-      <canvas ref="heroCanvas" class="hero-canvas"></canvas>
+      <canvas ref="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-overlay"></div>
       <div class="container hero-content">
         <div class="hero-badge reveal">
@@ -92,6 +92,58 @@
         <div class="services-cta reveal">
           <RouterLink to="/services" class="btn btn-outline">
             View All Services <i class="pi pi-arrow-right"></i>
+          </RouterLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRODUCTS ───────────────────────────────────────────────────────────── -->
+    <section class="section section-dark products-section">
+      <div class="container">
+        <div class="section-header reveal" style="text-align:center">
+          <span class="section-label">Our Products</span>
+          <h2 class="section-title">Technology That Empowers</h2>
+          <p class="section-subtitle" style="margin:0 auto">
+            Tools that serve as a bridge between people, knowledge, and technology—
+            so engineers can learn, grow, and move forward with confidence.
+          </p>
+        </div>
+        <div
+          v-for="product in products"
+          :key="product.id"
+          class="product-feature-card card reveal"
+          @click="$router.push(`/products#${product.id}`)"
+        >
+          <div class="product-feature-grid">
+            <div class="product-feature-logo-wrap">
+              <JpilotLogo theme="dark" :alt="product.logoAlt" img-class="product-feature-logo" />
+            </div>
+            <div class="product-feature-body">
+              <span class="section-label">{{ product.label }}</span>
+              <h3 class="product-feature-title">
+                {{ product.name }}
+                <span class="product-version">{{ product.version }}</span>
+              </h3>
+              <p class="product-feature-tagline">{{ product.tagline }}</p>
+              <p class="product-feature-desc">{{ product.excerpt }}</p>
+              <div class="product-feature-tags">
+                <span v-for="tag in product.tags.slice(0, 4)" :key="tag" class="tag">{{ tag }}</span>
+              </div>
+            </div>
+            <div class="product-feature-metrics">
+              <div v-for="m in product.metrics" :key="m.label" class="product-metric">
+                <span class="product-metric-value">{{ m.value }}</span>
+                <span class="product-metric-label">{{ m.label }}</span>
+              </div>
+            </div>
+          </div>
+          <span class="product-feature-arrow">
+            Explore {{ product.name }} <i class="pi pi-arrow-right"></i>
+          </span>
+        </div>
+        <div class="products-cta reveal">
+          <RouterLink to="/products" class="btn btn-outline">
+            View All Products <i class="pi pi-arrow-right"></i>
           </RouterLink>
         </div>
       </div>
@@ -243,6 +295,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
+import { products } from '@/data/products.js'
+import JpilotLogo from '@/components/shared/JpilotLogo.vue'
 
 const heroCanvas = ref(null)
 const blogPosts = ref([])
@@ -614,6 +668,110 @@ onUnmounted(() => {
 .service-card:hover .service-arrow { opacity: 1; }
 .services-cta { text-align: center; margin-top: 48px; }
 
+/* ── Products ───────────────────────────────────────────────────────────────── */
+.products-section { background: var(--nt-dark-2); border-top: 1px solid var(--nt-border); }
+.product-feature-card {
+  cursor: pointer;
+  padding: 32px;
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.product-feature-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 28px;
+  align-items: center;
+}
+.product-feature-logo-wrap {
+  width: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--nt-border);
+  border-radius: 16px;
+}
+.product-feature-logo {
+  width: 100%;
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
+  display: block;
+}
+.product-feature-tagline {
+  font-size: 0.88rem;
+  color: var(--nt-secondary);
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-family: var(--font-heading);
+}
+.product-feature-title {
+  font-size: 1.35rem;
+  margin: 6px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.product-version {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(0, 168, 224, 0.15);
+  border: 1px solid rgba(0, 168, 224, 0.3);
+  color: var(--nt-secondary);
+  font-family: var(--font-heading);
+  letter-spacing: 0.04em;
+}
+.product-feature-desc {
+  font-size: 0.92rem;
+  color: var(--nt-text-muted);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.product-feature-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.product-feature-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 140px;
+}
+.product-metric { text-align: center; }
+.product-metric-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--nt-secondary);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.product-metric-label {
+  font-size: 0.68rem;
+  color: var(--nt-text-muted);
+  font-weight: 600;
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+}
+.product-feature-arrow {
+  font-size: 0.82rem;
+  color: var(--nt-primary-l);
+  font-weight: 600;
+  font-family: var(--font-heading);
+  align-self: flex-end;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.product-feature-card:hover .product-feature-arrow { opacity: 1; }
+.products-cta { text-align: center; margin-top: 40px; }
+
 /* ── Why section ───────────────────────────────────────────────────────────── */
 .section-dark { background: var(--nt-dark-2); }
 .why-grid {
@@ -777,6 +935,15 @@ onUnmounted(() => {
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-feature-grid { grid-template-columns: auto 1fr; }
+  .product-feature-metrics {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .product-metric { min-width: 120px; }
   .why-grid { grid-template-columns: 1fr; gap: 40px; }
   .industries-grid { grid-template-columns: repeat(2, 1fr); }
   .blog-grid { grid-template-columns: repeat(2, 1fr); }

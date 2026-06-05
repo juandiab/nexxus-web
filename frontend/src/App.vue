@@ -1,7 +1,8 @@
 <template>
   <div class="app-root">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <NavBar />
-    <main>
+    <main id="main-content">
       <RouterView v-slot="{ Component }">
         <Transition name="page" mode="out-in">
           <component :is="Component" />
@@ -50,4 +51,25 @@ onMounted(() => {
 <style>
 .app-root { min-height: 100vh; display: flex; flex-direction: column; }
 main { flex: 1; }
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 10000;
+  padding: 10px 18px;
+  background: var(--nt-primary);
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 16px;
+  outline: 2px solid var(--nt-secondary);
+  outline-offset: 2px;
+}
 </style>

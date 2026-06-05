@@ -95,6 +95,18 @@
         <div class="section-header reveal" style="text-align:center">
           <span class="section-label">The Team</span>
           <h2 class="section-title" style="color:var(--nt-navy)">Meet the Team</h2>
+          <div class="team-controls">
+            <button
+              type="button"
+              class="team-pause-btn"
+              :aria-label="teamPaused ? 'Resume team carousel' : 'Pause team carousel'"
+              :aria-pressed="teamPaused"
+              @click="toggleTeamAutoplay"
+            >
+              <i :class="teamPaused ? 'pi pi-play' : 'pi pi-pause'"></i>
+              {{ teamPaused ? 'Resume' : 'Pause' }}
+            </button>
+          </div>
         </div>
         <div class="team-carousel reveal">
           <Carousel
@@ -178,9 +190,11 @@ import Carousel from 'primevue/carousel'
 
 const TEAM_AUTOPLAY_MS = 3000
 const teamPage = ref(0)
+const teamPaused = ref(false)
 let teamAutoplayTimer = null
 
 function startTeamAutoplay() {
+  if (teamPaused.value) return
   stopTeamAutoplay()
   teamAutoplayTimer = setInterval(() => {
     teamPage.value = (teamPage.value + 1) % teamMembers.length
@@ -191,6 +205,15 @@ function stopTeamAutoplay() {
   if (teamAutoplayTimer) {
     clearInterval(teamAutoplayTimer)
     teamAutoplayTimer = null
+  }
+}
+
+function toggleTeamAutoplay() {
+  teamPaused.value = !teamPaused.value
+  if (teamPaused.value) {
+    stopTeamAutoplay()
+  } else {
+    startTeamAutoplay()
   }
 }
 
@@ -408,7 +431,39 @@ const presence = [
 .value-item p { font-size: 0.875rem; color: var(--nt-text-muted); }
 
 .team-section { background: var(--nt-light-bg); }
-.team-carousel { margin-top: 48px; }
+.team-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.team-pause-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 100px;
+  color: var(--nt-primary);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: var(--nt-transition);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+.team-pause-btn:hover {
+  background: var(--nt-primary);
+  border-color: var(--nt-primary);
+  color: white;
+}
+.team-pause-btn:focus-visible {
+  outline: 2px solid var(--nt-secondary);
+  outline-offset: 2px;
+}
+.team-pause-btn .pi { font-size: 0.85rem; }
+.team-carousel { margin-top: 32px; }
 .team-carousel :deep(.p-carousel-content-container) { overflow: visible; }
 .team-carousel :deep(.p-carousel-item) { flex: 1 0 100%; }
 .team-carousel :deep(.p-carousel-prev-button),

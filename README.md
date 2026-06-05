@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.09** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.10** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,13 @@
 ---
 
 ## Changelog
+
+### v0.10 — 2026-06-05
+- **SEO** — per-route meta titles/descriptions, canonical URLs, Open Graph/Twitter cards, and JSON-LD (Organization, Person, Service, FAQPage, SoftwareApplication); `robots.txt` and `sitemap.xml` added
+- **FAQ** — new `/faq` page with 10 accordion items; footer link; FAQPage structured data
+- **Products** — new `/products` page for JPilot (overview, philosophy, capabilities, roles, platforms, founder note); homepage product showcase; nav and footer **Products** links
+- **JPilot** — product narrative from activation letter; `JpilotLogo` component (dark/light SVG variants); platform cards styled like the About vision grid
+- **Accessibility** — skip-to-content link, nav landmarks, contact form `aria-*`, team carousel pause/resume control
 
 ### v0.09 — 2026-06-04
 - **Branding** — new Nexxus Tech wordmark SVG and PNG favicon across the public site, admin console, and activation portal; legacy `logo*.svg` assets removed

@@ -1,0 +1,27 @@
+# Nexxus Tech — https://nexxus-tech.com
+User-agent: *
+Allow: /
+
+# Non-marketing application surfaces
+Disallow: /adminconsole/
+Disallow: /licensing/
+
+# AI crawlers — allow public marketing content
+User-agent: GPTBot
+Allow: /
+Disallow: /adminconsole/
+Disallow: /licensing/
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+Sitemap: https://nexxus-tech.com/sitemap.xml

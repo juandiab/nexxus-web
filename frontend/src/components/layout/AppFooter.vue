@@ -17,7 +17,7 @@
         </div>
 
         <!-- Services col -->
-        <div class="footer-col">
+        <nav class="footer-col" aria-label="Services">
           <h4 class="footer-col-title">Services</h4>
           <ul>
             <li><RouterLink to="/services#waf">WAF & API Protection</RouterLink></li>
@@ -26,17 +26,27 @@
             <li><RouterLink to="/services#cloud">Cloud Security</RouterLink></li>
             <li><RouterLink to="/services#ai">AI & Automation</RouterLink></li>
           </ul>
-        </div>
+        </nav>
+
+        <!-- Products col -->
+        <nav class="footer-col" aria-label="Products">
+          <h4 class="footer-col-title">Products</h4>
+          <ul>
+            <li><RouterLink to="/products#jpilot">JPilot</RouterLink></li>
+            <li><RouterLink to="/products">All Products</RouterLink></li>
+          </ul>
+        </nav>
 
         <!-- Company col -->
-        <div class="footer-col">
+        <nav class="footer-col" aria-label="Company">
           <h4 class="footer-col-title">Company</h4>
           <ul>
             <li><RouterLink to="/about">About Us</RouterLink></li>
+            <li><RouterLink to="/faq">FAQ</RouterLink></li>
             <li><RouterLink to="/blog">Blog & Insights</RouterLink></li>
             <li><RouterLink to="/contact">Contact</RouterLink></li>
           </ul>
-        </div>
+        </nav>
 
         <!-- Contact col -->
         <div class="footer-col">
@@ -93,8 +103,8 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
-  gap: 48px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  gap: 40px;
   margin-bottom: 60px;
 }
 .footer-logo { height: 48px; width: auto; margin-bottom: 20px; display: block; }

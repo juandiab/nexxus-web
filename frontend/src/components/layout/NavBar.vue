@@ -7,7 +7,7 @@
       </RouterLink>
 
       <!-- Desktop nav -->
-      <nav class="navbar-links">
+      <nav class="navbar-links" aria-label="Main navigation">
         <RouterLink v-for="link in links" :key="link.to" :to="link.to" class="nav-link">
           {{ link.label }}
         </RouterLink>
@@ -24,7 +24,7 @@
 
     <!-- Mobile menu -->
     <Transition name="mobile-menu">
-      <div v-if="menuOpen" class="mobile-nav">
+      <div v-if="menuOpen" class="mobile-nav" role="navigation" aria-label="Mobile navigation">
         <RouterLink
           v-for="link in links"
           :key="link.to"
@@ -53,6 +53,7 @@ const logoSrc = logo
 const links = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
+  { to: '/products', label: 'Products' },
   { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },
 ]

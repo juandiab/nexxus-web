@@ -97,6 +97,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { renderMarkdown } from '@/utils/renderMarkdown.js'
+import { applySeo } from '@/utils/seo.js'
+import { jsonLdForRoute } from '@/data/structuredData.js'
 
 const route = useRoute()
 const post = ref(null)
@@ -127,9 +129,22 @@ const fetchPost = async (slug) => {
     ])
     post.value = postRes.data
     allPosts.value = allRes.data
-    document.title = `${post.value.title} — Nexxus Tech Blog`
+    applySeo({
+      title: `${post.value.title} — Nexxus Tech Blog`,
+      description: post.value.excerpt,
+      path: `/blog/${post.value.slug}`,
+      type: 'article',
+      jsonLd: jsonLdForRoute('blog-post', { post: post.value }),
+    })
   } catch {
     post.value = null
+    applySeo({
+      title: 'Post Not Found — Nexxus Tech Blog',
+      description: 'The requested blog post could not be found.',
+      path: `/blog/${slug}`,
+      noindex: true,
+      jsonLd: jsonLdForRoute('blog'),
+    })
   } finally {
     loading.value = false
   }
