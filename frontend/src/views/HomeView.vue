@@ -14,9 +14,10 @@
           <span class="gradient-text">Most Critical Applications</span>
         </h1>
         <p class="hero-subtitle reveal reveal-delay-2">
-          Principal-level consulting in WAF, NetScaler ADC, Zero-Trust Architecture,
-          and AI-driven security automation. Delivered across
-          <strong>54+ countries</strong> for defense, finance, and enterprise.
+          <strong>Making expertise more accessible.</strong><br />
+          Through consulting, shared knowledge, and <strong>AI-driven innovation</strong>.<br />
+          <strong>Helping people and organizations</strong> learn, grow, and solve complex challenges.<br />
+          <strong>Inspiring the next generation of technology leaders</strong> across <strong>54+ countries</strong>.
         </p>
         <div class="hero-actions reveal reveal-delay-3">
           <RouterLink to="/services" class="btn btn-primary">
@@ -73,7 +74,7 @@
             v-for="(svc, i) in services"
             :key="svc.id"
             :class="`card service-card reveal reveal-delay-${(i % 4) + 1}`"
-            @click="$router.push(`/services#${svc.id}`)"
+            @click="$router.push(`/services#${svc.serviceHash || svc.id}`)"
           >
             <div class="service-icon" :style="{ background: svc.bg }">
               <i :class="svc.icon"></i>
@@ -103,14 +104,15 @@
           <div class="why-left reveal">
             <span class="section-label">Why Nexxus Tech</span>
             <h2 class="section-title">
-              Principal Architects.<br />
-              <span class="highlight">Real-World Results.</span>
+              Principals Who<br />
+              <span class="highlight">Show Up &amp; Stay.</span>
             </h2>
             <p class="section-subtitle">
-              We don't send juniors. Every engagement is led by a principal-level
-              architect with hands-on experience in the world's most demanding
-              security environments — from UAE Ministry of Defense to
-              Barclays and Emirates Airlines.
+              We don't send juniors. Every engagement is led by a principal architect
+              who works alongside your team — not above it. We've spent years in the
+              trenches of complex security and infrastructure work, and we believe
+              that expertise means little unless it helps people learn, grow, and
+              move forward with confidence.
             </p>
             <div class="why-list">
               <div v-for="item in whyItems" :key="item.title" class="why-item">
@@ -296,21 +298,22 @@ const services = [
     tags: ['Python', 'LLM', 'NITRO API', 'Automation'],
   },
   {
-    id: 'citrix',
-    icon: 'pi pi-desktop',
+    id: 'adc-migrations',
+    serviceHash: 'netscaler',
+    icon: 'pi pi-arrow-right-arrow-left',
     bg: 'linear-gradient(135deg,rgba(0,123,167,0.15),rgba(38,38,42,0.3))',
-    title: 'Citrix Virtual Apps & Desktops',
-    desc: 'Expert design and delivery of Citrix Virtual Apps & Desktops environments, Citrix Cloud, and DaaS migrations with security-first architecture.',
-    tags: ['Citrix Cloud', 'VAD', 'DaaS', 'CVAD'],
+    title: 'ADC Platform Migrations',
+    desc: '50+ technology migrations between F5 BIG-IP and NetScaler ADC — either direction — plus legacy load balancer transitions, WAF/LTM policy porting, and parallel-run cutovers.',
+    tags: ['F5 BIG-IP', 'NetScaler', 'ADC Migration', 'WAF Policy'],
   },
 ]
 
 // ── Why items ─────────────────────────────────────────────────────────────────
 const whyItems = [
-  { title: 'SME-Level Expertise', desc: 'Citrix-recognized Subject Matter Expert — co-author of NetScaler certification exams.' },
-  { title: 'Global Track Record', desc: 'UAE Ministry of Defense, Barclays, Emirates Airlines, United Nations, and more.' },
-  { title: 'Hands-On Leadership', desc: '90% team retention rate — we build specialists, not just deliver projects.' },
-  { title: 'AI-First Mindset', desc: 'Automating infrastructure management with Python, OpenAI, and modern DevSecOps practices.' },
+  { title: 'Principal-Only Delivery', desc: 'You work directly with the architects who design and deliver the solution — no handoffs, no layers in between.' },
+  { title: 'Knowledge Shared Openly', desc: "We don't hoard expertise. We explain, document, and transfer what we know so your team is stronger when we step away." },
+  { title: 'People Before Platforms', desc: "A successful engagement isn't just a working system — it's a team that feels more capable and confident facing what comes next." },
+  { title: 'AI That Amplifies You', desc: 'We use automation and AI to support human judgment — freeing your specialists to focus on the decisions that actually matter.' },
 ]
 
 // ── Regions ───────────────────────────────────────────────────────────────────

@@ -5,11 +5,11 @@
       <div class="footer-grid">
         <!-- Brand col -->
         <div class="footer-brand">
-          <img src="@/assets/logo-white.svg" alt="Nexxus Tech" class="footer-logo" />
+          <img src="@/assets/nexxus-tech-logo-full-large.svg" alt="Nexxus Tech" class="footer-logo" />
           <p class="footer-desc">
-            Principal-level consulting in WAF, Application Delivery Controllers,
-            Zero-Trust Architecture, and AI-driven security automation.
-            Deployed across 54+ countries.
+            Empowering people and organizations through consulting, architecture,
+            shared knowledge, and AI-driven innovation. Inspiring growth, solving
+            complex challenges, and making expertise more accessible.
           </p>
           <div class="footer-social">
             <SocialLinks variant="icons" />
@@ -97,7 +97,7 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
   gap: 48px;
   margin-bottom: 60px;
 }
-.footer-logo { height: 40px; margin-bottom: 20px; display: block; }
+.footer-logo { height: 48px; width: auto; margin-bottom: 20px; display: block; }
 .footer-desc {
   font-size: 0.9rem;
   color: var(--nt-text-muted);

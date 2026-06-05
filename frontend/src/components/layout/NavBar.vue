@@ -43,16 +43,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
-import logoWhite from '@/assets/logo-white.svg'
-import logoColored from '@/assets/logo.svg'
+import { ref, onMounted, onUnmounted } from 'vue'
+import logo from '@/assets/nexxus-tech-logo-full-large.svg'
 
 const isScrolled = ref(false)
 const menuOpen = ref(false)
-const route = useRoute()
-
-const logoSrc = computed(() => logoWhite)
+const logoSrc = logo
 
 const links = [
   { to: '/', label: 'Home' },
@@ -88,7 +84,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   height: 72px;
 }
 .navbar-logo { display: flex; align-items: center; }
-.logo-img { height: 42px; width: auto; }
+.logo-img { height: 52px; width: auto; display: block; }
 
 .navbar-links {
   display: flex;

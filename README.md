@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.08** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.09** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,15 @@
 ---
 
 ## Changelog
+
+### v0.09 — 2026-06-04
+- **Branding** — new Nexxus Tech wordmark SVG and PNG favicon across the public site, admin console, and activation portal; legacy `logo*.svg` assets removed
+- **Home** — hero subtitle reframed with emphasized messaging (accessibility, AI-driven innovation, people-first growth, 54+ countries)
+- **Home** — “Why Nexxus Tech” copy refresh; sixth service card updated to **ADC Platform Migrations** (F5 BIG-IP ↔ NetScaler)
+- **Services** — NetScaler section expanded for bidirectional ADC migrations, WAF/LTM policy translation, and parallel-run cutovers
+- **About** — **Our Vision** section (`/about#vision`): “People First. Technology Amplified.” with AI pull quote
+- **About** — **Sebastian Garcia Tabares** added to Meet the Team (Principal Enterprise Networking Architect · CCIE Enterprise)
+- **JPbot** — “Chat with JPbot” invite shows once per browser session; auto-dismisses after 5 seconds; no repeat after close (chat still available via the bubble)
 
 ### v0.08 — 2026-06-04
 - **Activation page** — Arabic founder letter (UAE locale) with RTL layout; form UI stays English when Arabic is selected
@@ -214,6 +223,8 @@ website/
 
 JPbot collects name, email, company, and service, then discusses the visitor's needs. When ready, they submit an enquiry (same email flow as the contact form). Draft details can pre-fill `/contact` via session storage.
 
+The **“Chat with JPbot”** invite card appears ~2.5s after page load, once per browser session. It auto-closes after 5 seconds if ignored, or when dismissed manually; it does not reappear until a new session. Visitors can always open chat from the floating bubble.
+
 ---
 
 ## Managing the blog
@@ -237,9 +248,9 @@ Copy `backend/data/blog_post.template.json` if you prefer to edit JSON by hand.
 
 ## Replacing the Logo
 
-Logo files are SVG with transparent backgrounds:
-- `frontend/src/assets/logo.svg` — full logo (for light backgrounds)
-- `frontend/src/assets/logo-white.svg` — full logo (for dark backgrounds)
-- `frontend/src/assets/logo-icon.svg` — icon only (used as favicon)
+Logo files (SVG):
+- `frontend/public/nexxus-tech-logo-full-large.svg` — full wordmark (navbar, footer, admin header)
+- `frontend/public/nexxus-tech-icon.png` — favicon (300×300)
+- `frontend/src/assets/nexxus-tech-logo-full-large.svg` — copy imported by navbar/footer
 
-Replace any of these files and rebuild the frontend (`docker compose up -d --build frontend`).
+Replace the public files, sync to `src/assets/`, then rebuild (`docker compose up -d --build frontend`).

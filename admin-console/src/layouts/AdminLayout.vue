@@ -2,8 +2,7 @@
   <div class="admin-layout">
     <header class="admin-header">
       <div class="brand">
-        <span class="brand-mark">N</span>
-        <span class="brand-name">Nexxus Tech</span>
+        <img src="@/assets/nexxus-tech-logo-full-large.svg" alt="Nexxus Tech" class="brand-logo" />
         <span class="brand-badge">Admin</span>
       </div>
       <nav class="admin-nav">
@@ -95,16 +94,10 @@ function onLogout() {
   gap: 0.75rem;
 }
 
-.brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
-  background: var(--p-primary-color);
-  font-weight: 700;
-  font-size: 0.95rem;
+.brand-logo {
+  height: 2.5rem;
+  width: auto;
+  display: block;
 }
 
 .brand-name {

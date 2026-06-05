@@ -107,7 +107,7 @@ const services = [
     light: true,
     reverse: true,
     title: 'NetScaler ADC & Application Delivery',
-    desc: 'Full lifecycle Citrix NetScaler (ADC) services from architecture design to hands-on deployment. As a Citrix-recognized SME and co-author of NetScaler certification exams, we bring unmatched depth to every engagement.',
+    desc: 'Full lifecycle Citrix NetScaler (ADC) services from architecture design to hands-on deployment — including large-scale platform migrations between F5 BIG-IP and NetScaler in either direction. As a Citrix-recognized SME and co-author of NetScaler certification exams, we bring unmatched depth to every engagement.',
     features: [
       'High-availability clustering (active-active, active-passive)',
       'SSL/TLS offloading and certificate management',
@@ -115,13 +115,15 @@ const services = [
       'Content switching and traffic steering policies',
       'NetScaler Gateway for secure remote access',
       'Citrix ADM integration for centralized management',
-      'Migration from F5 or legacy load balancers to NetScaler',
+      'F5 BIG-IP ↔ NetScaler ADC migrations (bidirectional)',
+      'Legacy load balancer transitions with WAF/LTM policy translation',
+      'Parallel-run cutover planning for minimal service impact',
     ],
-    tags: ['NetScaler', 'ADC', 'GSLB', 'SSL Offload', 'HA Clustering', 'Citrix Gateway'],
+    tags: ['NetScaler', 'F5 BIG-IP', 'ADC Migration', 'GSLB', 'SSL Offload', 'Citrix Gateway'],
     metrics: [
       { value: 'SME', label: 'Citrix Recognized Expert' },
       { value: '200+', label: 'NetScaler Deployments' },
-      { value: '0', label: 'Downtime Migrations' },
+      { value: '50+', label: 'ADC Platform Migrations' },
     ],
   },
   {

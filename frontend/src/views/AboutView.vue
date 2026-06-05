@@ -13,6 +13,51 @@
       </div>
     </section>
 
+    <!-- Vision -->
+    <section id="vision" class="section vision-section">
+      <div class="container">
+        <div class="vision-layout reveal">
+          <div class="vision-intro">
+            <span class="section-label">Our Vision</span>
+            <h2 class="section-title vision-title">
+              People First.<br />
+              <span class="gradient-text">Technology Amplified.</span>
+            </h2>
+          </div>
+          <div class="vision-body">
+            <p class="vision-lead">
+              Nexxus Tech exists to close the gap between complex technology and the people who need to master it.
+            </p>
+            <p>
+              We believe the most valuable outcome of any engagement isn't the solution we deliver — it's the team
+              that comes out the other side better prepared, more confident, and more capable of facing what comes
+              next. Watching people grow has always been the most rewarding part of this work. It still is.
+            </p>
+            <blockquote class="vision-quote">
+              <p>
+                Artificial Intelligence does not replace human creativity. It amplifies it. The best tools enhance
+                what people are already capable of — and it is still people who bring judgment, experience,
+                creativity, and purpose to everything that matters.
+              </p>
+            </blockquote>
+            <p>
+              We build tools and deliver expertise at the intersection of Cloud, Security, and AI — not to replace
+              human judgment, but to amplify it.
+            </p>
+            <p>
+              More than technology, we strive to build a bridge between people, knowledge, and inspiration. Because
+              we believe the best solutions don't come from one expert or one team — they emerge when a community
+              shares what it knows, what it has lived, and what it dares to imagine.
+            </p>
+            <p class="vision-closing">
+              The future belongs to those who remain curious, keep learning, and are willing to help others grow.
+              That is why Nexxus Tech exists.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Mission -->
     <section class="section section-dark">
       <div class="container">
@@ -246,6 +291,34 @@ const teamMembers = [
       { category: 'Tools & Leadership', items: ['Figma', 'Miro', 'Design Systems', 'Cross-Functional Leadership', 'Jira', 'Confluence'] },
     ],
   },
+  {
+    initials: 'SG',
+    name: 'Sebastian Garcia Tabares',
+    role: 'Principal Enterprise Networking Architect · CCIE Enterprise',
+    tagline: 'Cisco DNA · SD-Access · SD-WAN · Enterprise Networking · Cloud & Cybersecurity',
+    badges: [
+      { label: 'CCIE Enterprise', highlight: true },
+      { label: 'Cisco SD-Access' },
+      { label: 'SD-WAN & DNA' },
+    ],
+    bio: [
+      'Electronics Engineer with <strong>15+ years</strong> in technical pre-sales, consulting, and enterprise networking solutions for regional and global organizations. Deep expertise in Software Defined Networking—<strong>Cisco DNA</strong>, <strong>SD-Access</strong>, <strong>SD-WAN</strong>, enterprise networking, cloud infrastructure, and cybersecurity. Currently Enterprise Networking Solutions Engineer at Cisco, driving strategic opportunities through consultative solution design, technical pre-sales, and architectural guidance across Cisco\'s portfolio.',
+      'Career spanning Cisco (Systems Engineer &amp; Enterprise Networking Solutions Engineer), ngena (Value Architect for SD-WAN), Desca (Cisco Gold Partner), and AVANTEL—from NOC operations and core transport engineering through presales and value architecture. Holds <strong>CCIE Enterprise (#63068)</strong> and Cisco SD-Access PoV Certified Engineer credentials. Recognized as <em>Cisco LATAM Sales Champion FY19</em> (Top 10% Sales/Engineering Performers). Based in Bogotá, Colombia.',
+    ],
+    certs: [
+      'CCIE Enterprise #63068',
+      'Cisco SD-Access PoV Certified Engineer',
+      'Cisco LATAM Sales Champion FY19 (Top 10%)',
+      'Cisco Bronze Volunteer FY16',
+      'Electronics Engineering – National University of Colombia (2006)',
+    ],
+    skills: [
+      { category: 'Networking & SDN', items: ['Cisco DNA', 'SD-Access', 'SD-WAN', 'Enterprise Networking', 'Network Programmability', 'Network Automation'] },
+      { category: 'Platforms & Architecture', items: ['Cisco Catalyst', 'Enterprise Architecture', 'Solution Design', 'Managed Services', 'Data Center'] },
+      { category: 'Cloud & Security', items: ['Cloud Infrastructure', 'Cybersecurity', 'Security Solutions'] },
+      { category: 'Consulting & Sales', items: ['Technical Pre-Sales', 'Solution-Oriented Selling', 'Technical Consulting', 'Customer Success', 'RFP/RFI Response'] },
+    ],
+  },
 ]
 
 const presence = [
@@ -270,6 +343,56 @@ const presence = [
 }
 .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
 .page-hero-subtitle { font-size: 1.1rem; color: var(--nt-text-muted); margin-top: 16px; max-width: 560px; line-height: 1.75; }
+
+.vision-section {
+  background: var(--nt-light-bg);
+  border-top: 1px solid rgba(0, 123, 167, 0.08);
+  border-bottom: 1px solid rgba(0, 123, 167, 0.08);
+}
+.vision-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: 64px;
+  align-items: start;
+}
+.vision-title {
+  color: var(--nt-navy);
+  max-width: 16ch;
+}
+.vision-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.vision-body p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: #334155;
+}
+.vision-lead {
+  font-size: 1.15rem !important;
+  font-weight: 600;
+  color: var(--nt-navy) !important;
+}
+.vision-quote {
+  margin: 8px 0;
+  padding: 24px 28px;
+  border-left: 4px solid var(--nt-primary);
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(135deg, rgba(0, 123, 167, 0.08), rgba(0, 123, 167, 0.02));
+}
+.vision-quote p {
+  margin: 0;
+  font-size: 1.05rem !important;
+  font-style: italic;
+  color: var(--nt-navy) !important;
+  line-height: 1.8 !important;
+}
+.vision-closing {
+  font-weight: 600;
+  color: var(--nt-primary) !important;
+}
 
 .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
 .mission-values { display: flex; flex-direction: column; gap: 24px; }
@@ -363,6 +486,8 @@ const presence = [
 .presence-card p { font-size: 0.875rem; color: var(--nt-text-muted); line-height: 1.6; }
 
 @media (max-width: 1024px) {
+  .vision-layout { grid-template-columns: 1fr; gap: 32px; }
+  .vision-title { max-width: none; }
   .mission-grid { grid-template-columns: 1fr; gap: 48px; }
   .team-card { grid-template-columns: 1fr; }
   .team-card-left { flex-direction: row; justify-content: flex-start; align-items: center; }

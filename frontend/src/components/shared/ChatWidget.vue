@@ -309,7 +309,8 @@ import { formatChatMessage } from '@/utils/formatChatMessage.js'
 
 const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
 const CHAT_SIZE_KEY = 'nexxus-jpbot-chat-size'
-const INVITE_REMIND_MS = 90_000
+const INVITE_DELAY_MS = 2_500
+const INVITE_AUTO_DISMISS_MS = 5_000
 
 const SERVICES = [
   'WAF & API Protection',
@@ -406,7 +407,28 @@ const canSubmit = ref(false)
 const allowEarlySubmit = ref(false)
 const contactErrors = ref({ name: '', email: '' })
 let inviteTimer = null
-let remindTimer = null
+let autoDismissTimer = null
+
+const wasInviteDismissed = () => {
+  try {
+    return sessionStorage.getItem(INVITE_DISMISS_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+const markInviteDismissed = () => {
+  try {
+    sessionStorage.setItem(INVITE_DISMISS_KEY, '1')
+  } catch { /* ignore */ }
+}
+
+const clearAutoDismissTimer = () => {
+  if (autoDismissTimer) {
+    clearTimeout(autoDismissTimer)
+    autoDismissTimer = null
+  }
+}
 
 const panelValues = ref({
   enquiry_type: '',
@@ -484,19 +506,26 @@ const pushUser = (content) => messages.value.push({ role: 'user', content })
 const isValidEmail = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)
 
 const showInvitePopup = () => {
-  if (!isOpen.value) showInvite.value = true
+  if (isOpen.value || wasInviteDismissed()) return
+  showInvite.value = true
+  clearAutoDismissTimer()
+  autoDismissTimer = setTimeout(dismissInvite, INVITE_AUTO_DISMISS_MS)
 }
 
 const dismissInvite = () => {
   showInvite.value = false
-  try {
-    sessionStorage.setItem(INVITE_DISMISS_KEY, String(Date.now()))
-  } catch { /* ignore */ }
-  remindTimer = setTimeout(showInvitePopup, INVITE_REMIND_MS)
+  clearAutoDismissTimer()
+  markInviteDismissed()
 }
 
 const openFromInvite = () => {
+  if (inviteTimer) {
+    clearTimeout(inviteTimer)
+    inviteTimer = null
+  }
   showInvite.value = false
+  clearAutoDismissTimer()
+  markInviteDismissed()
   isOpen.value = true
   nextTick(() => {
     if (!intakePanel.value) inputEl.value?.focus()
@@ -506,9 +535,6 @@ const openFromInvite = () => {
 
 const closeChat = () => {
   isOpen.value = false
-  if (!submitted.value) {
-    setTimeout(showInvitePopup, 800)
-  }
 }
 
 const toggleChat = () => {
@@ -761,12 +787,14 @@ onMounted(() => {
     const saved = sessionStorage.getItem(CHAT_SIZE_KEY)
     if (saved === 'compact' || saved === 'expanded') chatSize.value = saved
   } catch { /* ignore */ }
-  inviteTimer = setTimeout(showInvitePopup, 2500)
+  if (!wasInviteDismissed()) {
+    inviteTimer = setTimeout(showInvitePopup, INVITE_DELAY_MS)
+  }
 })
 
 onUnmounted(() => {
   clearTimeout(inviteTimer)
-  clearTimeout(remindTimer)
+  clearAutoDismissTimer()
   if (typeof document !== 'undefined') document.body.style.overflow = ''
 })
 </script>
