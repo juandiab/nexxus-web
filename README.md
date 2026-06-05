@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.06** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.07** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,13 @@
 ---
 
 ## Changelog
+
+### v0.07 — 2026-06-04
+- **Activation page** — trilingual founder letter (English, Spanish, Portuguese) with SVG flag language switcher (Windows-compatible); form on the right, letter on the left
+- **Activation UX** — deployment details under “Your information”; app fingerprint hidden; activation date shown as DD-MM-YYYY
+- **Country field** — PrimeVue AutoComplete with searchable country list; OFAC high-risk jurisdictions excluded from selection
+- **Licensing API v0.7.1** — `country` captured and stored at activation
+- **Admin console** — extend license dialog defaults to 30 additional days
 
 ### v0.06 — 2026-06-04
 - **Licensing system enabled** — end-to-end activation, sync, and admin management for on-premises products (e.g. JPilot); see [Licensing system overview](#licensing-system-overview) below

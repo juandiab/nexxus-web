@@ -76,6 +76,7 @@ async def request_activation(
     name: str,
     email: str,
     company: str,
+    country: str,
     usage_type: str,
 ) -> tuple[dict[str, Any], str, str]:
     cleaned_email = email.strip().lower()
@@ -89,6 +90,9 @@ async def request_activation(
     license_type, validity_days = resolve_activation_terms(usage_type)
     cleaned_usage = usage_type.strip().lower()
     cleaned_company = company.strip()
+    cleaned_country = country.strip()
+    if not cleaned_country:
+        raise ValueError("Country is required.")
     if cleaned_usage != "personal" and not cleaned_company:
         raise ValueError("Company is required for non-personal license use.")
 
@@ -110,6 +114,7 @@ async def request_activation(
         "name": name.strip(),
         "email": cleaned_email,
         "company": cleaned_company,
+        "country": cleaned_country,
         "application": cleaned_application,
         "appFingerprint": cleaned_fingerprint,
         "appName": cleaned_application,
@@ -198,6 +203,7 @@ async def verify_activation_otp(
         "name": pending["name"],
         "email": cleaned_email,
         "company": pending.get("company", ""),
+        "country": pending.get("country", ""),
         "usageType": pending.get("usageType"),
         "registrationDate": registration_date,
         "licenseType": pending.get("licenseType", "free"),

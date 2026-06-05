@@ -252,7 +252,7 @@ const selectedLicense = ref(null)
 const extendVisible = ref(false)
 const typeVisible = ref(false)
 const deleteVisible = ref(false)
-const extendDays = ref(90)
+const extendDays = ref(30)
 const deleteConfirmText = ref('')
 const typeForm = ref({
   licenseType: 'free',
@@ -404,7 +404,7 @@ function confirmToggleActive(license) {
 
 function openExtendDialog(license) {
   selectedLicense.value = license
-  extendDays.value = license.validityDays || 90
+  extendDays.value = 30
   extendVisible.value = true
 }
 

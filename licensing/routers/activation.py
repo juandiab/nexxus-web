@@ -96,6 +96,7 @@ async def _handle_activation_request(
             name=payload.name,
             email=payload.email,
             company=payload.company,
+            country=payload.country,
             usage_type=payload.usageType,
         )
     except ValueError as exc:

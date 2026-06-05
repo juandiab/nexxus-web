@@ -10,6 +10,7 @@ class LicenseCreateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=128)
     email: EmailStr
     company: str = Field(default="", max_length=256)
+    country: str = Field(default="", max_length=128)
     licenseType: LicenseType = "free"
     application: str = Field(min_length=1, max_length=128)
     validityDays: int | None = Field(default=None, ge=1, le=3650)
@@ -19,6 +20,7 @@ class LicenseUpdateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=128)
     email: EmailStr
     company: str = Field(default="", max_length=256)
+    country: str = Field(default="", max_length=128)
     licenseType: LicenseType
     application: str = Field(min_length=1, max_length=128)
     validityDays: int = Field(ge=1, le=3650)
@@ -38,6 +40,7 @@ class LicenseResponse(BaseModel):
     name: str
     email: str
     company: str
+    country: str = ""
     registrationDate: datetime | None = None
     licenseType: LicenseType
     usageType: str | None = None

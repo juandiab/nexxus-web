@@ -5,43 +5,62 @@
       <div class="container page-hero-content">
         <span class="section-label reveal">License Activation</span>
         <h1 class="reveal reveal-delay-1">Activate Your<br /><span class="gradient-text">Application</span></h1>
-        <p class="page-hero-subtitle reveal reveal-delay-2">
-          Confirm deployment details and enter your information to receive a license code by email.
-        </p>
+        <p class="page-hero-subtitle reveal reveal-delay-2">{{ ui.heroSubtitle }}</p>
       </div>
     </section>
 
     <section class="section activate-section">
       <div class="container activate-grid">
-        <div class="deployment-card reveal">
-          <h2>Deployment details</h2>
-          <p class="card-subtitle">Received from your application.</p>
-          <dl class="param-list">
-            <div class="param-row">
-              <dt>App fingerprint</dt>
-              <dd>{{ appFingerprint || '—' }}</dd>
-            </div>
-            <div class="param-row">
-              <dt>App name</dt>
-              <dd>{{ appName || '—' }}</dd>
-            </div>
-            <div class="param-row">
-              <dt>Activation date</dt>
-              <dd>{{ activationDate || '—' }}</dd>
-            </div>
-          </dl>
-
-          <div class="license-meta">
-            <div class="meta-item">
-              <span class="meta-label">License type</span>
-              <span class="meta-value">{{ licensePreview.type }}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Validity</span>
-              <span class="meta-value">{{ licensePreview.days }} days</span>
+        <aside class="letter-card reveal">
+          <div class="letter-toolbar">
+            <div class="lang-flags" role="group" aria-label="Language">
+              <button
+                v-for="code in LETTER_LOCALES"
+                :key="code"
+                type="button"
+                class="lang-flag"
+                :class="{ active: locale === code }"
+                :title="LOCALE_FLAGS[code].label"
+                :aria-label="LOCALE_FLAGS[code].label"
+                :aria-pressed="locale === code"
+                @click="locale = code"
+              >
+                <img
+                  class="lang-flag-img"
+                  :src="`/flags/${LOCALE_FLAGS[code].iso}.svg`"
+                  :alt="LOCALE_FLAGS[code].label"
+                  width="24"
+                  height="16"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
             </div>
           </div>
-        </div>
+
+          <div class="letter-scroll">
+            <p class="letter-greeting">{{ letter.greeting }}</p>
+            <p
+              v-for="(paragraph, index) in letter.paragraphs"
+              :key="index"
+              class="letter-paragraph"
+            >
+              <template v-for="(segment, segIndex) in splitBoldSegments(paragraph)" :key="segIndex">
+                <strong v-if="segment.bold">{{ segment.text }}</strong>
+                <span v-else>{{ segment.text }}</span>
+              </template>
+            </p>
+            <div class="letter-signature">
+              <p class="letter-closing">{{ letter.closing }}</p>
+              <p class="letter-author">{{ letter.author }}</p>
+              <p class="letter-role">{{ letter.role }}</p>
+              <p class="letter-company">{{ letter.company }}</p>
+              <a :href="letter.website" class="letter-link" target="_blank" rel="noopener noreferrer">
+                {{ letter.website }}
+              </a>
+            </div>
+          </div>
+        </aside>
 
         <div class="form-card reveal reveal-delay-1">
           <h2>{{ stepTitle }}</h2>
@@ -51,17 +70,41 @@
             <template v-if="step === 'form'">
               <div class="form-row">
                 <div class="form-group">
-                  <label>Full Name *</label>
+                  <label>{{ ui.fullName }} *</label>
                   <input v-model="form.name" type="text" placeholder="Jane Smith" required />
                 </div>
                 <div class="form-group">
-                  <label>Email Address *</label>
+                  <label>{{ ui.email }} *</label>
                   <input v-model="form.email" type="email" placeholder="jane@company.com" required />
                 </div>
               </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>{{ ui.country }} *</label>
+                  <AutoComplete
+                    v-model="selectedCountry"
+                    option-label="name"
+                    :suggestions="filteredCountries"
+                    :placeholder="ui.countryPlaceholder"
+                    force-selection
+                    dropdown
+                    class="country-autocomplete w-full"
+                    @complete="searchCountries"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>{{ companyRequired ? `${ui.company} *` : ui.company }}</label>
+                  <input
+                    v-model="form.company"
+                    type="text"
+                    :placeholder="companyRequired ? ui.companyRequired : ui.companyOptional"
+                    :required="companyRequired"
+                  />
+                </div>
+              </div>
               <div class="form-group usage-group">
-                <label>License use *</label>
-                <div class="usage-segments" role="radiogroup" aria-label="License use">
+                <label>{{ ui.licenseUse }} *</label>
+                <div class="usage-segments" role="radiogroup" :aria-label="ui.licenseUse">
                   <label
                     v-for="option in usageOptions"
                     :key="option.value"
@@ -81,23 +124,36 @@
                 </div>
                 <p class="usage-hint">{{ selectedUsageHint }}</p>
               </div>
-              <div class="form-group">
-                <label>{{ companyRequired ? 'Company *' : 'Company' }}</label>
-                <input
-                  v-model="form.company"
-                  type="text"
-                  :placeholder="companyRequired ? 'Your organization name' : 'Optional for personal use'"
-                  :required="companyRequired"
-                />
+
+              <div class="deployment-panel">
+                <h3 class="deployment-heading">{{ ui.deploymentTitle }}</h3>
+                <p class="deployment-subtitle">{{ ui.deploymentSubtitle }}</p>
+                <dl class="param-list">
+                  <div class="param-row">
+                    <dt>{{ ui.appName }}</dt>
+                    <dd class="param-value">{{ appName || '—' }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.activationDate }}</dt>
+                    <dd class="param-value">{{ activationDateDisplay }}</dd>
+                  </div>
+                </dl>
+                <div class="license-meta">
+                  <div class="meta-item">
+                    <span class="meta-label">{{ ui.licenseType }}</span>
+                    <span class="meta-value">{{ licensePreview.type }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">{{ ui.validity }}</span>
+                    <span class="meta-value">{{ licensePreview.days }} {{ ui.days }}</span>
+                  </div>
+                </div>
               </div>
             </template>
 
             <template v-else-if="step === 'done'">
               <div class="offline-panel">
-                <p class="offline-lead">
-                  Your license is active. Enter the license code from your email in JPilot, or download
-                  the offline license file for air-gapped activation.
-                </p>
+                <p class="offline-lead">{{ ui.offlineLead }}</p>
                 <button
                   type="button"
                   class="btn btn-secondary download-btn"
@@ -105,17 +161,15 @@
                   @click="downloadOfflineLicense"
                 >
                   <i class="pi pi-download"></i>
-                  Download offline license
+                  {{ ui.downloadOffline }}
                 </button>
-                <small class="field-hint">
-                  Save the <strong>.lic</strong> file and import it in JPilot on systems without internet access.
-                </small>
+                <small class="field-hint">{{ ui.offlineHint }}</small>
               </div>
             </template>
 
             <template v-else-if="step === 'otp'">
               <div class="form-group">
-                <label>Email verification code *</label>
+                <label>{{ ui.otpLabel }} *</label>
                 <input
                   v-model="otp"
                   type="text"
@@ -127,20 +181,14 @@
                   required
                   @input="onOtpInput"
                 />
-                <small class="field-hint">
-                  Enter the <strong>6-digit verification code</strong> from your email — not the license code (which looks like XXXX-XXXX-XXXX-XXXX).
-                </small>
+                <small class="field-hint">{{ ui.otpHint }}</small>
               </div>
             </template>
 
             <div v-if="submitStatus === 'success'" class="alert alert-success">
               <i class="pi pi-check-circle"></i>
-              <span v-if="step === 'done'">
-                Email verified. Your license is active — use the license code from your email in your application.
-              </span>
-              <span v-else>
-                Codes sent to <strong>{{ submittedEmail }}</strong>. Enter the verification code to complete activation.
-              </span>
+              <span v-if="step === 'done'">{{ ui.successDone }}</span>
+              <span v-else>{{ ui.successOtp(submittedEmail) }}</span>
             </div>
             <div v-if="submitStatus === 'error'" class="alert alert-error">
               <i class="pi pi-times-circle"></i>
@@ -155,7 +203,7 @@
                 :disabled="submitting"
                 @click="backToForm"
               >
-                Back
+                {{ ui.back }}
               </button>
               <button
                 v-if="step === 'form' || step === 'otp'"
@@ -166,12 +214,10 @@
                 <i :class="submitting ? 'pi pi-spin pi-spinner' : step === 'form' ? 'pi pi-envelope' : 'pi pi-check'"></i>
                 {{
                   submitting
-                    ? 'Please wait…'
+                    ? ui.submitWait
                     : step === 'form'
-                      ? 'Generate license code'
-                      : step === 'done'
-                        ? 'Activation complete'
-                        : 'Confirm email'
+                      ? ui.submitGenerate
+                      : ui.submitConfirm
                 }}
               </button>
             </div>
@@ -183,45 +229,88 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import AutoComplete from 'primevue/autocomplete'
 import { requestActivation, verifyActivationOtp } from '@/api/licensing.js'
+import { CountryService } from '@/service/CountryService'
+import {
+  ACTIVATION_LETTERS,
+  ACTIVATION_UI,
+  LETTER_LOCALES,
+  LOCALE_FLAGS,
+  splitBoldSegments,
+} from '@/data/activation-i18n.js'
 
 const route = useRoute()
+const locale = ref('en')
+
+const letter = computed(() => ACTIVATION_LETTERS[locale.value])
+const ui = computed(() => ACTIVATION_UI[locale.value])
 
 const appFingerprint = computed(() => String(route.query.appfingerprint || '').trim())
 const appName = computed(() => String(route.query.appname || '').trim())
 const activationDate = computed(() => String(route.query.activationdate || '').trim())
 
+function formatActivationDate(value) {
+  if (!value) return '—'
+  const text = String(value).trim()
+  const normalized = /[zZ]$/.test(text) || /[+-]\d{2}:\d{2}$/.test(text) ? text : `${text}Z`
+  const date = new Date(normalized)
+  if (Number.isNaN(date.getTime())) return '—'
+  const dd = String(date.getUTCDate()).padStart(2, '0')
+  const mm = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const yyyy = String(date.getUTCFullYear())
+  return `${dd}-${mm}-${yyyy}`
+}
+
+const activationDateDisplay = computed(() => formatActivationDate(activationDate.value))
+
 const step = ref('form')
-const usageOptions = [
-  {
-    value: 'personal',
-    shortLabel: 'Personal',
-    description: 'Individual learning, testing, or non-commercial projects.',
-  },
-  {
-    value: 'onprem',
-    shortLabel: 'On-premises',
-    description: 'Internal deployment in infrastructure owned by your organization.',
-  },
-  {
-    value: 'cloud',
-    shortLabel: 'Cloud',
-    description: 'Internal deployment in cloud resources owned by your organization.',
-  },
-  {
-    value: 'consulting',
-    shortLabel: 'Consulting',
-    description: 'Deployment for a client organization, not your employer.',
-  },
-]
+const usageOptionKeys = ['personal', 'onprem', 'cloud', 'consulting']
+
+const usageOptions = computed(() =>
+  usageOptionKeys.map((value) => ({
+    value,
+    shortLabel: ui.value.usage[value].short,
+    description: ui.value.usage[value].hint,
+  })),
+)
+
 const form = reactive({
   name: '',
   email: '',
   company: '',
   usageType: 'personal',
 })
+
+const countries = ref([])
+const selectedCountry = ref(null)
+const filteredCountries = ref([])
+
+onMounted(() => {
+  CountryService.getCountries().then((data) => {
+    countries.value = data
+  })
+})
+
+function searchCountries(event) {
+  setTimeout(() => {
+    if (!event.query.trim().length) {
+      filteredCountries.value = [...countries.value]
+    } else {
+      filteredCountries.value = countries.value.filter((country) =>
+        country.name.toLowerCase().startsWith(event.query.toLowerCase()),
+      )
+    }
+  }, 250)
+}
+
+function selectedCountryName() {
+  return typeof selectedCountry.value === 'object' && selectedCountry.value?.name
+    ? selectedCountry.value.name.trim()
+    : ''
+}
 
 const licensePreview = computed(() => {
   if (form.usageType === 'consulting') {
@@ -231,7 +320,7 @@ const licensePreview = computed(() => {
 })
 
 const selectedUsageHint = computed(() => {
-  const match = usageOptions.find((option) => option.value === form.usageType)
+  const match = usageOptions.value.find((option) => option.value === form.usageType)
   return match?.description ?? ''
 })
 
@@ -245,15 +334,15 @@ const submittedEmail = ref('')
 const offlineLicense = ref(null)
 
 const stepTitle = computed(() => {
-  if (step.value === 'form') return 'Your information'
-  if (step.value === 'otp') return 'Confirm your email'
-  return 'Activation complete'
+  if (step.value === 'form') return ui.value.stepFormTitle
+  if (step.value === 'otp') return ui.value.stepOtpTitle
+  return ui.value.stepDoneTitle
 })
 
 const stepSubtitle = computed(() => {
-  if (step.value === 'form') return 'Required to generate and email your license code.'
-  if (step.value === 'otp') return `Enter the 6-digit code sent to ${submittedEmail.value}.`
-  return 'Use your license code in JPilot or download the offline license file below.'
+  if (step.value === 'form') return ui.value.stepFormSubtitle
+  if (step.value === 'otp') return ui.value.stepOtpSubtitle(submittedEmail.value)
+  return ui.value.stepDoneSubtitle
 })
 
 const canSubmit = computed(() => {
@@ -264,6 +353,7 @@ const canSubmit = computed(() => {
       activationDate.value &&
       form.name.trim() &&
       form.email.trim() &&
+      selectedCountryName() &&
       form.usageType &&
       (!companyRequired.value || form.company.trim())
     )
@@ -324,6 +414,7 @@ async function handleRequest() {
       activationDate: activationDate.value,
       name: form.name.trim(),
       email: form.email.trim().toLowerCase(),
+      country: selectedCountryName(),
       company: form.company.trim(),
       usageType: form.usageType,
     })
@@ -387,14 +478,136 @@ async function handleVerify() {
 }
 
 .activate-section { background: var(--nt-dark-2); }
+
 .activate-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 1.05fr 0.95fr;
   gap: 32px;
   align-items: start;
 }
 
-.deployment-card,
+.letter-card {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 120px);
+  background: var(--nt-card-bg);
+  border: 1px solid var(--nt-border);
+  border-radius: var(--nt-radius);
+  overflow: hidden;
+}
+
+.letter-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--nt-border);
+  background: rgba(0, 123, 167, 0.06);
+}
+
+.lang-flags {
+  display: flex;
+  gap: 8px;
+}
+
+.lang-flag {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: var(--nt-dark-3);
+  cursor: pointer;
+  transition: var(--nt-transition);
+  padding: 0;
+}
+
+.lang-flag-img {
+  display: block;
+  width: 24px;
+  height: auto;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.lang-flag:hover {
+  border-color: rgba(0, 123, 167, 0.45);
+  transform: translateY(-1px);
+}
+
+.lang-flag.active {
+  border-color: var(--nt-primary);
+  background: rgba(0, 123, 167, 0.14);
+  box-shadow: 0 0 0 1px rgba(0, 123, 167, 0.25);
+}
+
+.letter-scroll {
+  padding: 24px 28px 28px;
+  overflow-y: auto;
+}
+
+.letter-greeting {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--nt-text-light);
+}
+
+.letter-paragraph {
+  margin: 0 0 14px;
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--nt-text-muted);
+}
+
+.letter-paragraph :deep(strong) {
+  color: var(--nt-text-light);
+  font-weight: 600;
+}
+
+.letter-signature {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--nt-border);
+}
+
+.letter-closing {
+  margin: 0 0 12px;
+  font-size: 0.88rem;
+  color: var(--nt-text-muted);
+}
+
+.letter-author {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--nt-text-light);
+}
+
+.letter-role,
+.letter-company {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--nt-text-muted);
+}
+
+.letter-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--nt-primary);
+  text-decoration: none;
+}
+
+.letter-link:hover {
+  text-decoration: underline;
+}
+
 .form-card {
   background: var(--nt-card-bg);
   border: 1px solid var(--nt-border);
@@ -402,7 +615,6 @@ async function handleVerify() {
   padding: 28px;
 }
 
-.deployment-card h2,
 .form-card h2 {
   font-size: 1.35rem;
   margin-bottom: 8px;
@@ -414,15 +626,36 @@ async function handleVerify() {
   margin-bottom: 24px;
 }
 
+.deployment-panel {
+  margin-top: 4px;
+  padding: 20px;
+  background: var(--nt-dark-3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.deployment-heading {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--nt-text-light);
+}
+
+.deployment-subtitle {
+  margin: 0 0 16px;
+  font-size: 0.82rem;
+  color: var(--nt-text-muted);
+}
+
 .param-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .param-row {
   display: grid;
-  grid-template-columns: 8.5rem 1fr;
+  grid-template-columns: 7.5rem 1fr;
   gap: 12px;
   align-items: start;
 }
@@ -438,41 +671,46 @@ async function handleVerify() {
 
 .param-row dd {
   margin: 0;
-  font-family: Consolas, 'Courier New', monospace;
-  font-size: 0.82rem;
-  word-break: break-all;
+  word-break: break-word;
   color: var(--nt-text-light);
+}
+
+.param-row dd.param-value {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .license-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--nt-border);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .meta-item {
-  background: var(--nt-dark-3);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
 }
 
 .meta-label {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--nt-text-muted);
   font-family: var(--font-heading);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .meta-value {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--nt-text-light);
 }
@@ -520,6 +758,33 @@ input {
 input:focus {
   border-color: var(--nt-primary);
   box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.15);
+}
+
+.country-autocomplete :deep(.p-autocomplete-input) {
+  width: 100%;
+  background: var(--nt-dark-3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--nt-text);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  transition: var(--nt-transition);
+}
+
+.country-autocomplete :deep(.p-autocomplete-input:focus) {
+  border-color: var(--nt-primary);
+  box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.15);
+}
+
+.country-autocomplete :deep(.p-autocomplete-dropdown) {
+  background: var(--nt-dark-3);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--nt-text-muted);
+}
+
+.w-full {
+  width: 100%;
 }
 
 .field-hint {
@@ -647,8 +912,15 @@ input:focus {
   transform: none !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .activate-grid { grid-template-columns: 1fr; }
+  .letter-card {
+    position: static;
+    max-height: none;
+  }
+  .letter-scroll {
+    max-height: 420px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -659,6 +931,11 @@ input:focus {
   .usage-segment {
     flex: 1 1 calc(50% - 4px);
     min-width: 0;
+  }
+
+  .letter-scroll {
+    padding: 18px 20px 22px;
+    max-height: 360px;
   }
 }
 </style>

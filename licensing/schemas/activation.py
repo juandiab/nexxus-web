@@ -11,6 +11,7 @@ class ActivationRequest(BaseModel):
     activationDate: str = Field(min_length=1, max_length=64)
     name: str = Field(min_length=1, max_length=128)
     email: EmailStr
+    country: str = Field(min_length=1, max_length=128)
     company: str = Field(default="", max_length=256)
     usageType: UsageType
 
@@ -53,6 +54,7 @@ class ActivationResponse(BaseModel):
     id: str
     name: str
     email: str
+    country: str
     company: str
     application: str
     licenseType: LicenseType

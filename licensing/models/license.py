@@ -56,6 +56,7 @@ def serialize_license(doc: dict[str, Any]) -> dict[str, Any]:
         "id": str(doc["_id"]),
         "name": doc["name"],
         "email": doc["email"],
+        "country": doc.get("country", ""),
         "company": doc.get("company", ""),
         "registrationDate": doc.get("registrationDate"),
         "licenseType": doc.get("licenseType", "free"),
