@@ -27,10 +27,10 @@
               >
                 <img
                   class="lang-flag-img"
-                  :src="`/flags/${LOCALE_FLAGS[code].iso}.svg`"
+                  :src="`/flags/${LOCALE_FLAGS[code].iso}.png`"
                   :alt="LOCALE_FLAGS[code].label"
-                  width="24"
-                  height="16"
+                  width="28"
+                  height="20"
                   loading="lazy"
                   decoding="async"
                 />
@@ -38,7 +38,11 @@
             </div>
           </div>
 
-          <div class="letter-scroll">
+          <div
+            class="letter-scroll"
+            :class="{ 'letter-scroll-rtl': letter.rtl }"
+            :dir="letter.rtl ? 'rtl' : 'ltr'"
+          >
             <p class="letter-greeting">{{ letter.greeting }}</p>
             <p
               v-for="(paragraph, index) in letter.paragraphs"
@@ -240,13 +244,14 @@ import {
   LETTER_LOCALES,
   LOCALE_FLAGS,
   splitBoldSegments,
+  uiLocaleFor,
 } from '@/data/activation-i18n.js'
 
 const route = useRoute()
 const locale = ref('en')
 
 const letter = computed(() => ACTIVATION_LETTERS[locale.value])
-const ui = computed(() => ACTIVATION_UI[locale.value])
+const ui = computed(() => ACTIVATION_UI[uiLocaleFor(locale.value)] || ACTIVATION_UI.en)
 
 const appFingerprint = computed(() => String(route.query.appfingerprint || '').trim())
 const appName = computed(() => String(route.query.appname || '').trim())
@@ -512,8 +517,8 @@ async function handleVerify() {
 }
 
 .lang-flag {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -523,15 +528,15 @@ async function handleVerify() {
   cursor: pointer;
   transition: var(--nt-transition);
   padding: 0;
+  overflow: hidden;
 }
 
 .lang-flag-img {
   display: block;
-  width: 24px;
-  height: auto;
-  border-radius: 2px;
+  width: 28px;
+  height: 20px;
   object-fit: cover;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
 }
 
 .lang-flag:hover {
@@ -548,6 +553,16 @@ async function handleVerify() {
 .letter-scroll {
   padding: 24px 28px 28px;
   overflow-y: auto;
+}
+
+.letter-scroll-rtl {
+  font-family: 'Segoe UI', Tahoma, 'Noto Naskh Arabic', 'Arial Unicode MS', sans-serif;
+}
+
+.letter-scroll-rtl .letter-link {
+  direction: ltr;
+  display: inline-block;
+  unicode-bidi: embed;
 }
 
 .letter-greeting {

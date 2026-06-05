@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.07** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.08** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,10 @@
 ---
 
 ## Changelog
+
+### v0.08 — 2026-06-04
+- **Activation page** — Arabic founder letter (UAE locale) with RTL layout; form UI stays English when Arabic is selected
+- **Activation i18n** — locale codes aligned to country flags (US, Colombia, Brazil, UAE); PNG flag assets replace SVGs for broader browser support
 
 ### v0.07 — 2026-06-04
 - **Activation page** — trilingual founder letter (English, Spanish, Portuguese) with SVG flag language switcher (Windows-compatible); form on the right, letter on the left

@@ -1,7 +1,8 @@
-export const LETTER_LOCALES = ['en', 'es', 'pt']
+export const LETTER_LOCALES = ['en', 'co', 'br', 'ae']
 
 export const ACTIVATION_LETTERS = {
   en: {
+    rtl: false,
     greeting: 'Dear User,',
     paragraphs: [
       'Thank you for downloading and using one of our tools. Your trust means a great deal to us. **Every product we build starts with a simple idea: technology should empower people, not replace them.**',
@@ -18,7 +19,8 @@ export const ACTIVATION_LETTERS = {
     company: 'NexxusTech',
     website: 'https://www.nexxus-tech.com',
   },
-  es: {
+  co: {
+    rtl: false,
     greeting: 'Querido usuario,',
     paragraphs: [
       'Gracias por descargar y utilizar una de nuestras herramientas. Tu confianza significa mucho para nosotros. **Cada producto que construimos nace de una idea sencilla: la tecnología debe empoderar a las personas, no reemplazarlas.**',
@@ -35,7 +37,8 @@ export const ACTIVATION_LETTERS = {
     company: 'NexxusTech',
     website: 'https://www.nexxus-tech.com',
   },
-  pt: {
+  br: {
+    rtl: false,
     greeting: 'Caro usuário,',
     paragraphs: [
       'Obrigado por baixar e utilizar uma de nossas ferramentas. Sua confiança significa muito para nós. **Cada produto que criamos nasce de uma ideia simples: a tecnologia deve capacitar as pessoas, e não substituí-las.**',
@@ -52,6 +55,30 @@ export const ACTIVATION_LETTERS = {
     company: 'NexxusTech',
     website: 'https://www.nexxus-tech.com',
   },
+  ae: {
+    rtl: true,
+    greeting: 'عزيزي المستخدم،',
+    paragraphs: [
+      'شكرًا لك على تنزيل واستخدام إحدى أدواتنا. إن ثقتك تعني لنا الكثير. **كل منتج نقوم ببنائه ينطلق من فكرة بسيطة: يجب أن تمكّن التكنولوجيا الأشخاص، لا أن تستبدلهم.**',
+      'على مدار السنوات، حظيت بشرف العمل إلى جانب مهندسين وكبار معماريي الحلول ومديري الأنظمة ومستشارين من مختلف أنحاء العالم. وقد رأيت عن قرب حجم الجهد والتفاني والشغف المطلوب لإتقان التقنيات المعقدة. فالعديد من الأدوات التي نعتمد عليها اليوم تطلّبت ساعات لا تُحصى من الدراسة والتجارب العملية والاختبارات والخبرة الميدانية. **هدفنا هو جعل هذه المعرفة أكثر سهولة في الوصول إليها**، حتى يتمكن المزيد من الأشخاص من التعلم والتطور وتحقيق أهداف كانت تبدو في السابق حكرًا على عدد محدود من المتخصصين.',
+      'طوال مسيرتي المهنية، كان من أكثر الأمور التي منحتني الرضا رؤية الأشخاص وهم يطورون مهاراتهم وينمون مهنيًا. فالعديد من المشاريع التي شاركت فيها لم تنتهِ فقط بتنفيذ حل ناجح، بل أسفرت أيضًا عن **فرق عمل أكثر استعدادًا وثقةً بقدراتها وأكثر قدرةً على مواجهة التحديات المستقبلية**. لقد كان تبادل المعرفة دائمًا جزءًا أساسيًا من عملي، وهذه الأدوات هي امتداد طبيعي لهذه الفلسفة.',
+      'نحن نعيش اليوم فترةً من التحول غير المسبوق. فالذكاء الاصطناعي يغيّر الطريقة التي نعمل ونتعلم ونحل بها المشكلات. ومع ذلك، فإننا نؤمن إيمانًا راسخًا بأن **الذكاء الاصطناعي لا يستبدل الإبداع البشري، بل يعززه ويمنحه آفاقًا جديدة.** فأفضل الأدوات تزيد من قدراتنا، لكن **الحكم السليم والخبرة والإبداع والهدف** تظل أمورًا يقدمها الإنسان وحده.',
+      'نحن لا نسعى فقط إلى تطوير البرمجيات، بل إلى بناء أدوات تشكل **جسرًا بين الأشخاص والمعرفة والتكنولوجيا**. نريد أن نساعدك على التعلم والتطور واستكشاف إمكانيات جديدة وتحقيق أهداف ربما بدت بعيدة المنال في السابق. سواء كنت في بداية مسيرتك المهنية، أو متخصصًا ذا خبرة، أو كبير معماريي حلول، أو مؤسسة تسعى إلى تسريع الابتكار، فإننا نأمل أن تساعدك هذه الأدوات على التقدم بثقة.',
+      'نعمل كل يوم على تحسين ما نقدمه. ونحن نثمّن ملاحظاتك واقتراحاتك وأفكارك، لأننا نؤمن بأن **أفضل الحلول تنشأ عندما يتشارك أفراد المجتمع المعرفة والخبرة والإلهام.** فالمستقبل لمن يحافظون على فضولهم، ويواصلون التعلم، ويساعدون الآخرين على النمو والتطور.',
+      'شكرًا لانضمامك إلينا في هذه الرحلة. نأمل أن تساعدك هذه الأدوات على حل المشكلات واكتشاف فرص جديدة ومواصلة تطوير كامل إمكاناتك. **وإذا استطعنا مساعدتك في مواجهة تحديات جديدة في المستقبل، فسيكون شرفًا لنا أن نكون جزءًا من رحلتك.**',
+    ],
+    closing: 'مع خالص التقدير والامتنان،',
+    author: 'Juan Pablo Otalvaro',
+    role: 'المؤسس وكبير معماريي الحلول',
+    company: 'NexxusTech',
+    website: 'https://www.nexxus-tech.com',
+  },
+}
+
+/** Form UI locale — Arabic letter uses English UI. */
+export function uiLocaleFor(letterLocale) {
+  if (letterLocale === 'ae') return 'en'
+  return letterLocale
 }
 
 export const ACTIVATION_UI = {
@@ -96,7 +123,7 @@ export const ACTIVATION_UI = {
       consulting: { short: 'Consulting', hint: 'Deployment for a client organization, not your employer.' },
     },
   },
-  es: {
+  co: {
     heroSubtitle: 'Confirma los datos del despliegue e ingresa tu información para recibir un código de licencia por correo.',
     stepFormTitle: 'Tu información',
     stepFormSubtitle: 'Necesario para generar y enviar tu código de licencia por correo.',
@@ -137,7 +164,7 @@ export const ACTIVATION_UI = {
       consulting: { short: 'Consultoría', hint: 'Despliegue para un cliente, no para tu empleador.' },
     },
   },
-  pt: {
+  br: {
     heroSubtitle: 'Confirme os detalhes da implantação e informe seus dados para receber um código de licença por e-mail.',
     stepFormTitle: 'Suas informações',
     stepFormSubtitle: 'Necessário para gerar e enviar seu código de licença por e-mail.',
@@ -181,9 +208,10 @@ export const ACTIVATION_UI = {
 }
 
 export const LOCALE_FLAGS = {
-  en: { iso: 'us', label: 'English' },
-  es: { iso: 'es', label: 'Español' },
-  pt: { iso: 'br', label: 'Português' },
+  en: { iso: 'us', label: 'English (United States)' },
+  co: { iso: 'co', label: 'Español (Colombia)' },
+  br: { iso: 'br', label: 'Português (Brasil)' },
+  ae: { iso: 'ae', label: 'العربية (UAE)' },
 }
 
 export function splitBoldSegments(text) {
