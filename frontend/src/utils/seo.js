@@ -1,4 +1,10 @@
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT } from '@/config/site.js'
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_FAVICON,
+  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
+} from '@/config/site.js'
 
 const MANAGED_ATTR = 'data-seo-managed'
 
@@ -92,6 +98,8 @@ export function applySeo({
   upsertMeta('name', 'twitter:image:alt', imageAlt)
 
   upsertLink('canonical', canonical)
+  upsertLink('icon', SITE_FAVICON, { type: 'image/png', sizes: '300x300' })
+  upsertLink('apple-touch-icon', SITE_FAVICON, { sizes: '300x300' })
 
   setJsonLd('seo-jsonld', jsonLd)
 }

@@ -122,7 +122,7 @@
               <span class="section-label">{{ product.label }}</span>
               <h3 class="product-feature-title">
                 {{ product.name }}
-                <span class="product-version">{{ product.version }}</span>
+                <span class="product-version">{{ product.edition }}</span>
               </h3>
               <p class="product-feature-tagline">{{ product.tagline }}</p>
               <p class="product-feature-desc">{{ product.excerpt }}</p>

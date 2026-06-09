@@ -84,6 +84,8 @@ router.afterEach((to) => {
     title: seo.title,
     description: seo.description,
     path: seo.path,
+    image: seo.image,
+    imageAlt: seo.imageAlt,
     noindex: seo.noindex,
     type: 'website',
     jsonLd: jsonLdForRoute(to.name),

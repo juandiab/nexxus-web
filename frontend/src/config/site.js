@@ -3,8 +3,12 @@ export const SITE_URL = 'https://nexxus-tech.com'
 export const SITE_NAME = 'Nexxus Tech'
 export const SITE_TAGLINE = 'WAF · NetScaler · Cloud Security · AI'
 export const SITE_EMAIL = 'contact@nexxus-tech.com'
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/nexxus-tech-icon.png`
+export const SITE_FAVICON = '/nexxus-tech-favicon.png'
+export const DEFAULT_OG_IMAGE = `${SITE_URL}${SITE_FAVICON}`
 export const DEFAULT_OG_IMAGE_ALT = 'Nexxus Tech logo'
+export const JPILOT_OG_IMAGE = `${SITE_URL}/jpilot-og.png`
+export const JPILOT_OG_IMAGE_ALT =
+  'JPilot — self-hosted AI copilot for NetScaler, F5, and Cisco network appliances'
 
 export const ORGANIZATION = {
   name: SITE_NAME,
@@ -99,9 +103,9 @@ export const SOFTWARE_PRODUCTS = [
     name: 'JPilot',
     alternateName: 'NSAgent',
     description:
-      'JPilot — AI-assisted management platform for NetScaler, Cisco, and F5. Built to empower engineers, amplify human judgment, and make complex ADC knowledge more accessible. Open-source core.',
+      'Self-hosted AI management platform for NetScaler, F5, and Cisco — chat to plan, configure, and troubleshoot. BYO AI keys.',
     url: 'https://nexxus-tech.com/products#jpilot',
-    downloadUrl: 'https://github.com/juandiab/nsagent',
+    downloadUrl: 'https://install.nexxus-tech.com/jpilot',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Docker, Linux, Windows, macOS',
     offers: { price: '0', priceCurrency: 'USD' },
@@ -132,10 +136,12 @@ export const ROUTE_SEO = {
     path: '/services',
   },
   products: {
-    title: 'Products — Nexxus Tech',
+    title: 'JPilot — AI Management Platform for NetScaler, F5 & Cisco',
     description:
-      'JPilot — AI-assisted appliance management built to empower engineers, make complex ADC knowledge more accessible, and amplify human judgment. NetScaler, Cisco, and F5 support.',
+      'Self-hosted AI management platform for network appliances. Chat to plan, configure, and troubleshoot NetScaler, F5 BIG-IP, and Cisco — bring your own AI keys, credentials never leave your network. Free edition.',
     path: '/products',
+    image: JPILOT_OG_IMAGE,
+    imageAlt: JPILOT_OG_IMAGE_ALT,
   },
   about: {
     title: 'About Us — Nexxus Tech',
