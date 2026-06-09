@@ -135,7 +135,12 @@
         <InstallBlock copy-id="footer" />
         <div class="cta-actions">
           <a href="#install" class="btn btn-primary">Install now</a>
-          <RouterLink to="/contact" class="btn btn-secondary">Book a demo</RouterLink>
+          <a
+            href="https://calendar.app.google/8tqyZPwSvSE8o6cS8"
+            class="btn btn-secondary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Book a demo</a>
           <a href="mailto:support@nexxus-tech.com" class="btn btn-secondary">Contact us</a>
         </div>
       </div>
