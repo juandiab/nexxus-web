@@ -4,19 +4,25 @@
     <section class="hero">
       <div class="hero-bg"></div>
       <div class="container hero-inner">
-        <img
-          src="/JPilot-logo-big-black.svg"
-          alt="JPilot"
-          class="hero-logo reveal"
-          width="96"
-          height="96"
-        />
-        <h1 class="hero-headline reveal">
-          JPilot is an AI management platform for your network appliances — chat to plan, configure, and troubleshoot your ADCs and network infrastructure, all running on hardware you control.
-        </h1>
-        <p class="hero-subline reveal reveal-delay-1">
-          Works across NetScaler, F5, and Cisco. Free edition. Bring your own AI keys. Your credentials never leave your network.
-        </p>
+        <div class="hero-lockup">
+          <p class="hero-eyebrow reveal">Introducing</p>
+          <img
+            src="/JPilot-logo-big-black.svg"
+            alt="JPilot"
+            class="hero-logo reveal"
+            width="88"
+            height="88"
+          />
+          <h1 class="hero-title reveal">
+            <span class="brand-accent">JP</span>ilot
+          </h1>
+          <p class="hero-description reveal">
+            JPilot is an AI management platform for your network appliances — chat to plan, configure, and troubleshoot your ADCs and network infrastructure, all running on hardware you control.
+          </p>
+          <p class="hero-subline reveal reveal-delay-1">
+            Free edition. Bring your own AI keys. Your credentials never leave your network.
+          </p>
+        </div>
 
         <div id="install" class="hero-install reveal reveal-delay-2">
           <InstallBlock copy-id="hero" />
@@ -192,27 +198,58 @@ const supportedVendors = [
   text-align: center;
 }
 
+.hero-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.hero-eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--nt-text-muted);
+}
+
 .hero-logo {
   display: block;
-  width: 96px;
-  height: 96px;
-  margin: 0 auto 10px;
+  width: 88px;
+  height: 88px;
+  margin: 0 0 8px;
   filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
 }
 
-.hero-headline {
-  font-size: clamp(1.35rem, 3.2vw, 1.85rem);
-  font-weight: 700;
-  line-height: 1.45;
+.hero-title {
+  margin: 0 0 10px;
+  font-size: clamp(2.25rem, 5.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--nt-white);
-  margin-bottom: 10px;
+}
+
+.brand-accent {
+  color: var(--nt-primary-l);
+}
+
+.hero-description {
+  margin: 0 0 10px;
+  max-width: 38rem;
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--nt-text-muted);
 }
 
 .hero-subline {
-  font-size: 0.95rem;
+  margin: 0;
+  font-size: 0.9rem;
   color: var(--nt-text-muted);
   line-height: 1.65;
-  margin-bottom: 24px;
 }
 
 .hero-install {
@@ -488,10 +525,18 @@ const supportedVendors = [
   .hero-logo {
     width: 64px;
     height: 64px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
-  .hero-subline {
+  .hero-title {
+    font-size: clamp(1.85rem, 9vw, 2.5rem);
+  }
+
+  .hero-description {
+    font-size: 0.92rem;
+  }
+
+  .hero-lockup {
     margin-bottom: 20px;
   }
 

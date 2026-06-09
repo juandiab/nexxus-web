@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.11** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.12** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,9 @@
 ---
 
 ## Changelog
+
+### v0.12 — 2026-06-10
+- **Products hero** — product-launch lockup: “Introducing” eyebrow, centered JPilot logo, **JP**ilot title with cerulean `JP` accent, description as supporting copy, then subline → install block → video
 
 ### v0.11 — 2026-06-09
 - **Products** — rebuilt `/products` as a JPilot command-first landing: hero with product logo, branded install blocks (macOS / Linux / Windows tabs via `install.nexxus-tech.com`), demo-video placeholders, early-access licensing note, supported-platforms grid, and three-action CTA (no GitHub links)
