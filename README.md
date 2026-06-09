@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.12** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.13** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,11 @@
 ---
 
 ## Changelog
+
+### v0.13 — 2026-06-10
+- **JPbot** — new **Book a demo** intake path: contact details → demo focus → Google Calendar booking link with visitor info in the URL; team notified via existing enquiry email
+- **JPbot** — company / organization is now required on the contact step (frontend + API validation)
+- **Products** — “Book a demo” CTA and JPbot share `JPILOT_DEMO_CALENDAR_URL` (`calendar.app.google/…`)
 
 ### v0.12 — 2026-06-10
 - **Products hero** — product-launch lockup: “Introducing” eyebrow, centered JPilot logo, **JP**ilot title with cerulean `JP` accent, description as supporting copy, then subline → install block → video

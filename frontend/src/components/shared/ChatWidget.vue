@@ -70,7 +70,8 @@
           class="chat-intake-panel"
           :class="{
             'chat-intake-panel--choices': intakePanel === 'enquiry_type',
-            'chat-intake-panel--contact': intakePanel === 'contact',
+            'chat-intake-panel--contact':
+              intakePanel === 'contact' || intakePanel === 'demo_details',
           }"
         >
           <template v-if="intakePanel === 'enquiry_type'">
@@ -129,16 +130,49 @@
                 <span v-if="contactErrors.email" class="field-error">{{ contactErrors.email }}</span>
               </div>
               <div class="form-field">
-                <label for="jpbot-company">Company / organization</label>
+                <label for="jpbot-company">Company / organization <span class="req">*</span></label>
                 <input
                   id="jpbot-company"
                   v-model="panelValues.company"
                   type="text"
                   autocomplete="organization"
-                  placeholder="Optional if personal"
+                  placeholder="Acme Corp"
+                  required
                 />
+                <span v-if="contactErrors.company" class="field-error">{{ contactErrors.company }}</span>
               </div>
               <button type="submit" class="btn-intake btn-intake--continue">Continue</button>
+            </form>
+          </template>
+
+          <template v-else-if="intakePanel === 'demo_details'">
+            <label class="intake-panel-title">Demo details</label>
+            <form class="jpbot-contact-form" @submit.prevent="confirmDemoDetails">
+              <div class="form-field">
+                <label for="jpbot-demo-interest">What would you like to see? <span class="req">*</span></label>
+                <select id="jpbot-demo-interest" v-model="panelValues.demo_interest">
+                  <option value="">Select...</option>
+                  <option v-for="opt in demoInterests" :key="opt.value" :value="opt.value">
+                    {{ opt.label }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="jpbot-demo-notes">Anything else we should know?</label>
+                <textarea
+                  id="jpbot-demo-notes"
+                  v-model="panelValues.demo_notes"
+                  rows="3"
+                  placeholder="Goals, platforms, or questions for the demo..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="btn-intake btn-intake--continue"
+                :disabled="!panelValues.demo_interest"
+              >
+                Continue
+              </button>
             </form>
           </template>
 
@@ -235,9 +269,27 @@
           </router-link>
         </div>
 
+        <div v-else-if="phase === 'demo_booking'" class="chat-demo-bar">
+          <p class="demo-booking-lead">
+            Pick a time on Google Calendar — your name, email, and demo notes are included in the booking link.
+          </p>
+          <button
+            type="button"
+            class="btn-submit-enquiry"
+            :disabled="submitting"
+            @click="openDemoCalendar"
+          >
+            <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-calendar'"></i>
+            {{ submitting ? 'Opening...' : 'Continue to Google Calendar' }}
+          </button>
+        </div>
+
         <div v-if="submitted" class="chat-success">
           <i class="pi pi-check-circle"></i>
-          <p>Enquiry sent! Check your inbox for a summary.</p>
+          <p v-if="profile.enquiry_type === 'Book a demo'">
+            Demo details saved! Complete your booking in the Google Calendar tab. Check your inbox for a summary.
+          </p>
+          <p v-else>Enquiry sent! Check your inbox for a summary.</p>
         </div>
 
         <div v-else-if="phase === 'discovery' && !submitted" class="chat-input-area">
@@ -306,6 +358,7 @@ import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
 import { formatChatMessage } from '@/utils/formatChatMessage.js'
+import { buildDemoBookingUrl, buildDemoBookingSummary } from '@/utils/demoBooking.js'
 
 const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
 const CHAT_SIZE_KEY = 'nexxus-jpbot-chat-size'
@@ -345,7 +398,21 @@ const TECHNOLOGIES = [
   'Other',
 ]
 
+const DEMO_INTERESTS = [
+  { value: 'AI & Automation', label: 'JPilot demo' },
+  { value: 'NetScaler / ADC', label: 'NetScaler / ADC' },
+  { value: 'WAF & API Protection', label: 'WAF & API Protection' },
+  { value: 'Zero-Trust Architecture', label: 'Zero-Trust Architecture' },
+  { value: 'Other / Discovery Call', label: 'Other / general discovery' },
+]
+
 const ENQUIRY_TYPES = [
+  {
+    value: 'Book a demo',
+    label: 'Book a demo',
+    desc: 'Schedule a live JPilot or services walkthrough',
+    icon: 'pi-calendar',
+  },
   {
     value: 'Troubleshooting / incident',
     label: 'Troubleshooting',
@@ -379,6 +446,7 @@ const ENQUIRY_TYPES = [
 ]
 
 const INTAKE_PANELS_BY_TYPE = {
+  'Book a demo': [],
   'Troubleshooting / incident': ['criticality', 'users', 'technologies', 'version', 'model'],
   'Support request': ['criticality', 'users', 'technologies', 'version', 'model'],
   'New project / implementation': ['technologies', 'version', 'model'],
@@ -399,13 +467,25 @@ const services = SERVICES
 const criticalityOptions = CRITICALITY
 const technologyOptions = TECHNOLOGIES
 const enquiryTypes = ENQUIRY_TYPES
+const demoInterests = DEMO_INTERESTS
+
+const demoTechnologyForInterest = (interest) => {
+  const map = {
+    'AI & Automation': 'AI Deployments',
+    'NetScaler / ADC': 'NetScaler ADC',
+    'WAF & API Protection': 'NetScaler ADC',
+    'Zero-Trust Architecture': 'NetScaler Gateway',
+    'Other / Discovery Call': 'Other',
+  }
+  return map[interest] || 'AI Deployments'
+}
 
 const phase = ref('intake')
 const intakePanel = ref('enquiry_type')
 const intakeQueue = ref([])
 const canSubmit = ref(false)
 const allowEarlySubmit = ref(false)
-const contactErrors = ref({ name: '', email: '' })
+const contactErrors = ref({ name: '', email: '', company: '' })
 let inviteTimer = null
 let autoDismissTimer = null
 
@@ -442,6 +522,8 @@ const panelValues = ref({
   technology_other: '',
   platform_version: '',
   platform_model: '',
+  demo_interest: '',
+  demo_notes: '',
 })
 
 const profile = ref({
@@ -456,6 +538,8 @@ const profile = ref({
   technology_other: '',
   platform_version: '',
   platform_model: '',
+  demo_interest: '',
+  demo_notes: '',
 })
 
 const discoveryMessages = ref([])
@@ -469,7 +553,11 @@ const messages = ref([
 ])
 
 const compactMessageArea = computed(
-  () => phase.value === 'intake' && (intakePanel.value === 'enquiry_type' || intakePanel.value === 'contact')
+  () =>
+    phase.value === 'intake' &&
+    (intakePanel.value === 'enquiry_type' ||
+      intakePanel.value === 'contact' ||
+      intakePanel.value === 'demo_details')
 )
 
 const canSendEnquiry = computed(() => canSubmit.value || allowEarlySubmit.value)
@@ -624,15 +712,16 @@ const confirmEnquiryType = () => {
   pushUser(profile.value.enquiry_type)
   intakePanel.value = 'contact'
   pushAssistant(
-    'Great. **Fill in your contact details** below — *name*, *email*, and company if you have one.'
+    'Great. **Fill in your contact details** below — *name*, *email*, and *company*.'
   )
   scrollToBottom()
 }
 
 const confirmContact = () => {
-  contactErrors.value = { name: '', email: '' }
+  contactErrors.value = { name: '', email: '', company: '' }
   const name = panelValues.value.name.trim()
   const email = panelValues.value.email.trim()
+  const company = panelValues.value.company.trim()
   let valid = true
   if (name.length < 2) {
     contactErrors.value.name = 'Please enter your full name'
@@ -642,16 +731,80 @@ const confirmContact = () => {
     contactErrors.value.email = 'Please enter a valid email'
     valid = false
   }
+  if (company.length < 2) {
+    contactErrors.value.company = 'Please enter your company or organization'
+    valid = false
+  }
   if (!valid) return
 
   profile.value.name = name
   profile.value.email = email
-  profile.value.company = panelValues.value.company.trim()
-  const companyLabel = profile.value.company || '(personal / not provided)'
-  pushUser(`${name} · ${email} · ${companyLabel}`)
+  profile.value.company = company
+  pushUser(`${name} · ${email} · ${company}`)
+
+  if (profile.value.enquiry_type === 'Book a demo') {
+    panelValues.value.demo_interest = panelValues.value.demo_interest || 'AI & Automation'
+    intakePanel.value = 'demo_details'
+    pushAssistant(
+      '**What would you like to see?** Choose a focus and add any notes for the demo.'
+    )
+    scrollToBottom()
+    return
+  }
+
   intakePanel.value = 'service'
   pushAssistant(panelPrompt('service'))
   scrollToBottom()
+}
+
+const confirmDemoDetails = () => {
+  profile.value.demo_interest = panelValues.value.demo_interest
+  profile.value.demo_notes = panelValues.value.demo_notes.trim()
+  profile.value.service = panelValues.value.demo_interest
+  profile.value.technologies = [demoTechnologyForInterest(panelValues.value.demo_interest)]
+  profile.value.criticality = 'Planning — not happening yet'
+  profile.value.users_affected = 'Not applicable (demo booking)'
+
+  const notesLabel = profile.value.demo_notes ? ` · ${profile.value.demo_notes}` : ''
+  pushUser(`${profile.value.service}${notesLabel}`)
+
+  intakePanel.value = null
+  phase.value = 'demo_booking'
+  pushAssistant(
+    'Almost done — tap **Continue to Google Calendar** below to pick a time. Your contact details and demo notes are passed into the booking link.'
+  )
+  scrollToBottom()
+}
+
+const openDemoCalendar = async () => {
+  if (submitting.value) return
+  submitting.value = true
+  const summary = buildDemoBookingSummary(profile.value)
+  discoveryMessages.value = [{ role: 'user', content: summary }]
+
+  try {
+    await axios.post('/api/chat/submit', {
+      profile: profile.value,
+      messages: discoveryMessages.value,
+    })
+  } catch {
+    pushAssistant(
+      'We could not email a copy to our team, but you can still complete booking on Google Calendar.'
+    )
+  }
+
+  const bookingUrl = buildDemoBookingUrl(profile.value)
+  try {
+    await navigator.clipboard.writeText(buildDemoBookingSummary(profile.value))
+  } catch {
+    /* clipboard optional */
+  }
+
+  window.open(bookingUrl, '_blank', 'noopener,noreferrer')
+  submitted.value = true
+  phase.value = 'submitted'
+  submitting.value = false
+  await scrollToBottom()
 }
 
 const confirmService = () => {
@@ -1266,7 +1419,8 @@ onUnmounted(() => {
 }
 .optional { font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.8; }
 .chat-intake-panel select,
-.chat-intake-panel input[type='text'] {
+.chat-intake-panel input[type='text'],
+.chat-intake-panel textarea {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
@@ -1402,6 +1556,29 @@ onUnmounted(() => {
   color: var(--nt-secondary);
   text-align: center;
   text-decoration: none;
+}
+
+.chat-demo-bar {
+  padding: 10px 16px;
+  border-top: 1px solid var(--nt-border);
+  background: var(--nt-dark-3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.demo-booking-lead {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--nt-text-muted);
+  text-align: center;
+}
+
+.chat-intake-panel textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
 }
 
 .chat-success {

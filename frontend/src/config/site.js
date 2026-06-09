@@ -6,6 +6,7 @@ export const SITE_EMAIL = 'contact@nexxus-tech.com'
 export const SITE_FAVICON = '/nexxus-tech-favicon.png'
 export const DEFAULT_OG_IMAGE = `${SITE_URL}${SITE_FAVICON}`
 export const DEFAULT_OG_IMAGE_ALT = 'Nexxus Tech logo'
+export const JPILOT_DEMO_CALENDAR_URL = 'https://calendar.app.google/8tqyZPwSvSE8o6cS8'
 export const JPILOT_OG_IMAGE = `${SITE_URL}/jpilot-og.png`
 export const JPILOT_OG_IMAGE_ALT =
   'JPilot — self-hosted AI copilot for NetScaler, F5, and Cisco network appliances'

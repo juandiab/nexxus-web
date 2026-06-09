@@ -136,7 +136,7 @@
         <div class="cta-actions">
           <a href="#install" class="btn btn-primary">Install now</a>
           <a
-            href="https://calendar.app.google/8tqyZPwSvSE8o6cS8"
+            :href="JPILOT_DEMO_CALENDAR_URL"
             class="btn btn-secondary"
             target="_blank"
             rel="noopener noreferrer"
@@ -164,6 +164,7 @@
 <script setup>
 import InstallBlock from '@/components/shared/InstallBlock.vue'
 import DemoVideo from '@/components/shared/DemoVideo.vue'
+import { JPILOT_DEMO_CALENDAR_URL } from '@/config/site.js'
 
 const supportedVendors = [
   { name: 'NetScaler MPX', status: 'available' },

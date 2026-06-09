@@ -34,6 +34,7 @@ ALLOWED_TECHNOLOGIES = [
 ]
 
 ALLOWED_ENQUIRY_TYPES = [
+    "Book a demo",
     "Troubleshooting / incident",
     "Support request",
     "New project / implementation",
@@ -98,7 +99,17 @@ class ChatProfile(BaseModel):
             raise ValueError("Name is too long")
         return name
 
-    @field_validator("company", "technology_other", "platform_version", "platform_model")
+    @field_validator("company")
+    @classmethod
+    def company_ok(cls, v: str) -> str:
+        company = v.strip()
+        if len(company) < 2:
+            raise ValueError("Company name is required")
+        if len(company) > 200:
+            raise ValueError("Company name is too long")
+        return company
+
+    @field_validator("technology_other", "platform_version", "platform_model")
     @classmethod
     def strip_bounded(cls, v: str) -> str:
         return v.strip()[:200]

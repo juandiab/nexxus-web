@@ -74,6 +74,10 @@ ENQUIRY TYPE: Assessment / discovery (evaluate options, architecture review, quo
     "General enquiry": """
 ENQUIRY TYPE: General enquiry.
 - Clarify what they need from Nexxus; stay neutral until intent is clear.""",
+    "Book a demo": """
+ENQUIRY TYPE: Book a demo (live product or services walkthrough).
+- Confirm what they want to see and preferred timing if not already stated.
+- Do NOT use incident language. Keep replies short and practical.""",
 }
 
 SUBMIT_READY_REPLY = (
