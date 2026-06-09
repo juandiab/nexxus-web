@@ -122,6 +122,8 @@ onUnmounted(() => {
 <style scoped>
 .demo-video {
   width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
   aspect-ratio: 16 / 9;
 }
 
@@ -144,14 +146,20 @@ onUnmounted(() => {
   padding: 0;
   overflow: hidden;
   display: flex;
+  min-height: 0;
 }
 
 .skeleton-panel {
   width: 100%;
-  padding: 1.5rem;
+  height: 100%;
+  padding: 0.875rem;
   border-radius: var(--nt-radius);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: var(--nt-dark-2);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
 }
 
 .section-light .skeleton-panel {
@@ -184,8 +192,8 @@ onUnmounted(() => {
 }
 
 .skeleton-video-body {
-  height: calc(100% - 7rem);
-  min-height: 120px;
+  flex: 1;
+  min-height: 0;
 }
 
 .demo-video--hero .demo-video__player {

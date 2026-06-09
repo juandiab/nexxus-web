@@ -103,7 +103,7 @@ export const SOFTWARE_PRODUCTS = [
     name: 'JPilot',
     alternateName: 'NSAgent',
     description:
-      'Self-hosted AI management platform for NetScaler, F5, and Cisco — chat to plan, configure, and troubleshoot. BYO AI keys.',
+      'Self-hosted AI management platform for network appliances — chat to plan, configure, and troubleshoot NetScaler, F5, and Cisco. BYO AI keys.',
     url: 'https://nexxus-tech.com/products#jpilot',
     downloadUrl: 'https://install.nexxus-tech.com/jpilot',
     applicationCategory: 'BusinessApplication',
@@ -136,7 +136,7 @@ export const ROUTE_SEO = {
     path: '/services',
   },
   products: {
-    title: 'JPilot — AI Management Platform for NetScaler, F5 & Cisco',
+    title: 'JPilot — AI Management Platform for Network Appliances',
     description:
       'Self-hosted AI management platform for network appliances. Chat to plan, configure, and troubleshoot NetScaler, F5 BIG-IP, and Cisco — bring your own AI keys, credentials never leave your network. Free edition.',
     path: '/products',

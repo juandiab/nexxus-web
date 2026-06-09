@@ -185,7 +185,7 @@ export function productsPageSchema() {
       '@id': `${SITE_URL}/products#${p.id}`,
       name: p.name,
       description:
-        'Self-hosted AI management platform for NetScaler, F5, and Cisco — chat to plan, configure, and troubleshoot. BYO AI keys.',
+        'Self-hosted AI management platform for network appliances — chat to plan, configure, and troubleshoot NetScaler, F5, and Cisco. BYO AI keys.',
       image: `${SITE_URL}${JPILOT_LOGOS.dark}`,
       url: `${SITE_URL}/products#${p.id}`,
       downloadUrl: p.links.install,

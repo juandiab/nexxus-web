@@ -12,10 +12,10 @@
           height="96"
         />
         <h1 class="hero-headline reveal">
-          JPilot is an AI management platform for your network appliances — chat to plan, configure, and troubleshoot NetScaler, F5, and Cisco, all on your own infrastructure.
+          JPilot is an AI management platform for your network appliances — chat to plan, configure, and troubleshoot your ADCs and network infrastructure, all running on hardware you control.
         </h1>
         <p class="hero-subline reveal reveal-delay-1">
-          Free edition. Bring your own AI keys. Your credentials never leave your network.
+          Works across NetScaler, F5, and Cisco. Free edition. Bring your own AI keys. Your credentials never leave your network.
         </p>
 
         <div id="install" class="hero-install reveal reveal-delay-2">
@@ -166,12 +166,13 @@ const supportedVendors = [
 <style scoped>
 .products-page {
   background: var(--nt-dark);
+  overflow-x: hidden;
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  padding: 120px 0 72px;
+  padding: 100px 0 48px;
   overflow: hidden;
 }
 
@@ -195,7 +196,7 @@ const supportedVendors = [
   display: block;
   width: 96px;
   height: 96px;
-  margin: 0 auto 20px;
+  margin: 0 auto 10px;
   filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
 }
 
@@ -204,30 +205,31 @@ const supportedVendors = [
   font-weight: 700;
   line-height: 1.45;
   color: var(--nt-white);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .hero-subline {
   font-size: 0.95rem;
   color: var(--nt-text-muted);
   line-height: 1.65;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .hero-install {
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .hero-video {
+  width: 100%;
   max-width: 720px;
   margin: 0 auto;
 }
 
 /* ── Early Access ─────────────────────────────────────────────────────────── */
 .early-access-section {
-  padding: 48px 0;
+  padding: clamp(40px, 6vh, 56px) 0;
   border-bottom: 1px solid rgba(0, 123, 167, 0.12);
 }
 
@@ -266,17 +268,16 @@ const supportedVendors = [
 
 /* ── Feature sections ─────────────────────────────────────────────────────── */
 .feature-section {
-  padding: clamp(64px, 10vh, 100px) 0;
-  min-height: min(100vh, 900px);
-  display: flex;
-  align-items: center;
+  padding: clamp(48px, 7vh, 72px) 0;
 }
 
 .feature-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 5vw, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 48px);
   align-items: center;
+  max-width: 1080px;
+  margin: 0 auto;
 }
 
 .feature-grid--reverse .feature-copy {
@@ -285,6 +286,10 @@ const supportedVendors = [
 
 .feature-grid--reverse .feature-media {
   order: 1;
+}
+
+.feature-copy {
+  max-width: 34rem;
 }
 
 .feature-copy h2 {
@@ -300,13 +305,19 @@ const supportedVendors = [
   color: var(--nt-text-muted);
 }
 
+.feature-media {
+  width: 100%;
+  max-width: 720px;
+  justify-self: center;
+}
+
 .section-light .feature-copy p {
   color: #4a5568;
 }
 
 /* ── Supported Platforms ──────────────────────────────────────────────────── */
 .platforms-section {
-  padding: clamp(64px, 10vh, 100px) 0;
+  padding: clamp(48px, 7vh, 72px) 0;
 }
 
 .platforms-inner {
@@ -390,7 +401,7 @@ const supportedVendors = [
 
 /* ── CTA ──────────────────────────────────────────────────────────────────── */
 .cta-section {
-  padding: 80px 0;
+  padding: clamp(48px, 7vh, 72px) 0;
   border-top: 1px solid rgba(0, 123, 167, 0.15);
 }
 
@@ -467,20 +478,25 @@ const supportedVendors = [
     order: unset;
   }
 
-  .feature-section {
-    min-height: auto;
-  }
 }
 
 @media (max-width: 767px) {
   .hero {
-    padding: 108px 0 56px;
+    padding: 96px 0 40px;
   }
 
   .hero-logo {
     width: 64px;
     height: 64px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+  }
+
+  .hero-subline {
+    margin-bottom: 20px;
+  }
+
+  .hero-install {
+    margin-bottom: 20px;
   }
 
   .cta-actions {

@@ -48,6 +48,19 @@
           </ul>
         </nav>
 
+        <!-- Legal col -->
+        <nav class="footer-col" aria-label="Legal">
+          <h4 class="footer-col-title">Legal</h4>
+          <ul>
+            <li>
+              <a href="https://jpilot.nexxus-tech.com/legal/privacy">Privacy</a>
+            </li>
+            <li>
+              <a href="https://jpilot.nexxus-tech.com/legal/terms">Terms of Use</a>
+            </li>
+          </ul>
+        </nav>
+
         <!-- Contact col -->
         <div class="footer-col">
           <h4 class="footer-col-title">Contact</h4>
@@ -103,8 +116,8 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
-  gap: 40px;
+  grid-template-columns: 2fr repeat(4, 1fr) 1.25fr;
+  gap: 32px;
   margin-bottom: 60px;
 }
 .footer-logo { height: 48px; width: auto; margin-bottom: 20px; display: block; }

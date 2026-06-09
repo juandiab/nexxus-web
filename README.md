@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.10** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.11** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,13 @@
 ---
 
 ## Changelog
+
+### v0.11 — 2026-06-09
+- **Products** — rebuilt `/products` as a JPilot command-first landing: hero with product logo, branded install blocks (macOS / Linux / Windows tabs via `install.nexxus-tech.com`), demo-video placeholders, early-access licensing note, supported-platforms grid, and three-action CTA (no GitHub links)
+- **JPilot SEO** — repositioned from “AI Copilot” to “AI management platform”; titles broadened to **Network Appliances**; vendor names kept in descriptions, subline, and platform list; JSON-LD `SoftwareApplication` descriptions updated
+- **Products UX** — tighter hero rhythm, uniform section padding, 16:9 max-width video/skeleton containers, readable copy line lengths
+- **Footer** — new **Legal** column: Privacy and Terms of Use (`jpilot.nexxus-tech.com/legal/…`)
+- **Favicon** — `nexxus-tech-favicon.png` replaces `nexxus-tech-icon.png` site-wide
 
 ### v0.10 — 2026-06-05
 - **SEO** — per-route meta titles/descriptions, canonical URLs, Open Graph/Twitter cards, and JSON-LD (Organization, Person, Service, FAQPage, SoftwareApplication); `robots.txt` and `sitemap.xml` added
@@ -257,7 +264,7 @@ Copy `backend/data/blog_post.template.json` if you prefer to edit JSON by hand.
 
 Logo files (SVG):
 - `frontend/public/nexxus-tech-logo-full-large.svg` — full wordmark (navbar, footer, admin header)
-- `frontend/public/nexxus-tech-icon.png` — favicon (300×300)
+- `frontend/public/nexxus-tech-favicon.png` — favicon (300×300), used site-wide
 - `frontend/src/assets/nexxus-tech-logo-full-large.svg` — copy imported by navbar/footer
 
 Replace the public files, sync to `src/assets/`, then rebuild (`docker compose up -d --build frontend`).
