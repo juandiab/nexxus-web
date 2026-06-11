@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.14** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.15** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,9 @@
 ---
 
 ## Changelog
+
+### v0.15 — 2026-06-11
+- **Products / JPilot videos** — demo clips served from `frontend/public/videos/` (not committed to git); documented filenames, 1080p export, MP4/WebM conversion, and server deploy steps
 
 ### v0.14 — 2026-06-11
 - **JPilot blog** — article retitled to **AI Management Platform for Network Appliances**; repo and install URLs updated to `github.com/Nexxus-Tech-SAS/jpilot` and `install.nexxus-tech.com/jpilot`; installation steps aligned with current jpilot README (install folder prompt, legal terms, progress bar, license gate)
@@ -280,3 +283,53 @@ Logo files (SVG):
 - `frontend/src/assets/nexxus-tech-logo-full-large.svg` — copy imported by navbar/footer
 
 Replace the public files, sync to `src/assets/`, then rebuild (`docker compose up -d --build frontend`).
+
+---
+
+## JPilot product demo videos
+
+Demo clips on `/products#jpilot` are **self-hosted** under `frontend/public/videos/` and served at `/videos/…`. They are **excluded from git** (too large for GitHub); copy them to the server before rebuilding the frontend image.
+
+### Filenames
+
+| Base name | Section |
+|---|---|
+| `install` | Hero (user-initiated play; optional `install-poster.jpg`) |
+| `section-chat` | Talk to your appliances in plain language |
+| `section-roles` | Architect, Operator, Analyst |
+| `section-providers` | Your keys, your data, your hardware |
+| `section-mcp` | Built on MCP |
+
+For each clip, provide **`{name}.webm`** and **`{name}.mp4`**. `DemoVideo` probes for the `.webm` file to decide whether to show the player or the skeleton placeholder.
+
+### Export settings
+
+- **Resolution:** 1920×1080 (16:9) — displays at up to 720px wide but fullscreen uses full resolution
+- **Source:** DaVinci Resolve → `.mov`, then convert for the web
+
+### Convert `.mov` → MP4 + WebM (ffmpeg)
+
+```bash
+brew install ffmpeg   # macOS
+
+for f in *.mov; do
+  base="${f%.mov}"
+  ffmpeg -i "$f" -c:v libx264 -crf 20 -preset slow -an -movflags +faststart "${base}.mp4"
+  ffmpeg -i "$f" -c:v libvpx-vp9 -crf 32 -b:v 0 -an "${base}.webm"
+done
+```
+
+Hero poster still (optional):
+
+```bash
+ffmpeg -i install.mov -ss 00:00:02 -vframes 1 -q:v 2 install-poster.jpg
+```
+
+### Deploy to production
+
+```bash
+rsync -av frontend/public/videos/ user@server:/opt/nexxus-web/frontend/public/videos/
+ssh user@server 'cd /opt/nexxus-web && docker compose up -d --build frontend'
+```
+
+Until at least `{name}.webm` is present on the server, the products page shows a skeleton placeholder for that slot.

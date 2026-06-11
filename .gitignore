@@ -7,3 +7,9 @@ dist/
 *.log
 __pycache__/
 *.pyc
+
+# Product demo videos — too large for git; deploy to server separately
+frontend/public/videos/*.mp4
+frontend/public/videos/*.webm
+frontend/public/videos/*.mov
+frontend/public/videos/*-poster.jpg
