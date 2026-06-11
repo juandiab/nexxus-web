@@ -3,53 +3,69 @@
 import json
 from pathlib import Path
 
-CONTENT = r"""# JPilot: NetScaler AI Copilot with Memory-Guided Tools
+CONTENT = r"""# JPilot: AI Management Platform for Network Appliances
 
-Managing NetScaler ADC at scale means juggling **Next-Gen API** endpoints, classic **NITRO**, and **SSH CLI** syntax—often under pressure during incidents or migration projects. **JPilot** is Nexxus Tech's name for an open-source NetScaler copilot platform: a unified admin UI plus an AI assistant that registers appliances, connects to your chosen LLM provider, and reads or changes configuration through audited tools—**without credentials ever being sent to the model**.
+Managing network appliances at scale means juggling vendor APIs, SSH CLI syntax, and change windows—often under pressure during incidents or migration projects. **JPilot** is Nexxus Tech's AI-assisted management platform: a unified admin UI plus role-based assistants (**Architect**, **Operator**, **Analyst**) that register NetScaler ADC, SDX, Cisco IOS/XE, and F5 BIG-IP appliances, connect to **your own** LLM provider keys, and read or change configuration through audited MCP tools—**without credentials ever being sent to the model**.
 
-The current open-source foundation is on GitHub: [github.com/juandiab/nsagent](https://github.com/juandiab/nsagent). We use the **JPilot** name in product and roadmap discussions to keep branding distinct from third-party trademarks.
+The **Free edition** is offered at no charge; Nexxus Tech does not supply or pay for AI inference—you choose the provider, hold the API keys, and pay that provider directly.
 
-> JPilot / this open-source stack is an independent project and is not affiliated with Citrix. NetScaler is a trademark of Citrix Systems, Inc.
+Repository: [github.com/Nexxus-Tech-SAS/jpilot](https://github.com/Nexxus-Tech-SAS/jpilot)
+
+> JPilot is an independent project and is not affiliated with, endorsed by, or sponsored by Cloud Software Group, Inc., F5, Inc., or Cisco Systems, Inc. NetScaler is a trademark of Cloud Software Group, Inc. BIG-IP and F5 are trademarks of F5, Inc. Cisco and IOS are trademarks of Cisco Systems, Inc.
 
 ## Installation
 
-The only prerequisite is **Docker**. The installer downloads the project, generates secrets and a TLS certificate, writes `.env`, launches the stack, and opens JPilot in your browser.
+One command downloads JPilot, prompts for an install folder (default **`~/jpilot`** on macOS/Linux or **`%USERPROFILE%\jpilot`** on Windows), generates secrets and a TLS certificate, launches the Docker stack, and opens JPilot in your browser. The only prerequisite is **Docker**; the installer can also install **git** and Docker if missing.
 
 **Prerequisites:** Docker and Docker Compose; NetScaler ADC with **Next-Gen API** enabled (`enable ns nextgenapi`) for API tools; SSH access (port 22) for classic CLI and diagnostics; optional SMTP for password-reset emails.
 
+**Need help?** The installer prints its source and a support contact when it runs. Stuck? Reach us at [www.nexxus-tech.com](https://www.nexxus-tech.com) or [support@nexxus-tech.com](mailto:support@nexxus-tech.com).
+
 ### Windows
 
-Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/) and [Git for Windows](https://git-scm.com/download/win), then run in **PowerShell**:
+Run in **PowerShell** (offers to install Git for Windows and Docker Desktop via `winget` if missing):
 
 ```powershell
-irm https://raw.githubusercontent.com/juandiab/nsagent/main/get.ps1 | iex
+irm https://install.nexxus-tech.com/jpilot/ps1 | iex
 ```
 
 ### macOS
 
-Install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/) (or let the installer set it up via Homebrew), then run in **Terminal**:
+Run in **Terminal** (default install folder `~/jpilot`; offers to install git and Docker Desktop via Homebrew if missing):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/juandiab/nsagent/main/get.sh | bash
+curl -fsSL https://install.nexxus-tech.com/jpilot | bash
 ```
 
 ### Ubuntu / Linux
 
-Docker Engine is required—the installer offers to install it if missing. Then run:
+Run in a terminal (default `~/jpilot`; for paths like `/opt/jpilot` the installer explains requirements and can create the folder with **sudo**; offers to install git and Docker Engine if missing):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/juandiab/nsagent/main/get.sh | bash
+curl -fsSL https://install.nexxus-tech.com/jpilot | bash
 ```
 
-The script checks for Docker, downloads JPilot, and starts the setup wizard. Then:
+The script checks for Docker, downloads JPilot to your chosen folder, and starts the setup wizard. Then:
 
 1. Open **https://localhost:9443** (self-signed certificate—accept the one-time browser warning).
-2. Complete the wizard: admin account, domain, and TLS (self-signed or your own cert).
-3. On the **Review** step, **save the generated `NSAGENT_ENCRYPTION_KEY`**—required to restore or migrate the install and cannot be recovered.
-4. Click **Install JPilot**. The wizard writes `.env` and `nginx/ssl/`, then launches the stack and opens it in your browser.
+2. Complete the wizard: admin account (username, **email**, password), domain, deploy mode (production or development), and TLS (self-signed or your own cert).
+3. On **Review**, accept the legal terms, then **save the generated `NSAGENT_ENCRYPTION_KEY`**—required to restore or migrate the install and cannot be recovered.
+4. Click **Install JPilot**. **Keep the setup tab open**—a progress bar runs while Docker builds; JPilot opens automatically once the stack is ready (first boot is often 1–3 minutes).
 5. Sign in at **https://\<your-domain\>** with the admin account you created.
 
-Already cloned the repo? Run `./install.sh` (macOS/Linux) or `.\install.ps1` (Windows) from the project root instead of the one-liner.
+Already cloned the repo? Clone and run the installer from the project root instead of the one-liner:
+
+```bash
+git clone https://github.com/Nexxus-Tech-SAS/jpilot.git
+cd jpilot
+./install.sh          # macOS / Linux
+```
+
+```powershell
+git clone https://github.com/Nexxus-Tech-SAS/jpilot.git
+cd jpilot
+.\install.ps1         # Windows (PowerShell)
+```
 
 To reconfigure an existing install (overwrites `.env`):
 
@@ -62,16 +78,16 @@ The installer generates `NSAGENT_ENCRYPTION_KEY` (Fernet) and `JWT_SECRET_KEY` a
 
 **After first login:**
 
-- **NetScalers** — add your appliance (name, host, API/SSH user and password).
-- **AI Providers** — add an LLM provider and set it as default.
-- **Settings → MCP** — tool toggles, **SSH fallback** (required for diagnostics and SSL shell), timeouts.
-- **Settings → Platform** — optional Brave Search API key for JPilot doc augmentation.
+- **Appliances** — add your appliance (vendor, name, host, API/SSH credentials); **SSL Certificates** tab for CSR/self-signed generation.
+- **Settings → AI Providers** — add an LLM provider, set default, configure optional Brave Search, and view usage.
+- **Settings → MCP Server** — tool toggles, **SSH fallback** (required for diagnostics and SSL shell), SMTP, timeouts.
+- **Settings → Next-Gen API** — test Next-Gen connection and browse API reference.
 - **Settings → Security** — register an optional passkey after password login.
+- **Settings → License** — enter a license code or import an offline `.lic` file (required before using the app).
 - **Users** (admin) — create users with email (for password reset) and initial passwords.
-- **SSL Certificate Tools** — generate CSR or self-signed cert on an appliance.
 - **JPilot** — select an appliance and ask questions or request changes.
 
-For manual `.env` configuration, TLS certificate placement, and advanced setup, see the [NSAgent README on GitHub](https://github.com/juandiab/nsagent#manual-setup-advanced).
+For manual `.env` configuration, TLS certificate placement, and advanced setup, see the [JPilot README on GitHub](https://github.com/Nexxus-Tech-SAS/jpilot#manual-setup-advanced).
 
 ## Why another NetScaler tool?
 
@@ -243,7 +259,7 @@ Later releases will extend JPilot beyond NetScaler to **additional technologies*
 
 JPilot will **learn how to interact** with each stack (memory files, tool adapters, and validated command surfaces) so administrators can complete requests **faster and safer** from one copilot: same pattern of guidance, clarifying questions, approval gates, and audited execution—whether you are on ADC, perimeter, routing, or load-balancing gear.
 
-Contributions and feedback are welcome on the [GitHub repository](https://github.com/juandiab/nsagent) as these features land.
+Contributions and feedback are welcome on the [GitHub repository](https://github.com/Nexxus-Tech-SAS/jpilot) as these features land.
 
 ## How this fits Nexxus engagements
 
@@ -259,12 +275,14 @@ def main():
     posts = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     for post in posts:
         if post.get("id") == "5":
-            post["title"] = "JPilot: NetScaler AI Copilot with Memory-Guided Tools"
+            post["slug"] = "jpilot-ai-management-platform"
+            post["title"] = "JPilot: AI Management Platform for Network Appliances"
             post["excerpt"] = (
-                "JPilot is Nexxus Tech's NetScaler AI copilot—built on Next-Gen API "
-                "(REST, OpenAPI, application-centric automation), memory-guided tools, "
-                "secure local/enterprise AI, and a roadmap for multi-agent roles, "
-                "scale-out, SaaS + on-prem agent, and Slack/Teams."
+                "JPilot is Nexxus Tech's self-hosted AI management platform for network "
+                "appliances—NetScaler, F5, and Cisco with memory-guided MCP tools, "
+                "Architect/Operator/Analyst roles, and bring-your-own AI keys. Install "
+                "with one command from install.nexxus-tech.com; source at "
+                "github.com/Nexxus-Tech-SAS/jpilot."
             )
             post["content"] = CONTENT.strip()
             post["tags"] = [

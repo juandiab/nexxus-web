@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.13** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.14** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,10 @@
 ---
 
 ## Changelog
+
+### v0.14 — 2026-06-11
+- **JPilot blog** — article retitled to **AI Management Platform for Network Appliances**; repo and install URLs updated to `github.com/Nexxus-Tech-SAS/jpilot` and `install.nexxus-tech.com/jpilot`; installation steps aligned with current jpilot README (install folder prompt, legal terms, progress bar, license gate)
+- **JPilot blog** — slug renamed to `/blog/jpilot-ai-management-platform`; permanent redirect from `/blog/nsagent-open-source-netscaler-copilot`; sitemap and products page link updated
 
 ### v0.13 — 2026-06-10
 - **JPbot** — new **Book a demo** intake path: contact details → demo focus → Google Calendar booking link with visitor info in the URL; team notified via existing enquiry email
@@ -39,7 +43,7 @@
 
 ### v0.09 — 2026-06-04
 - **Branding** — new Nexxus Tech wordmark SVG and PNG favicon across the public site, admin console, and activation portal; legacy `logo*.svg` assets removed
-- **Home** — hero subtitle reframed with emphasized messaging (accessibility, AI-driven innovation, people-first growth, 54+ countries)
+- **Home** — hero subtitle reframed with emphasized messaging (accessibility, AI-driven innovation, people-first growth, 20+ countries)
 - **Home** — “Why Nexxus Tech” copy refresh; sixth service card updated to **ADC Platform Migrations** (F5 BIG-IP ↔ NetScaler)
 - **Services** — NetScaler section expanded for bidirectional ADC migrations, WAF/LTM policy translation, and parallel-run cutovers
 - **About** — **Our Vision** section (`/about#vision`): “People First. Technology Amplified.” with AI pull quote

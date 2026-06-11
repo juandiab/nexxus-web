@@ -35,6 +35,10 @@ const routes = [
     meta: { seo: ROUTE_SEO.blog }
   },
   {
+    path: '/blog/nsagent-open-source-netscaler-copilot',
+    redirect: '/blog/jpilot-ai-management-platform',
+  },
+  {
     path: '/blog/:slug',
     name: 'blog-post',
     component: () => import('@/views/BlogPostView.vue'),

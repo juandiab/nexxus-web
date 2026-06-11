@@ -19,7 +19,7 @@ export const ORGANIZATION = {
   email: SITE_EMAIL,
   foundingDate: '2010',
   description:
-    'Principal-level consulting in Web Application Firewall (WAF), NetScaler ADC, Zero-Trust Architecture, multicloud security, and AI-powered infrastructure automation. 15+ years of experience across 54+ countries.',
+    'Principal-level consulting in Web Application Firewall (WAF), NetScaler ADC, Zero-Trust Architecture, multicloud security, and AI-powered infrastructure automation. 15+ years of experience across 20+ countries.',
   slogan: 'Securing the World\'s Most Critical Applications',
   areaServed: 'Worldwide',
   knowsAbout: [
@@ -115,7 +115,7 @@ export const SOFTWARE_PRODUCTS = [
 
 /** Static blog slugs for sitemap generation (mirrors backend/data/blog_posts.json). */
 export const BLOG_SLUGS = [
-  'nsagent-open-source-netscaler-copilot',
+  'jpilot-ai-management-platform',
   'netscaler-hybrid-post-quantum-cryptography',
   'netscaler-waf-top10-owasp-2024',
   'zero-trust-architecture-netscaler-okta-azure-ad',
@@ -127,7 +127,7 @@ export const ROUTE_SEO = {
   home: {
     title: 'Nexxus Tech — WAF · NetScaler · Cloud Security · AI',
     description:
-      'Nexxus Tech delivers principal-level consulting in WAF, NetScaler ADC, Zero-Trust, multicloud security, and AI-driven infrastructure. 15+ years, 54+ countries, Fortune 500 & government clients.',
+      'Nexxus Tech delivers principal-level consulting in WAF, NetScaler ADC, Zero-Trust, multicloud security, and AI-driven infrastructure. 15+ years, 20+ countries, Fortune 500 & government clients.',
     path: '/',
   },
   services: {

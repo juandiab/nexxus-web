@@ -132,7 +132,7 @@ export const products = [
     },
     links: {
       install: 'https://install.nexxus-tech.com/jpilot',
-      blog: '/blog/nsagent-open-source-netscaler-copilot',
+      blog: '/blog/jpilot-ai-management-platform',
     },
     disclaimer:
       'JPilot is an independent project and is not affiliated with, endorsed by, or sponsored by Cloud Software Group, Inc., F5, Inc., or Cisco Systems, Inc. NetScaler is a trademark of Cloud Software Group, Inc. BIG-IP and F5 are trademarks of F5, Inc. Cisco and IOS are trademarks of Cisco Systems, Inc.',
