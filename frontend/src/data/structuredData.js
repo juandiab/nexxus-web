@@ -113,7 +113,7 @@ export function aboutTeamPersonSchemas() {
       name: 'Juan Pablo Otalvaro',
       jobTitle: 'Founder & Principal Cloud & Security Architect',
       description:
-        'Principal Cloud & Security Architect with 15+ years leading multicloud security transformations across 50+ countries. Citrix SME, AWS Security Specialty certified.',
+        'Principal Cloud & Security Architect with 15+ years leading multicloud security transformations across 20+ countries. Citrix SME, AWS Security Specialty certified.',
       knowsAbout: ['WAF', 'Zero-Trust', 'NetScaler', 'AWS Security', 'LLM Engineering'],
     },
     {

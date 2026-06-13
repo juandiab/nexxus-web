@@ -10,6 +10,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from models.license import FREE_ACTIVATION_VALIDITY_DAYS
 from services.license_payload import build_encrypted_license, format_utc, plain_license_code
 from services.license_crypto import normalize_license_code
+from services.license_service import find_license_by_code_and_app, rebind_license_to_deployment
+from services.offline_license_service import find_license_by_deployment
 from utils.time import ensure_utc_aware, utc_now
 
 
@@ -81,12 +83,24 @@ async def sync_license(
     if not cleaned_fingerprint or not cleaned_application:
         raise SyncNotFoundError()
 
-    doc = await db.licenses.find_one(
-        {
-            "appFingerprint": cleaned_fingerprint,
-            "application": cleaned_application,
-        }
+    doc = await find_license_by_deployment(
+        db,
+        app_fingerprint=cleaned_fingerprint,
+        app_name=cleaned_application,
     )
+    if doc is None and license_code and license_code.strip():
+        matched = await find_license_by_code_and_app(
+            db,
+            license_code=license_code,
+            app_name=cleaned_application,
+        )
+        if matched is not None:
+            doc = await rebind_license_to_deployment(
+                db,
+                matched,
+                app_fingerprint=cleaned_fingerprint,
+                app_name=cleaned_application,
+            )
     if doc is None or not doc.get("licenseCode"):
         raise SyncNotFoundError()
 

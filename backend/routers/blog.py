@@ -1,18 +1,9 @@
-import json
 import aiofiles
-from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from models.blog import BlogPost
+from services.blog_store import load_posts
 
 router = APIRouter()
-
-DATA_FILE = Path(__file__).parent.parent / "data" / "blog_posts.json"
-
-
-async def load_posts() -> list[BlogPost]:
-    async with aiofiles.open(DATA_FILE, "r") as f:
-        raw = await f.read()
-    return [BlogPost(**p) for p in json.loads(raw)]
 
 
 @router.get("/blog", response_model=list[BlogPost])

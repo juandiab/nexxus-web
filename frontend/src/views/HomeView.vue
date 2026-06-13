@@ -17,7 +17,7 @@
           <strong>Making expertise more accessible.</strong><br />
           Through consulting, shared knowledge, and <strong>AI-driven innovation</strong>.<br />
           <strong>Helping people and organizations</strong> learn, grow, and solve complex challenges.<br />
-          <strong>Inspiring the next generation of technology leaders</strong> across <strong>54+ countries</strong>.
+          <strong>Inspiring the next generation of technology leaders</strong> across <strong>20+ countries</strong>.
         </p>
         <div class="hero-actions reveal reveal-delay-3">
           <RouterLink to="/services" class="btn btn-primary">
@@ -183,7 +183,7 @@
             <div class="globe-card">
               <div class="globe-header">
                 <span class="section-label">Global Reach</span>
-                <h3>54+ Countries.<br/>One Standard of Excellence.</h3>
+                <h3>20+ Countries.<br/>One Standard of Excellence.</h3>
               </div>
               <div class="regions-grid">
                 <div v-for="region in regions" :key="region.name" class="region-item">
@@ -304,7 +304,7 @@ const blogPosts = ref([])
 // ── Stats ─────────────────────────────────────────────────────────────────────
 const stats = [
   { value: '15+',  label: 'Years of Experience' },
-  { value: '54+',  label: 'Countries Served' },
+  { value: '20+',  label: 'Countries Served' },
   { value: '100+', label: 'Projects Delivered' },
   { value: '100%', label: 'Remote Capable' },
 ]

@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.16** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.17** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,16 @@
 ---
 
 ## Changelog
+
+### v0.17 — 2026-06-13
+- **Blog admin** — create, edit, delete, and publish posts from `/adminconsole/blogs`; MongoDB-backed store with role-gated API (`admin` or `blog`)
+- **Blog AI assistant** — paste a draft to extract title, slug, excerpt, tags, cover color, and polished markdown; separate LLM settings in Settings; server-side markdown sanitization for safe rendering
+- **Blog rendering** — line-based markdown parser (handles Python docstrings and nested code fences); improved article typography on `/blog/:slug`
+- **Licensing activation** — detects existing deployment licenses on page load; email/license-code recovery to link a license to a new device without re-registering; case-insensitive app name lookup
+- **Licensing API v0.7.2** — recovery endpoints (`/activation/recover/*`), license rebind by code, sync rebind when fingerprint changes
+- **License update emails** — branded HTML notifications when admins extend, change type, edit, expire, deactivate, or reactivate a license
+- **JPbot settings** — admin-configurable LLM provider, model dropdown, and encrypted API key in MongoDB; Book a demo flow refinements
+- **Admin console** — Settings view (JPbot + blog assistant), blog panel, JWT role claim handling
 
 ### v0.16 — 2026-06-12
 - **SC Studio subdomain** — nginx terminates TLS for `scstudio.nexxus-tech.com`; routes UI to `scstudio-frontend:5173` (Vite dev) and API/JPilot paths (`/api/`, `/calibrations/`, `/skill-feedback`, `/health`) to `scstudio-backend-api:8000` on the shared Docker network (no host port publish on scstudio)
@@ -64,7 +74,7 @@
 - **Activation page** — trilingual founder letter (English, Spanish, Portuguese) with SVG flag language switcher (Windows-compatible); form on the right, letter on the left
 - **Activation UX** — deployment details under “Your information”; app fingerprint hidden; activation date shown as DD-MM-YYYY
 - **Country field** — PrimeVue AutoComplete with searchable country list; OFAC high-risk jurisdictions excluded from selection
-- **Licensing API v0.7.1** — `country` captured and stored at activation
+- **Licensing API v0.7.2** — `country` captured and stored at activation
 - **Admin console** — extend license dialog defaults to 30 additional days
 
 ### v0.06 — 2026-06-04
@@ -141,23 +151,25 @@ Nexxus Tech products can be licensed through this stack. The design keeps sensit
 
 | Surface | URL | Purpose |
 |---|---|---|
-| Activation | `/licensing/activate` | End-user registers a deployment (name, email, company, usage type); email OTP confirms identity before a license is created |
+| Activation | `/licensing/activate` | End-user activates or recovers a deployment license (email OTP); shows existing license when fingerprint already registered |
 | Sync | `/licensing/sync` | Installed apps report fingerprint + app name; server returns current status, expiration, and an updated encrypted license blob |
 | Admin console | `/adminconsole` | Operators sign in (password + passkey), manage licenses and platform users |
 | Licensing API | `/licensing/` | REST API (health, auth, licenses, activation, sync) — proxied by nginx to the `licensing` container |
 
 **Typical flow**
 
-1. **Activate** — The application opens the activation page (or calls the API). The user completes the form and verifies email. A license is tied to that deployment’s fingerprint and application name.
+1. **Activate** — The application opens the activation page (or calls the API). If the deployment already has a license, it is shown immediately. Otherwise the user verifies email (or recovers an existing license by email/code) before a license is bound to the fingerprint and application name.
 2. **Run** — The app stores its license locally and validates expiration and status.
-3. **Sync** — On a schedule (or on demand), the app syncs with the server to pick up admin changes (extended validity, type change, deactivation, forced expiry).
-4. **Administer** — From the admin console, operators can extend validity, change license type, force-expire, deactivate, or delete licenses.
+3. **Sync** — On a schedule (or on demand), the app syncs with the server to pick up admin changes (extended validity, type change, deactivation, forced expiry). Users receive email when admins change their license.
+4. **Administer** — From the admin console, operators can extend validity, change license type, force-expire, deactivate, or delete licenses. License changes trigger user notification emails when SMTP is configured.
 
 **Admin console capabilities**
 
 - View licenses in a compact table (contact, organization, license type, status, validity)
 - Force-expire (blocks auto-renew for free licenses), deactivate/reactivate, extend days, change type, delete
+- Email notifications to license holders on extend, type change, edit, expire, deactivate, and reactivate
 - Manage admin users (create, deactivate, password reset, passkey management)
+- Blog post management and AI assistant settings (admin / blog roles)
 
 **Configuration**
 

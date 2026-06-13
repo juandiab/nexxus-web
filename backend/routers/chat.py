@@ -1,5 +1,4 @@
 import json
-import os
 import re
 
 import httpx
@@ -18,13 +17,10 @@ from models.chat import (
     ChatSubmitResponse,
 )
 from routers.contact import deliver_jpbot_enquiry
+from services.chat_settings_store import get_runtime_config
+from services.llm_service import chat_completion
 
 router = APIRouter()
-
-AI_PROVIDER = os.getenv("AI_PROVIDER", "").strip().lower()
-AI_API_KEY = os.getenv("AI_API_KEY", "")
-AI_MODEL = os.getenv("AI_MODEL", "deepseek-chat")
-DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 
 DISCOVERY_BASE_PROMPT = """You are JPbot, the intake assistant on nexxus-tech.com for Nexxus Tech.
 
@@ -257,34 +253,21 @@ def _placeholder_reply() -> ChatResponse:
     )
 
 
-async def _call_deepseek(
+async def _llm_complete(
     *,
     system: str,
     messages: list[dict],
     json_mode: bool = False,
     max_tokens: int = 1024,
 ) -> str:
-    payload: dict = {
-        "model": AI_MODEL,
-        "messages": [{"role": "system", "content": system}] + messages,
-        "max_tokens": max_tokens,
-        "temperature": 0.35,
-    }
-    if json_mode:
-        payload["response_format"] = {"type": "json_object"}
-
-    async with httpx.AsyncClient(timeout=45) as client:
-        resp = await client.post(
-            f"{DEEPSEEK_BASE_URL.rstrip('/')}/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {AI_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        return data["choices"][0]["message"]["content"]
+    config = await get_runtime_config()
+    return await chat_completion(
+        config,
+        system=system,
+        messages=messages,
+        json_mode=json_mode,
+        max_tokens=max_tokens,
+    )
 
 
 def _format_transcript(messages: list) -> str:
@@ -315,14 +298,15 @@ async def chat(request: ChatRequest):
     if not request.messages:
         raise HTTPException(status_code=400, detail="Conversation history is required")
 
-    if AI_PROVIDER != "deepseek" or not AI_API_KEY:
+    config = await get_runtime_config()
+    if not config.configured:
         return _placeholder_reply()
 
     history = _sanitize_history(request.messages)
     enquiry_type = request.profile.enquiry_type
 
     try:
-        raw = await _call_deepseek(
+        raw = await _llm_complete(
             system=_discovery_system_prompt(request.profile),
             messages=[
                 {"role": "user", "content": _profile_context(request.profile)},
@@ -346,6 +330,7 @@ async def submit_chat(request: ChatSubmitRequest):
         )
 
     transcript = _format_transcript(request.messages)
+    config = await get_runtime_config()
     parsed = {
         "situation": "The visitor submitted a JPbot enquiry.",
         "pain_points": [],
@@ -356,9 +341,9 @@ async def submit_chat(request: ChatSubmitRequest):
         ),
     }
 
-    if AI_PROVIDER == "deepseek" and AI_API_KEY:
+    if config.configured:
         try:
-            raw = await _call_deepseek(
+            raw = await _llm_complete(
                 system=SUMMARY_SYSTEM_PROMPT,
                 messages=[
                     {

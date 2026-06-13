@@ -55,7 +55,7 @@
                   <span>{{ post.author_role }}</span>
                 </div>
               </div>
-              <p>Principal Cloud &amp; Security Architect with 15+ years across 54+ countries. Citrix SME. AWS Certified.</p>
+              <p>Principal Cloud &amp; Security Architect with 15+ years across 20+ countries. Citrix SME. AWS Certified.</p>
               <RouterLink to="/about" class="btn btn-outline sidebar-btn">
                 Full Profile <i class="pi pi-arrow-right"></i>
               </RouterLink>
@@ -108,7 +108,9 @@ const loading = ref(true)
 const formatDate = (d) =>
   new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
-const renderedContent = computed(() => post.value ? renderMarkdown(post.value.content) : '')
+const renderedContent = computed(() =>
+  post.value ? renderMarkdown(post.value.content, { skipTitle: post.value.title }) : ''
+)
 
 const relatedPosts = computed(() => {
   if (!post.value) return []
@@ -191,52 +193,128 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
 .post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
 
 .markdown-body {
-  font-size: 1rem;
-  line-height: 1.8;
+  font-size: 1.05rem;
+  line-height: 1.85;
   color: var(--nt-text-light);
+  max-width: 72ch;
 }
-.markdown-body :deep(h1), .markdown-body :deep(h2), .markdown-body :deep(h3) {
+
+.markdown-body :deep(h1) {
+  display: none;
+}
+
+.markdown-body :deep(h2) {
   color: var(--nt-white);
-  margin: 32px 0 12px;
+  margin: 3rem 0 1rem;
+  padding-top: 0.5rem;
   font-family: var(--font-heading);
+  font-size: 1.65rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
-.markdown-body :deep(h1) { font-size: 2rem; }
-.markdown-body :deep(h2) { font-size: 1.5rem; }
-.markdown-body :deep(h3) { font-size: 1.2rem; }
-.markdown-body :deep(p) { margin: 0 0 16px; }
-.markdown-body :deep(ul) { padding-left: 24px; margin: 12px 0 20px; }
-.markdown-body :deep(li) { margin: 6px 0; color: var(--nt-text-light); }
-.markdown-body :deep(code) {
-  background: rgba(91,79,232,0.15);
-  border: 1px solid rgba(91,79,232,0.25);
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 0.875em;
-  font-family: 'Fira Code', 'Consolas', monospace;
+
+.markdown-body :deep(h3) {
+  color: var(--nt-white);
+  margin: 2rem 0 0.75rem;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  line-height: 1.35;
+}
+
+.markdown-body :deep(p) {
+  margin: 0 0 1.25rem;
+}
+
+.markdown-body :deep(p + h2),
+.markdown-body :deep(p + h3),
+.markdown-body :deep(ul + h2),
+.markdown-body :deep(.code-block + h2) {
+  margin-top: 3rem;
+}
+
+.markdown-body :deep(ul) {
+  padding-left: 1.35rem;
+  margin: 0.5rem 0 1.5rem;
+  list-style: disc;
+}
+
+.markdown-body :deep(li) {
+  margin: 0.45rem 0;
+  color: var(--nt-text-light);
+  padding-left: 0.25rem;
+}
+
+.markdown-body :deep(li::marker) {
   color: var(--nt-secondary);
 }
-.markdown-body :deep(pre) {
-  background: var(--nt-dark-3);
-  border: 1px solid var(--nt-border);
+
+.markdown-body :deep(code) {
+  background: rgba(0, 168, 224, 0.12);
+  border: 1px solid rgba(0, 168, 224, 0.22);
+  border-radius: 4px;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.88em;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  color: #7dd3fc;
+  word-break: break-word;
+}
+
+.markdown-body :deep(.code-block) {
+  margin: 1.75rem 0 2rem;
   border-radius: var(--nt-radius);
-  padding: 24px;
+  border: 1px solid var(--nt-border);
+  background: var(--nt-dark-3);
+  overflow: hidden;
+}
+
+.markdown-body :deep(.code-block-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--nt-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.markdown-body :deep(.code-lang) {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--nt-secondary);
+}
+
+.markdown-body :deep(pre) {
+  margin: 0;
+  padding: 1.15rem 1.25rem;
   overflow-x: auto;
-  margin: 24px 0;
+  background: transparent;
+  border: none;
 }
+
 .markdown-body :deep(pre code) {
-  background: none; border: none; padding: 0;
-  font-size: 0.875rem; color: var(--nt-text);
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  color: #e2e8f0;
+  white-space: pre;
+  word-break: normal;
 }
-.markdown-body :deep(a) { color: var(--nt-secondary); }
+
+.markdown-body :deep(a) { color: var(--nt-secondary); text-decoration: underline; text-underline-offset: 2px; }
 .markdown-body :deep(strong) { color: var(--nt-white); font-weight: 700; }
+
 .markdown-body :deep(blockquote) {
-  margin: 24px 0;
-  padding: 16px 20px;
+  margin: 1.75rem 0;
+  padding: 1rem 1.15rem;
   border-left: 4px solid var(--nt-secondary);
-  background: rgba(91, 79, 232, 0.08);
+  background: rgba(0, 168, 224, 0.08);
   border-radius: 0 var(--nt-radius) var(--nt-radius) 0;
   color: var(--nt-text-muted);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
+  line-height: 1.7;
 }
 .markdown-body :deep(table.md-table) {
   width: 100%;

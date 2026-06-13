@@ -30,7 +30,7 @@ router = APIRouter(prefix="/auth/webauthn", tags=["webauthn"])
 async def _build_login_response(db: AsyncIOMotorDatabase, user: dict[str, Any]) -> LoginResponse:
     count = await count_user_passkeys(db, user["_id"])
     return LoginResponse(
-        accessToken=create_access_token(user["username"]),
+        accessToken=create_access_token(user["username"], role=user.get("role", "user")),
         user=UserResponse(**serialize_user(user, passkey_count=count)),
     )
 

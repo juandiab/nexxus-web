@@ -70,3 +70,7 @@ class LicenseResponse(BaseModel):
 
 class LicenseCreatedResponse(LicenseResponse):
     licenseCode: str
+
+
+class LicenseCodeResponse(BaseModel):
+    licenseCode: str

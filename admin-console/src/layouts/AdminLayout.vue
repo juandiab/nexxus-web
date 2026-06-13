@@ -55,10 +55,10 @@ const navItems = computed(() => {
     items.push({ to: '/licensing', label: 'Licensing' })
   }
   if (canAccessBlog.value) {
-    items.push({ to: '/blogs', label: 'Blogs', inProgress: true })
+    items.push({ to: '/blogs', label: 'Blogs' })
   }
   if (canAccessSettings.value) {
-    items.push({ to: '/settings', label: 'Settings', inProgress: true })
+    items.push({ to: '/settings', label: 'Settings' })
   }
   return items
 })

@@ -34,6 +34,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/licensing/, ''),
       },
+      '/api/admin': {
+        target: 'http://backend:8000',
+        changeOrigin: true,
+      },
     },
   },
 })

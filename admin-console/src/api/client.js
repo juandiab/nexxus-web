@@ -175,3 +175,129 @@ export async function changeLicenseType(licenseId, licenseType, recalculateValid
     body: JSON.stringify({ licenseType, recalculateValidity }),
   })
 }
+
+export async function getLicenseCode(licenseId) {
+  return request(`/licenses/${licenseId}/code`)
+}
+
+const BLOG_BASE = '/api/admin/blog'
+
+async function blogRequest(path, options = {}) {
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+  }
+  const token = getToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  const res = await fetch(`${BLOG_BASE}${path}`, { ...options, headers })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    const detail = err.detail
+    const message = Array.isArray(detail)
+      ? detail.map((d) => d.msg).join(', ')
+      : detail || 'Request failed'
+    throw new Error(message)
+  }
+  if (res.status === 204) return null
+  return res.json()
+}
+
+export async function listBlogPosts() {
+  return blogRequest('')
+}
+
+export async function getBlogPost(postId) {
+  return blogRequest(`/${postId}`)
+}
+
+export async function createBlogPost(payload) {
+  return blogRequest('', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateBlogPost(postId, payload) {
+  return blogRequest(`/${postId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteBlogPost(postId) {
+  return blogRequest(`/${postId}`, { method: 'DELETE' })
+}
+
+export async function assistBlogPost(draft) {
+  return blogRequest('/assist', {
+    method: 'POST',
+    body: JSON.stringify({ draft }),
+  })
+}
+
+export async function getBlogAssistantSettings() {
+  return blogRequest('/assistant/settings')
+}
+
+export async function getBlogAssistantModels(provider, currentModel = '') {
+  const params = new URLSearchParams()
+  if (currentModel) params.set('current', currentModel)
+  const query = params.toString()
+  return blogRequest(`/assistant/models/${encodeURIComponent(provider)}${query ? `?${query}` : ''}`)
+}
+
+export async function saveBlogAssistantSettings(payload) {
+  return blogRequest('/assistant/settings', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+const ADMIN_API_BASE = '/api/admin'
+
+async function adminApiRequest(path, options = {}) {
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+  }
+  const token = getToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  const res = await fetch(`${ADMIN_API_BASE}${path}`, { ...options, headers })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    const detail = err.detail
+    const message = Array.isArray(detail)
+      ? detail.map((d) => d.msg).join(', ')
+      : detail || 'Request failed'
+    throw new Error(message)
+  }
+  if (res.status === 204) return null
+  return res.json()
+}
+
+export async function getJpbotSettings() {
+  return adminApiRequest('/chat/settings')
+}
+
+export async function getJpbotModels(provider, currentModel = '') {
+  const params = new URLSearchParams()
+  if (currentModel) params.set('current', currentModel)
+  const query = params.toString()
+  return adminApiRequest(`/chat/models/${encodeURIComponent(provider)}${query ? `?${query}` : ''}`)
+}
+
+export async function saveJpbotSettings(payload) {
+  return adminApiRequest('/chat/settings', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function testJpbotSettings(payload) {
+  return adminApiRequest('/chat/settings/test', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}

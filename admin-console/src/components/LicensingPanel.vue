@@ -71,6 +71,15 @@
         <template #body="{ data }">
           <div class="actions-cell flex gap-1">
             <Button
+              v-tooltip="tooltip('View license code')"
+              icon="pi pi-key"
+              text
+              rounded
+              size="small"
+              :disabled="!data.hasLicenseCode"
+              @click="openCodeDialog(data)"
+            />
+            <Button
               v-tooltip="tooltip('Force expire (blocks auto-renew)')"
               icon="pi pi-clock"
               text
@@ -117,6 +126,36 @@
         </template>
       </Column>
     </DataTable>
+
+    <Dialog
+      v-model:visible="codeVisible"
+      header="License code"
+      modal
+      :style="{ width: 'min(28rem, 92vw)' }"
+      :draggable="false"
+    >
+      <div v-if="selectedLicense" class="flex flex-column gap-3">
+        <p class="dialog-copy m-0">
+          License for <strong>{{ selectedLicense.email }}</strong> — {{ selectedLicense.application }}
+        </p>
+        <div v-if="codeLoading" class="py-3 text-center">Loading…</div>
+        <div v-else-if="displayedCode" class="license-code-block">
+          <code class="license-code-value">{{ displayedCode }}</code>
+        </div>
+        <Message v-else severity="warn" :closable="false">
+          No license code is stored for this record.
+        </Message>
+      </div>
+      <template #footer>
+        <Button label="Close" text @click="codeVisible = false" />
+        <Button
+          label="Copy code"
+          icon="pi pi-copy"
+          :disabled="!displayedCode || codeLoading"
+          @click="copyLicenseCode"
+        />
+      </template>
+    </Dialog>
 
     <Dialog
       v-model:visible="extendVisible"
@@ -238,6 +277,7 @@ import {
   deleteLicense,
   expireLicense,
   extendLicense,
+  getLicenseCode,
   listLicenses,
   reactivateLicense,
 } from '@/api/client'
@@ -252,6 +292,9 @@ const selectedLicense = ref(null)
 const extendVisible = ref(false)
 const typeVisible = ref(false)
 const deleteVisible = ref(false)
+const codeVisible = ref(false)
+const codeLoading = ref(false)
+const displayedCode = ref('')
 const extendDays = ref(30)
 const deleteConfirmText = ref('')
 const typeForm = ref({
@@ -408,6 +451,42 @@ function openExtendDialog(license) {
   extendVisible.value = true
 }
 
+async function openCodeDialog(license) {
+  selectedLicense.value = license
+  displayedCode.value = ''
+  codeVisible.value = true
+  codeLoading.value = true
+  try {
+    const data = await getLicenseCode(license.id)
+    displayedCode.value = data.licenseCode || ''
+  } catch (error) {
+    codeVisible.value = false
+    toast.add({
+      severity: 'error',
+      summary: 'Failed to load license code',
+      detail: error.message,
+      life: 5000,
+    })
+  } finally {
+    codeLoading.value = false
+  }
+}
+
+async function copyLicenseCode() {
+  if (!displayedCode.value) return
+  try {
+    await navigator.clipboard.writeText(displayedCode.value)
+    toast.add({ severity: 'success', summary: 'License code copied', life: 2500 })
+  } catch {
+    toast.add({
+      severity: 'warn',
+      summary: 'Copy failed',
+      detail: 'Select and copy the code manually.',
+      life: 4000,
+    })
+  }
+}
+
 async function submitExtend() {
   if (!selectedLicense.value) return
   const ok = await runAction(
@@ -518,5 +597,22 @@ onMounted(loadLicenses)
 
 .actions-col {
   white-space: nowrap;
+}
+
+.license-code-block {
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.license-code-value {
+  display: block;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  word-break: break-all;
+  color: var(--p-text-color);
 }
 </style>

@@ -21,7 +21,7 @@
           <h2 id="faq-heading" class="faq-heading">Common Questions</h2>
           <p class="faq-subheading">
             Principal-level expertise in WAF, NetScaler, Zero-Trust, multicloud security, and AI automation—
-            delivered remotely across 54+ countries.
+            delivered remotely across 20+ countries.
           </p>
         </div>
 

@@ -73,7 +73,7 @@
             </p>
             <p class="section-subtitle" style="margin-top:16px">
               With a presence in Colombia, UAE, UK, and the US, we operate remotely but think globally —
-              having delivered engagements across 54+ countries and every major industry vertical.
+              having delivered engagements across 20+ countries and every major industry vertical.
             </p>
           </div>
           <div class="mission-values reveal reveal-delay-2">
@@ -168,7 +168,7 @@
           <span class="section-label">Global Presence</span>
           <h2 class="section-title">Remote-First. Worldwide Reach.</h2>
           <p class="section-subtitle" style="margin:0 auto">
-            With offices and presence in 4 countries and clients in 54+,
+            With offices and presence in 4 countries and clients in 20+,
             we operate wherever our clients need us — without compromise.
           </p>
         </div>
@@ -222,7 +222,7 @@ onUnmounted(stopTeamAutoplay)
 
 const values = [
   { icon: 'pi pi-star', title: 'Principal-Only Delivery', desc: 'Every engagement is led by a principal-level architect. No juniors, no handoffs.' },
-  { icon: 'pi pi-globe', title: 'Global Perspective', desc: 'Having worked in 54+ countries, we understand diverse regulatory and cultural environments.' },
+  { icon: 'pi pi-globe', title: 'Global Perspective', desc: 'Having worked in 20+ countries, we understand diverse regulatory and cultural environments.' },
   { icon: 'pi pi-bolt', title: 'AI-First Approach', desc: 'We automate where possible — so your team can focus on what matters.' },
   { icon: 'pi pi-shield', title: 'Security Above All', desc: 'We never recommend solutions that sacrifice security for convenience.' },
 ]
@@ -239,7 +239,7 @@ const teamMembers = [
       { label: 'AI & LLM Engineering' },
     ],
     bio: [
-      'Principal Cloud & Security Architect with <strong>15+ years</strong> leading large-scale multicloud, hybrid, and on-premises security transformations across <strong>50+ countries</strong>. Recognized Subject Matter Expert in Web Application Firewall and API protection (Citrix NetScaler/ADC, F5), Zero-Trust Architecture, and secure application delivery for finance, defense, telecom, and government sectors.',
+      'Principal Cloud & Security Architect with <strong>15+ years</strong> leading large-scale multicloud, hybrid, and on-premises security transformations across <strong>20+ countries</strong>. Recognized Subject Matter Expert in Web Application Firewall and API protection (Citrix NetScaler/ADC, F5), Zero-Trust Architecture, and secure application delivery for finance, defense, telecom, and government sectors.',
       'Designs, deploys, and customizes <strong>AI and LLM solutions</strong> for production—model selection, guardrails, RAG, and agent workflows integrated with enterprise infrastructure (including JPilot and NetScaler automation). Co-authored NetScaler certification exams (versions 10 and 11), recipient of the <em>Citrix SME of the Year 2013 & 2014</em> award, and a Citrix Education MVP. Delivered security transformations for UAE Ministry of Defense, Barclays, Emirates Airlines, Central Bank of Oman, United Nations, and Smart Dubai.',
     ],
     certs: [

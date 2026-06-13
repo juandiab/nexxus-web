@@ -11,6 +11,8 @@ from config import settings
 from services.email_templates import (
     build_license_activation_html,
     build_license_activation_plain,
+    build_license_update_html,
+    build_license_update_plain,
     build_password_reset_html,
     build_password_reset_plain,
     build_welcome_credentials_html,
@@ -151,6 +153,89 @@ async def send_license_activation_email(
     await send_email(
         to_address=to_address,
         subject=f"Your {application} license — Nexxus Tech",
+        body=plain,
+        html_body=html,
+    )
+
+
+async def send_license_recovery_email(
+    *,
+    to_address: str,
+    name: str,
+    application: str,
+    otp_code: str,
+) -> None:
+    greeting = name.strip() or "there"
+    plain = (
+        f"Hello {greeting},\n\n"
+        f"We received a request to link your existing {application} license to a new device.\n\n"
+        f"Your verification code is: {otp_code}\n\n"
+        "Enter this 6-digit code on the activation page to continue.\n"
+        "If you did not request this, you can ignore this email.\n"
+    )
+    html = (
+        f"<p>Hello {greeting},</p>"
+        f"<p>We received a request to link your existing <strong>{application}</strong> license to a new device.</p>"
+        f"<p>Your verification code is:</p>"
+        f"<p style=\"font-size:24px;font-weight:700;letter-spacing:0.2em;\">{otp_code}</p>"
+        "<p>Enter this 6-digit code on the activation page to continue.</p>"
+        "<p>If you did not request this, you can ignore this email.</p>"
+    )
+    await send_email(
+        to_address=to_address,
+        subject=f"Link your {application} license — Nexxus Tech",
+        body=plain,
+        html_body=html,
+    )
+
+
+async def send_license_update_email(
+    *,
+    to_address: str,
+    name: str,
+    application: str,
+    license_code: str,
+    license_type: str,
+    expiration_date,
+    status_label: str,
+    change: str,
+    validity_days: int | None = None,
+    days_added: int | None = None,
+) -> None:
+    subject_map = {
+        "extended": f"Your {application} license was extended — Nexxus Tech",
+        "type_changed": f"Your {application} license type was updated — Nexxus Tech",
+        "updated": f"Your {application} license was updated — Nexxus Tech",
+        "expired": f"Your {application} license has expired — Nexxus Tech",
+        "deactivated": f"Your {application} license was deactivated — Nexxus Tech",
+        "reactivated": f"Your {application} license was reactivated — Nexxus Tech",
+    }
+    subject = subject_map.get(change, subject_map["updated"])
+    plain = build_license_update_plain(
+        name=name,
+        application=application,
+        license_code=license_code,
+        license_type=license_type,
+        expiration_date=expiration_date,
+        status_label=status_label,
+        change=change,
+        validity_days=validity_days,
+        days_added=days_added,
+    )
+    html = build_license_update_html(
+        name=name,
+        application=application,
+        license_code=license_code,
+        license_type=license_type,
+        expiration_date=expiration_date,
+        status_label=status_label,
+        change=change,
+        validity_days=validity_days,
+        days_added=days_added,
+    )
+    await send_email(
+        to_address=to_address,
+        subject=subject,
         body=plain,
         html_body=html,
     )

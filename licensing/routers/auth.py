@@ -42,7 +42,7 @@ async def login(payload: LoginRequest, db: AsyncIOMotorDatabase = Depends(get_db
         )
 
     return LoginResponse(
-        accessToken=create_access_token(user["username"]),
+        accessToken=create_access_token(user["username"], role=user.get("role", "user")),
         user=await _user_response(db, user),
     )
 

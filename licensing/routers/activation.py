@@ -10,14 +10,26 @@ from pydantic import ValidationError
 
 from dependencies import get_db
 from schemas.activation import (
+    ActivationExistingResponse,
+    ActivationRecoverCheckResponse,
+    ActivationRecoverRequest,
+    ActivationRecoverRequestResponse,
+    ActivationRecoverVerifyRequest,
     ActivationRequest,
     ActivationRequestResponse,
     ActivationResponse,
     ActivationVerifyRequest,
     OfflineLicensePackage,
 )
-from services.activation_service import request_activation, verify_activation_otp
-from services.email_service import send_license_activation_email
+from services.activation_service import (
+    check_recoverable_license,
+    get_existing_deployment_activation,
+    request_activation,
+    request_license_recovery,
+    verify_activation_otp,
+    verify_license_recovery,
+)
+from services.email_service import send_license_activation_email, send_license_recovery_email
 from services.offline_license_service import get_offline_license_package, offline_license_filename
 
 router = APIRouter(prefix="/activation", tags=["activation"])
@@ -124,6 +136,91 @@ async def _handle_activation_request(
         validityDays=preview["validityDays"],
         otpExpiresAtUnix=preview["otpExpiresAtUnix"],
     )
+
+
+@router.get("/existing", response_model=ActivationExistingResponse)
+async def get_existing_activation(
+    appfingerprint: str = Query(..., min_length=1, max_length=256),
+    appname: str = Query(..., min_length=1, max_length=128),
+    licensecode: str | None = Query(default=None, max_length=64),
+    activationdate: str | None = Query(default=None, max_length=64),
+    db: AsyncIOMotorDatabase = Depends(get_db),
+) -> ActivationExistingResponse:
+    try:
+        row = await get_existing_deployment_activation(
+            db,
+            app_fingerprint=appfingerprint.strip(),
+            app_name=appname.strip(),
+            license_code=licensecode,
+            activation_date=activationdate,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    return ActivationExistingResponse(**row)
+
+
+@router.get("/recover/check", response_model=ActivationRecoverCheckResponse)
+async def get_recover_check(
+    email: str = Query(..., min_length=3, max_length=256),
+    appname: str = Query(..., min_length=1, max_length=128),
+    db: AsyncIOMotorDatabase = Depends(get_db),
+) -> ActivationRecoverCheckResponse:
+    try:
+        row = await check_recoverable_license(
+            db,
+            email=email.strip(),
+            app_name=appname.strip(),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    return ActivationRecoverCheckResponse(**row)
+
+
+@router.post("/recover/request", response_model=ActivationRecoverRequestResponse)
+async def post_recover_request(
+    payload: ActivationRecoverRequest,
+    db: AsyncIOMotorDatabase = Depends(get_db),
+) -> ActivationRecoverRequestResponse:
+    try:
+        preview, otp = await request_license_recovery(
+            db,
+            app_fingerprint=payload.appFingerprint.strip(),
+            app_name=payload.appName.strip(),
+            activation_date=payload.activationDate.strip(),
+            email=str(payload.email),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+
+    try:
+        await send_license_recovery_email(
+            to_address=preview["email"],
+            name=preview["name"],
+            application=preview["application"],
+            otp_code=otp,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
+
+    return ActivationRecoverRequestResponse(**preview)
+
+
+@router.post("/recover/verify", response_model=ActivationExistingResponse, status_code=status.HTTP_200_OK)
+async def post_recover_verify(
+    payload: ActivationRecoverVerifyRequest,
+    db: AsyncIOMotorDatabase = Depends(get_db),
+) -> ActivationExistingResponse:
+    try:
+        row = await verify_license_recovery(
+            db,
+            app_fingerprint=payload.appFingerprint.strip(),
+            app_name=payload.appName.strip(),
+            email=str(payload.email),
+            otp=payload.otp.strip(),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    return ActivationExistingResponse(**row)
 
 
 @router.post("/request", response_model=ActivationRequestResponse, status_code=status.HTTP_200_OK)

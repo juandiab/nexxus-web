@@ -274,3 +274,224 @@ def build_license_activation_plain(
         ]
     )
     return "\n".join(lines)
+
+
+def _format_display_date(value) -> str:
+    if value is None:
+        return "—"
+    if isinstance(value, str):
+        text = value.replace("Z", "+00:00")
+        try:
+            from datetime import datetime
+
+            value = datetime.fromisoformat(text)
+        except ValueError:
+            return value
+    try:
+        from utils.time import ensure_utc_aware
+
+        aware = ensure_utc_aware(value)
+        return aware.strftime("%B %d, %Y")
+    except (TypeError, ValueError):
+        return str(value)
+
+
+def _license_email_shell(*, eyebrow: str, title: str, body_html: str) -> str:
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <body style="margin:0;padding:0;background:{_BRAND_LIGHT_BG};font-family:'Segoe UI',Arial,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{_BRAND_LIGHT_BG};padding:40px 16px;">
+        <tr><td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+            <tr><td style="height:4px;background:linear-gradient(90deg,{_BRAND_PRIMARY},{_BRAND_PRIMARY_LIGHT});"></td></tr>
+            <tr><td style="padding:40px 40px 24px;text-align:center;">
+              <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:{_BRAND_PRIMARY};">Nexxus Tech</p>
+              <h1 style="margin:0;font-size:24px;font-weight:700;color:{_BRAND_DARK};">{escape(title)}</h1>
+              <p style="margin:12px 0 0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:{_BRAND_GREY};">{escape(eyebrow)}</p>
+            </td></tr>
+            <tr><td style="padding:0 40px 32px;">
+              {body_html}
+            </td></tr>
+            <tr><td style="background:{_BRAND_DARK};padding:24px 40px;text-align:center;">
+              <p style="margin:0;font-size:13px;color:#E5E5E5;">
+                Questions? <a href="mailto:contact@nexxus-tech.com" style="color:{_BRAND_PRIMARY_LIGHT};text-decoration:none;">contact@nexxus-tech.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </body>
+    </html>
+    """
+
+
+def _license_code_box(license_code: str) -> str:
+    if not license_code:
+        return ""
+    return _otp_box(license_code, label="Your license code")
+
+
+def _license_details_table(
+    *,
+    application: str,
+    license_type: str,
+    expiration_date,
+    status_label: str,
+    validity_days: int | None = None,
+) -> str:
+    type_label = escape(license_type.replace("_", " ").title())
+    rows = (
+        _row("Application", escape(application))
+        + _row("License type", type_label)
+        + (_row("Validity", f"{validity_days} days") if validity_days else "")
+        + _row("Expires", escape(_format_display_date(expiration_date)))
+        + _row("Status", escape(status_label), last=True)
+    )
+    return f"""
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{_BRAND_LIGHT_BG};border-radius:10px;margin:24px 0;">
+      <tr><td style="padding:20px 24px;">
+        <p style="margin:0 0 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:{_BRAND_GREY};">Updated license details</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          {rows}
+        </table>
+      </td></tr>
+    </table>
+    """
+
+
+_CHANGE_COPY = {
+    "extended": {
+        "eyebrow": "License extended",
+        "title": "Your license validity has been extended",
+        "lead": "Good news — an administrator extended your license. Your application will continue working until the new expiration date below.",
+    },
+    "type_changed": {
+        "eyebrow": "License updated",
+        "title": "Your license type has changed",
+        "lead": "An administrator updated your license type and validity. Review the details below and sync your application if needed.",
+    },
+    "updated": {
+        "eyebrow": "License updated",
+        "title": "Your license details were updated",
+        "lead": "An administrator updated your license. Review the details below and sync your application if needed.",
+    },
+    "expired": {
+        "eyebrow": "License expired",
+        "title": "Your license has expired",
+        "lead": "An administrator marked your license as expired. Contact support if you believe this was a mistake or need a renewal.",
+    },
+    "deactivated": {
+        "eyebrow": "License deactivated",
+        "title": "Your license has been deactivated",
+        "lead": "An administrator deactivated your license. Your application will no longer sync until the license is reactivated.",
+    },
+    "reactivated": {
+        "eyebrow": "License reactivated",
+        "title": "Your license is active again",
+        "lead": "Good news — your license was reactivated. You can sync your application again using the details below.",
+    },
+}
+
+
+def build_license_update_html(
+    *,
+    name: str,
+    application: str,
+    license_code: str,
+    license_type: str,
+    expiration_date,
+    status_label: str,
+    change: str,
+    validity_days: int | None = None,
+    days_added: int | None = None,
+) -> str:
+    copy = _CHANGE_COPY.get(change, _CHANGE_COPY["updated"])
+    first = escape(name.split()[0] if name.strip() else "there")
+    app = escape(application)
+    lead = copy["lead"]
+    if change == "extended" and days_added:
+        lead = (
+            f"Good news — an administrator added {days_added} days to your license. "
+            f"It is now valid until {_format_display_date(expiration_date)}."
+        )
+
+    body = f"""
+      <p style="margin:0 0 20px;font-size:16px;line-height:1.75;color:#374151;">Hi {first},</p>
+      <p style="margin:0 0 8px;font-size:15px;line-height:1.75;color:#4B5563;">{escape(lead)}</p>
+      <p style="margin:0 0 8px;font-size:15px;line-height:1.75;color:#4B5563;">
+        Application: <strong>{app}</strong>
+      </p>
+      {_license_code_box(license_code)}
+      {_license_details_table(
+          application=application,
+          license_type=license_type,
+          expiration_date=expiration_date,
+          status_label=status_label,
+          validity_days=validity_days,
+      )}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;margin-bottom:24px;">
+        <tr><td style="padding:18px 22px;">
+          <p style="margin:0;font-size:14px;line-height:1.65;color:#374151;">
+            Open your application and sync the license to pick up the latest expiration date and status.
+            If you use an offline license file, download a fresh copy from the activation page.
+          </p>
+        </td></tr>
+      </table>
+      <p style="margin:0;font-size:15px;color:#4B5563;">— The Nexxus Tech Team</p>
+    """
+    return _license_email_shell(
+        eyebrow=copy["eyebrow"],
+        title=copy["title"],
+        body_html=body,
+    )
+
+
+def build_license_update_plain(
+    *,
+    name: str,
+    application: str,
+    license_code: str,
+    license_type: str,
+    expiration_date,
+    status_label: str,
+    change: str,
+    validity_days: int | None = None,
+    days_added: int | None = None,
+) -> str:
+    copy = _CHANGE_COPY.get(change, _CHANGE_COPY["updated"])
+    lead = copy["lead"]
+    if change == "extended" and days_added:
+        lead = (
+            f"An administrator added {days_added} days to your license. "
+            f"It is now valid until {_format_display_date(expiration_date)}."
+        )
+
+    lines = [
+        f"Hi {name},",
+        "",
+        lead,
+        "",
+        f"Application: {application}",
+        f"License type: {license_type.replace('_', ' ').title()}",
+    ]
+    if validity_days:
+        lines.append(f"Validity: {validity_days} days")
+    lines.extend(
+        [
+            f"Expires: {_format_display_date(expiration_date)}",
+            f"Status: {status_label}",
+        ]
+    )
+    if license_code:
+        lines.extend(["", f"License code: {license_code}"])
+    lines.extend(
+        [
+            "",
+            "Sync your application to pick up the latest expiration date and status.",
+            "",
+            "— The Nexxus Tech Team",
+            "contact@nexxus-tech.com",
+        ]
+    )
+    return "\n".join(lines)

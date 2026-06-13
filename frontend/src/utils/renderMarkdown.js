@@ -1,7 +1,15 @@
 /**
- * Renders blog Markdown with consistent site styling.
- * Uses the same rules as existing posts (GFM-style subset).
+ * Line-based Markdown renderer for blog posts.
+ * Handles fenced code blocks safely (won't break on Python """ strings).
  */
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 function inlineMarkdown(text) {
   return text
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -10,72 +18,160 @@ function inlineMarkdown(text) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
 }
 
-function convertTables(md) {
-  return md.replace(
-    /^(\|.+\|)\n(\|[\s\-:|]+\|)\n((?:\|.+\|\n?)*)/gm,
-    (_, headerLine, _sep, bodyLines) => {
-      const parseCells = (line) =>
-        line
-          .split('|')
-          .slice(1, -1)
-          .map((c) => c.trim())
-      const headers = parseCells(headerLine)
-      const rows = bodyLines
-        .trim()
-        .split('\n')
-        .filter(Boolean)
-        .map(parseCells)
-      const thead =
-        '<thead><tr>' +
-        headers.map((h) => `<th>${inlineMarkdown(h)}</th>`).join('') +
-        '</tr></thead>'
-      const tbody =
-        '<tbody>' +
-        rows
-          .map(
-            (cells) =>
-              '<tr>' +
-              cells.map((c) => `<td>${inlineMarkdown(c)}</td>`).join('') +
-              '</tr>'
-          )
-          .join('') +
-        '</tbody>'
-      return `<table class="md-table">${thead}${tbody}</table>`
-    }
-  )
+function parseTableRow(line) {
+  return line
+    .split('|')
+    .slice(1, -1)
+    .map((cell) => cell.trim())
 }
 
-export function renderMarkdown(md) {
+function renderTable(lines) {
+  const header = parseTableRow(lines[0])
+  const rows = lines.slice(2).map(parseTableRow)
+  const thead =
+    '<thead><tr>' +
+    header.map((h) => `<th>${inlineMarkdown(h)}</th>`).join('') +
+    '</tr></thead>'
+  const tbody =
+    '<tbody>' +
+    rows
+      .map(
+        (cells) =>
+          '<tr>' + cells.map((c) => `<td>${inlineMarkdown(c)}</td>`).join('') + '</tr>'
+      )
+      .join('') +
+    '</tbody>'
+  return `<table class="md-table">${thead}${tbody}</table>`
+}
+
+function isTableSeparator(line) {
+  return /^\|[\s\-:|]+\|$/.test(line.trim())
+}
+
+function titlesMatch(a, b) {
+  return a.trim().toLowerCase() === b.trim().toLowerCase()
+}
+
+/**
+ * @param {string} md
+ * @param {{ skipTitle?: string }} [options]
+ */
+export function renderMarkdown(md, options = {}) {
   if (!md) return ''
 
-  let html = convertTables(md)
-    .replace(/\r\n/g, '\n')
-    // Fenced code blocks (before inline transforms)
-    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, _lang, code) => {
-      const escaped = code
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-      return `<pre><code>${escaped}</code></pre>`
-    })
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/(<li>[\s\S]*?<\/li>)+/g, (block) => `<ul>${block}</ul>`)
+  const lines = md.replace(/\r\n/g, '\n').split('\n')
+  const htmlParts = []
+  let index = 0
 
-  html = inlineMarkdown(html)
+  while (index < lines.length) {
+    const line = lines[index]
 
-  const blocks = html.split(/\n\n+/)
-  html = blocks
-    .map((block) => {
-      const trimmed = block.trim()
-      if (!trimmed) return ''
-      if (/^<(h[1-6]|ul|pre|blockquote|table)/.test(trimmed)) return trimmed
-      return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`
-    })
-    .join('\n')
+    if (!line.trim()) {
+      index += 1
+      continue
+    }
 
-  return html
+    const fenceOpen = line.match(/^```([\w-]*)\s*$/)
+    if (fenceOpen) {
+      const lang = fenceOpen[1] || ''
+      index += 1
+      const codeLines = []
+      let depth = 1
+
+      while (index < lines.length && depth > 0) {
+        const nestedFence = lines[index].match(/^```([\w-]*)\s*$/)
+        if (nestedFence) {
+          if (nestedFence[1]) {
+            depth += 1
+            codeLines.push(lines[index])
+          } else {
+            depth -= 1
+            if (depth > 0) codeLines.push(lines[index])
+          }
+          index += 1
+          continue
+        }
+        if (depth > 0) codeLines.push(lines[index])
+        index += 1
+      }
+
+      const langClass = lang ? ` class="language-${lang}"` : ''
+      const langLabel = lang
+        ? `<div class="code-block-header"><span class="code-lang">${lang}</span></div>`
+        : ''
+      htmlParts.push(
+        `<div class="code-block">${langLabel}<pre><code${langClass}>${escapeHtml(codeLines.join('\n'))}</code></pre></div>`
+      )
+      continue
+    }
+
+    if (line.includes('|') && index + 1 < lines.length && isTableSeparator(lines[index + 1])) {
+      const tableLines = [lines[index], lines[index + 1]]
+      index += 2
+      while (index < lines.length && lines[index].includes('|')) {
+        tableLines.push(lines[index])
+        index += 1
+      }
+      htmlParts.push(renderTable(tableLines))
+      continue
+    }
+
+    if (line.startsWith('### ')) {
+      htmlParts.push(`<h3>${inlineMarkdown(line.slice(4))}</h3>`)
+      index += 1
+      continue
+    }
+    if (line.startsWith('## ')) {
+      htmlParts.push(`<h2>${inlineMarkdown(line.slice(3))}</h2>`)
+      index += 1
+      continue
+    }
+    if (line.startsWith('# ')) {
+      const title = line.slice(2)
+      if (!options.skipTitle || !titlesMatch(title, options.skipTitle)) {
+        htmlParts.push(`<h1>${inlineMarkdown(title)}</h1>`)
+      }
+      index += 1
+      continue
+    }
+
+    if (line.startsWith('> ')) {
+      const quoteLines = []
+      while (index < lines.length && lines[index].startsWith('> ')) {
+        quoteLines.push(lines[index].slice(2))
+        index += 1
+      }
+      htmlParts.push(`<blockquote>${inlineMarkdown(quoteLines.join(' '))}</blockquote>`)
+      continue
+    }
+
+    if (/^[-*] /.test(line)) {
+      const items = []
+      while (index < lines.length && /^[-*] /.test(lines[index])) {
+        items.push(lines[index].replace(/^[-*] /, ''))
+        index += 1
+      }
+      htmlParts.push(
+        `<ul>${items.map((item) => `<li>${inlineMarkdown(item)}</li>`).join('')}</ul>`
+      )
+      continue
+    }
+
+    const paragraphLines = []
+    while (
+      index < lines.length &&
+      lines[index].trim() &&
+      !lines[index].startsWith('#') &&
+      !lines[index].startsWith('> ') &&
+      !/^```/.test(lines[index]) &&
+      !/^[-*] /.test(lines[index]) &&
+      !(lines[index].includes('|') && index + 1 < lines.length && isTableSeparator(lines[index + 1]))
+    ) {
+      paragraphLines.push(lines[index])
+      index += 1
+    }
+    htmlParts.push(`<p>${inlineMarkdown(paragraphLines.join(' '))}</p>`)
+  }
+
+  return htmlParts.join('\n')
 }

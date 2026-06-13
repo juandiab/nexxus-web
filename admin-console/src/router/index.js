@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/blogs',
     name: 'blogs',
-    component: () => import('@/views/InProgressView.vue'),
+    component: () => import('@/views/BlogsView.vue'),
     meta: {
       requiresAuth: true,
       requiresSetup: true,
@@ -57,14 +57,12 @@ const routes = [
   {
     path: '/settings',
     name: 'settings',
-    component: () => import('@/views/InProgressView.vue'),
+    component: () => import('@/views/SettingsView.vue'),
     meta: {
       requiresAuth: true,
       requiresSetup: true,
       requiresAdmin: true,
       title: 'Settings',
-      sectionTitle: 'Settings',
-      sectionSubtitle: 'Configure admin console preferences.',
     },
   },
   {

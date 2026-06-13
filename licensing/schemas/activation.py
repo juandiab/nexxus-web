@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
-from models.license import LicenseType, UsageType
+from models.license import LicenseType, UsageType, LicenseStatus
 
 
 class ActivationRequest(BaseModel):
@@ -65,5 +65,44 @@ class ActivationResponse(BaseModel):
     appFingerprint: str
     appName: str
     activationDate: str | None = None
+    licenseCode: str | None = None
     offlineLicense: OfflineLicensePackage | None = None
+    active: bool = True
+    status: LicenseStatus | None = None
     message: str = "Email verified. Your license has been activated."
+
+
+class ActivationExistingResponse(ActivationResponse):
+    message: str = "This deployment already has an activated license."
+
+
+class ActivationRecoverCheckResponse(BaseModel):
+    found: bool
+    email: str | None = None
+    application: str | None = None
+    name: str | None = None
+    licenseType: LicenseType | None = None
+    expirationDate: datetime | None = None
+
+
+class ActivationRecoverRequest(BaseModel):
+    appFingerprint: str = Field(min_length=1, max_length=256)
+    appName: str = Field(min_length=1, max_length=128)
+    activationDate: str = Field(min_length=1, max_length=64)
+    email: EmailStr
+
+
+class ActivationRecoverRequestResponse(BaseModel):
+    email: str
+    application: str
+    name: str
+    licenseType: LicenseType
+    otpExpiresAtUnix: int
+    message: str = "Verification code sent to your email to link this license to the device."
+
+
+class ActivationRecoverVerifyRequest(BaseModel):
+    appFingerprint: str = Field(min_length=1, max_length=256)
+    appName: str = Field(min_length=1, max_length=128)
+    email: EmailStr
+    otp: str = Field(min_length=1, max_length=32)

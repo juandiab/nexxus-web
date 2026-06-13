@@ -15,7 +15,95 @@ from models.license import (
     VALID_LICENSE_TYPES,
     serialize_license,
 )
+from services.license_payload import plain_license_code
+from services.offline_license_service import _application_name_query
 from utils.time import ensure_utc_aware, utc_now
+
+
+def _license_code_matches(doc: dict[str, Any], provided: str) -> bool:
+    stored = doc.get("licenseCode")
+    if not stored:
+        return False
+    cleaned = provided.strip().upper()
+    try:
+        return secrets.compare_digest(decrypt(stored), cleaned)
+    except ValueError:
+        return secrets.compare_digest(str(stored).strip().upper(), cleaned)
+
+
+def _is_license_usable(doc: dict[str, Any]) -> bool:
+    if doc.get("active") is False:
+        return False
+    expiration = doc.get("expirationDate")
+    if expiration is not None and ensure_utc_aware(expiration) < utc_now():
+        return False
+    return bool(doc.get("licenseCode"))
+
+
+async def find_active_license_by_email_and_app(
+    db: AsyncIOMotorDatabase,
+    *,
+    email: str,
+    app_name: str,
+) -> dict[str, Any] | None:
+    cleaned_email = email.strip().lower()
+    name_query = _application_name_query(app_name)
+    if not cleaned_email or not name_query:
+        return None
+
+    cursor = db.licenses.find({"email": cleaned_email, **name_query}).sort(
+        "registrationDate", -1
+    )
+    async for doc in cursor:
+        if _is_license_usable(doc):
+            return doc
+    return None
+
+
+async def find_license_by_code_and_app(
+    db: AsyncIOMotorDatabase,
+    *,
+    license_code: str,
+    app_name: str,
+) -> dict[str, Any] | None:
+    name_query = _application_name_query(app_name)
+    if not license_code.strip() or not name_query:
+        return None
+
+    async for doc in db.licenses.find(name_query):
+        if _license_code_matches(doc, license_code) and _is_license_usable(doc):
+            return doc
+    return None
+
+
+async def rebind_license_to_deployment(
+    db: AsyncIOMotorDatabase,
+    doc: dict[str, Any],
+    *,
+    app_fingerprint: str,
+    app_name: str,
+    activation_date: str | None = None,
+) -> dict[str, Any]:
+    cleaned_fingerprint = app_fingerprint.strip()
+    cleaned_application = app_name.strip()
+    if not cleaned_fingerprint or not cleaned_application:
+        raise ValueError("App fingerprint and app name are required")
+
+    now = utc_now()
+    update: dict[str, Any] = {
+        "appFingerprint": cleaned_fingerprint,
+        "appName": cleaned_application,
+        "application": cleaned_application,
+        "updatedAt": now,
+    }
+    if activation_date:
+        update["activationDate"] = activation_date
+
+    await db.licenses.update_one({"_id": doc["_id"]}, {"$set": update})
+    updated = await db.licenses.find_one({"_id": doc["_id"]})
+    if updated is None:
+        raise ValueError("License could not be updated for this deployment")
+    return updated
 
 
 def generate_license_code() -> str:
@@ -31,7 +119,11 @@ def _resolve_validity_days(license_type: str, validity_days: int | None) -> int:
 
 
 async def ensure_license_indexes(db: AsyncIOMotorDatabase) -> None:
-    await db.licenses.create_index([("email", 1), ("application", 1)], unique=True)
+    index_info = await db.licenses.index_information()
+    email_app_index = index_info.get("email_1_application_1")
+    if email_app_index and email_app_index.get("unique"):
+        await db.licenses.drop_index("email_1_application_1")
+    await db.licenses.create_index([("email", 1), ("application", 1)])
     await db.licenses.create_index(
         [("appFingerprint", 1), ("application", 1)],
         unique=True,
@@ -48,6 +140,16 @@ async def get_license_by_id(db: AsyncIOMotorDatabase, license_id: str) -> dict[s
     except Exception:
         return None
     return await db.licenses.find_one({"_id": oid})
+
+
+async def get_license_plain_code(db: AsyncIOMotorDatabase, license_id: str) -> str | None:
+    doc = await get_license_by_id(db, license_id)
+    if doc is None:
+        return None
+    stored = doc.get("licenseCode")
+    if not stored:
+        return None
+    return plain_license_code(str(stored))
 
 
 async def list_licenses(db: AsyncIOMotorDatabase) -> list[dict[str, Any]]:
@@ -73,12 +175,6 @@ async def create_license(
     cleaned_application = application.strip()
     if not cleaned_application:
         raise ValueError("Application is required")
-
-    existing = await db.licenses.find_one(
-        {"email": cleaned_email, "application": cleaned_application}
-    )
-    if existing is not None:
-        raise ValueError("A license already exists for this email and application")
 
     days = _resolve_validity_days(cleaned_type, validity_days)
     registration_date = utc_now()
@@ -130,12 +226,6 @@ async def activate_license(
     )
     if existing is not None:
         raise ValueError("This deployment is already activated for this application")
-
-    conflict = await db.licenses.find_one(
-        {"email": cleaned_email, "application": cleaned_application}
-    )
-    if conflict is not None:
-        raise ValueError("A license already exists for this email and application")
 
     days = FREE_ACTIVATION_VALIDITY_DAYS
     registration_date = utc_now()
@@ -205,16 +295,6 @@ async def update_license(
     cleaned_application = application.strip()
     if not cleaned_application:
         raise ValueError("Application is required")
-
-    conflict = await db.licenses.find_one(
-        {
-            "email": cleaned_email,
-            "application": cleaned_application,
-            "_id": {"$ne": doc["_id"]},
-        }
-    )
-    if conflict is not None:
-        raise ValueError("A license already exists for this email and application")
 
     registration_date = doc.get("registrationDate") or doc.get("createdAt") or utc_now()
     expiration_date = registration_date + timedelta(days=validity_days)
@@ -387,27 +467,13 @@ async def verify_license_code(
 ) -> dict[str, Any] | None:
     cleaned_email = email.strip().lower()
     cleaned_application = application.strip()
-    doc = await db.licenses.find_one(
-        {"email": cleaned_email, "application": cleaned_application}
+    doc = await find_active_license_by_email_and_app(
+        db,
+        email=cleaned_email,
+        app_name=cleaned_application,
     )
-    if doc is None or not doc.get("licenseCode"):
+    if doc is None:
         return None
-
-    provided = license_code.strip().upper()
-    stored = doc["licenseCode"]
-    matched = False
-    try:
-        matched = secrets.compare_digest(decrypt(stored), provided)
-    except ValueError:
-        matched = secrets.compare_digest(str(stored).strip().upper(), provided)
-    if not matched:
+    if not _license_code_matches(doc, license_code):
         return None
-
-    expiration = doc.get("expirationDate")
-    if expiration is not None and ensure_utc_aware(expiration) < utc_now():
-        return None
-
-    if doc.get("active") is False:
-        return None
-
     return serialize_license(doc)

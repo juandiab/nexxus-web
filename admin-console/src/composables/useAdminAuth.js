@@ -5,6 +5,17 @@ const user = ref(null)
 const loading = ref(false)
 const error = ref('')
 
+function tokenHasRoleClaim() {
+  const token = getToken()
+  if (!token) return false
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+    return typeof payload.role === 'string' && payload.role.length > 0
+  } catch {
+    return false
+  }
+}
+
 export function useAdminAuth() {
   const isAuthenticated = computed(() => Boolean(getToken() && user.value))
   const username = computed(() => user.value?.username || '')
@@ -51,6 +62,11 @@ export function useAdminAuth() {
 
   async function refreshUser() {
     if (!getToken()) return false
+    if (!tokenHasRoleClaim()) {
+      error.value = 'Your session expired. Please sign in again.'
+      clearSession()
+      return false
+    }
     try {
       user.value = await fetchMe()
       return true

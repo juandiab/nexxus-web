@@ -27,7 +27,7 @@ export const faqs = [
   {
     title: 'Where does Nexxus Tech operate?',
     description:
-      'Nexxus Tech is remote-first with presence in Colombia, UAE, the United Kingdom, and the United States. The team has delivered engagements across 54+ countries. Most work is conducted remotely; on-site delivery is available on demand when your project requires it.',
+      'Nexxus Tech is remote-first with presence in Colombia, UAE, the United Kingdom, and the United States. The team has delivered engagements across 20+ countries. Most work is conducted remotely; on-site delivery is available on demand when your project requires it.',
   },
   {
     title: 'How do engagements typically start?',

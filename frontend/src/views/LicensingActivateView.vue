@@ -70,8 +70,52 @@
           <h2>{{ stepTitle }}</h2>
           <p class="card-subtitle">{{ stepSubtitle }}</p>
 
-          <form class="activate-form" @submit.prevent="step === 'form' ? handleRequest() : step === 'otp' ? handleVerify() : undefined">
-            <template v-if="step === 'form'">
+          <form
+            class="activate-form"
+            @submit.prevent="
+              step === 'recover'
+                ? handleRecover()
+                : step === 'form'
+                  ? handleRequest()
+                  : step === 'otp'
+                    ? handleVerify()
+                    : undefined
+            "
+          >
+            <template v-if="step === 'checking'">
+              <div class="checking-panel">
+                <i class="pi pi-spin pi-spinner"></i>
+                <p>{{ ui.checkingDeployment }}</p>
+              </div>
+            </template>
+
+            <template v-else-if="step === 'recover'">
+              <p class="recover-lead">{{ ui.recoverLead }}</p>
+              <div class="form-group">
+                <label>{{ ui.email }} *</label>
+                <input
+                  v-model="form.email"
+                  type="email"
+                  placeholder="jane@company.com"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>{{ ui.licenseCodeOptional }}</label>
+                <input
+                  v-model="recoverLicenseCode"
+                  type="text"
+                  :placeholder="ui.licenseCodePlaceholder"
+                  autocomplete="off"
+                />
+                <small class="field-hint">{{ ui.licenseCodeHint }}</small>
+              </div>
+              <button type="button" class="link-btn" @click="goToNewActivation">
+                {{ ui.newActivationInstead }}
+              </button>
+            </template>
+
+            <template v-else-if="step === 'form'">
               <div class="form-row">
                 <div class="form-group">
                   <label>{{ ui.fullName }} *</label>
@@ -156,8 +200,53 @@
             </template>
 
             <template v-else-if="step === 'done'">
+              <div v-if="existingActivation && assignedLicense" class="assigned-license-panel">
+                <h3 class="deployment-heading">{{ ui.assignedLicenseTitle }}</h3>
+                <dl class="param-list">
+                  <div class="param-row">
+                    <dt>{{ ui.licenseHolder }}</dt>
+                    <dd class="param-value">{{ assignedLicense.name || '—' }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.email }}</dt>
+                    <dd class="param-value">{{ assignedLicense.email || '—' }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.appName }}</dt>
+                    <dd class="param-value">{{ assignedLicense.application || appName || '—' }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.licenseType }}</dt>
+                    <dd class="param-value">{{ formatLicenseType(assignedLicense.licenseType) }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.registeredOn }}</dt>
+                    <dd class="param-value">{{ formatLicenseDate(assignedLicense.registrationDate) }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.expiresOn }}</dt>
+                    <dd class="param-value">{{ formatLicenseDate(assignedLicense.expirationDate) }}</dd>
+                  </div>
+                  <div class="param-row">
+                    <dt>{{ ui.licenseStatus }}</dt>
+                    <dd class="param-value">{{ formatLicenseStatus(assignedLicense.status) }}</dd>
+                  </div>
+                </dl>
+              </div>
+
               <div class="offline-panel">
-                <p class="offline-lead">{{ ui.offlineLead }}</p>
+                <div v-if="licenseCode" class="license-code-panel">
+                  <span class="meta-label">{{ ui.licenseCode }}</span>
+                  <div class="license-code-row">
+                    <code class="license-code">{{ licenseCode }}</code>
+                    <button type="button" class="btn btn-secondary copy-btn" @click="copyLicenseCode">
+                      {{ copiedLicenseCode ? ui.copiedLicenseCode : ui.copyLicenseCode }}
+                    </button>
+                  </div>
+                </div>
+                <p class="offline-lead">
+                  {{ existingActivation ? ui.stepExistingSubtitle : ui.offlineLead }}
+                </p>
                 <button
                   type="button"
                   class="btn btn-secondary download-btn"
@@ -210,18 +299,30 @@
                 {{ ui.back }}
               </button>
               <button
-                v-if="step === 'form' || step === 'otp'"
+                v-if="step === 'recover' || step === 'form' || step === 'otp'"
                 type="submit"
                 class="btn btn-primary submit-btn"
                 :disabled="submitting || !canSubmit"
               >
-                <i :class="submitting ? 'pi pi-spin pi-spinner' : step === 'form' ? 'pi pi-envelope' : 'pi pi-check'"></i>
+                <i
+                  :class="
+                    submitting
+                      ? 'pi pi-spin pi-spinner'
+                      : step === 'recover'
+                        ? 'pi pi-search'
+                        : step === 'form'
+                          ? 'pi pi-envelope'
+                          : 'pi pi-check'
+                  "
+                ></i>
                 {{
                   submitting
                     ? ui.submitWait
-                    : step === 'form'
-                      ? ui.submitGenerate
-                      : ui.submitConfirm
+                    : step === 'recover'
+                      ? ui.submitRecover
+                      : step === 'form'
+                        ? ui.submitGenerate
+                        : ui.submitConfirm
                 }}
               </button>
             </div>
@@ -233,10 +334,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AutoComplete from 'primevue/autocomplete'
-import { requestActivation, verifyActivationOtp } from '@/api/licensing.js'
+import {
+  checkRecoverableLicense,
+  fetchExistingActivation,
+  requestActivation,
+  requestLicenseRecovery,
+  verifyActivationOtp,
+  verifyLicenseRecovery,
+} from '@/api/licensing.js'
 import { CountryService } from '@/service/CountryService'
 import {
   ACTIVATION_LETTERS,
@@ -256,6 +364,7 @@ const ui = computed(() => ACTIVATION_UI[uiLocaleFor(locale.value)] || ACTIVATION
 const appFingerprint = computed(() => String(route.query.appfingerprint || '').trim())
 const appName = computed(() => String(route.query.appname || '').trim())
 const activationDate = computed(() => String(route.query.activationdate || '').trim())
+const licenseCodeFromQuery = computed(() => String(route.query.licensecode || route.query.licenseCode || '').trim())
 
 function formatActivationDate(value) {
   if (!value) return '—'
@@ -270,8 +379,14 @@ function formatActivationDate(value) {
 }
 
 const activationDateDisplay = computed(() => formatActivationDate(activationDate.value))
+const hasDeploymentParams = computed(() => Boolean(appFingerprint.value && appName.value))
 
-const step = ref('form')
+const step = ref(hasDeploymentParams.value ? 'checking' : 'form')
+const checkingDeployment = ref(hasDeploymentParams.value)
+const existingActivation = ref(false)
+const assignedLicense = ref(null)
+const recoverMode = ref(false)
+const recoverLicenseCode = ref('')
 const usageOptionKeys = ['personal', 'onprem', 'cloud', 'consulting']
 
 const usageOptions = computed(() =>
@@ -298,6 +413,72 @@ onMounted(() => {
     countries.value = data
   })
 })
+
+watch([appFingerprint, appName, licenseCodeFromQuery], () => {
+  if (licenseCodeFromQuery.value) {
+    recoverLicenseCode.value = licenseCodeFromQuery.value
+  }
+  loadExistingActivation()
+}, { immediate: true })
+
+function formatLicenseDate(value) {
+  if (!value) return '—'
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return '—'
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+function formatLicenseType(value) {
+  if (!value) return '—'
+  return String(value).replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+function formatLicenseStatus(status) {
+  const labels = {
+    active: ui.value.statusActive,
+    expired: ui.value.statusExpired,
+    deactivated: ui.value.statusDeactivated,
+    expired_blocked: ui.value.statusExpiredBlocked,
+  }
+  return labels[status] || status || ui.value.statusActive
+}
+
+async function loadExistingActivation() {
+  if (!hasDeploymentParams.value) {
+    checkingDeployment.value = false
+    if (step.value === 'checking') step.value = 'form'
+    return
+  }
+
+  checkingDeployment.value = true
+  if (step.value !== 'done' && step.value !== 'otp') step.value = 'checking'
+  try {
+    const existing = await fetchExistingActivation(appFingerprint.value, appName.value, {
+      licenseCode: recoverLicenseCode.value || licenseCodeFromQuery.value,
+      activationDate: activationDate.value,
+    })
+    if (existing) {
+      applyExistingActivation(existing)
+    } else if (step.value === 'checking') {
+      step.value = 'recover'
+    }
+  } catch {
+    if (step.value === 'checking') step.value = 'recover'
+  } finally {
+    checkingDeployment.value = false
+  }
+}
+
+function applyExistingActivation(existing) {
+  existingActivation.value = true
+  assignedLicense.value = existing
+  licenseCode.value = existing.licenseCode || ''
+  offlineLicense.value = existing.offlineLicense || null
+  submittedEmail.value = existing.email || ''
+  step.value = 'done'
+  submitStatus.value = 'success'
+  errorMessage.value = ''
+}
 
 function searchCountries(event) {
   setTimeout(() => {
@@ -337,20 +518,35 @@ const submitStatus = ref('')
 const errorMessage = ref('')
 const submittedEmail = ref('')
 const offlineLicense = ref(null)
+const licenseCode = ref('')
+const copiedLicenseCode = ref(false)
 
 const stepTitle = computed(() => {
+  if (step.value === 'checking') return ui.value.stepCheckingTitle
+  if (step.value === 'recover') return ui.value.stepRecoverTitle
   if (step.value === 'form') return ui.value.stepFormTitle
-  if (step.value === 'otp') return ui.value.stepOtpTitle
+  if (step.value === 'otp') return recoverMode.value ? ui.value.stepRecoverOtpTitle : ui.value.stepOtpTitle
+  if (existingActivation.value) return ui.value.stepExistingTitle
   return ui.value.stepDoneTitle
 })
 
 const stepSubtitle = computed(() => {
+  if (step.value === 'checking') return ui.value.stepCheckingSubtitle
+  if (step.value === 'recover') return ui.value.stepRecoverSubtitle
   if (step.value === 'form') return ui.value.stepFormSubtitle
-  if (step.value === 'otp') return ui.value.stepOtpSubtitle(submittedEmail.value)
+  if (step.value === 'otp') {
+    return recoverMode.value
+      ? ui.value.stepRecoverOtpSubtitle(submittedEmail.value)
+      : ui.value.stepOtpSubtitle(submittedEmail.value)
+  }
+  if (existingActivation.value) return ui.value.stepExistingSubtitle
   return ui.value.stepDoneSubtitle
 })
 
 const canSubmit = computed(() => {
+  if (step.value === 'recover') {
+    return appFingerprint.value && appName.value && form.email.trim()
+  }
   if (step.value === 'form') {
     return (
       appFingerprint.value &&
@@ -378,11 +574,80 @@ function onOtpInput(event) {
 }
 
 function backToForm() {
-  step.value = 'form'
+  if (existingActivation.value) return
+  recoverMode.value = false
+  step.value = 'recover'
   otp.value = ''
   submitStatus.value = ''
   errorMessage.value = ''
   offlineLicense.value = null
+  licenseCode.value = ''
+}
+
+function goToNewActivation() {
+  recoverMode.value = false
+  step.value = 'form'
+  submitStatus.value = ''
+  errorMessage.value = ''
+}
+
+async function handleRecover() {
+  if (!canSubmit.value) return
+  submitting.value = true
+  submitStatus.value = ''
+  errorMessage.value = ''
+  const email = form.email.trim().toLowerCase()
+  try {
+    if (recoverLicenseCode.value.trim()) {
+      const existing = await fetchExistingActivation(appFingerprint.value, appName.value, {
+        licenseCode: recoverLicenseCode.value.trim(),
+        activationDate: activationDate.value,
+      })
+      if (existing) {
+        applyExistingActivation(existing)
+        return
+      }
+      throw new Error(ui.value.licenseCodeNotFound)
+    }
+
+    const check = await checkRecoverableLicense(email, appName.value)
+    if (!check.found) {
+      step.value = 'form'
+      form.email = email
+      submitStatus.value = ''
+      errorMessage.value = ui.value.noExistingLicense
+      return
+    }
+
+    await requestLicenseRecovery({
+      appFingerprint: appFingerprint.value,
+      appName: appName.value,
+      activationDate: activationDate.value || new Date().toISOString(),
+      email,
+    })
+    submittedEmail.value = email
+    recoverMode.value = true
+    step.value = 'otp'
+    submitStatus.value = 'success'
+  } catch (error) {
+    submitStatus.value = 'error'
+    errorMessage.value = error.message || 'Something went wrong. Please try again.'
+  } finally {
+    submitting.value = false
+  }
+}
+
+async function copyLicenseCode() {
+  if (!licenseCode.value) return
+  try {
+    await navigator.clipboard.writeText(licenseCode.value)
+    copiedLicenseCode.value = true
+    setTimeout(() => {
+      copiedLicenseCode.value = false
+    }, 2000)
+  } catch {
+    /* ignore clipboard failures */
+  }
 }
 
 function buildOfflineLicenseFilename(appNameValue, exportedAt) {
@@ -427,6 +692,17 @@ async function handleRequest() {
     step.value = 'otp'
     submitStatus.value = 'success'
   } catch (error) {
+    if (String(error.message || '').includes('already activated')) {
+      try {
+        const existing = await fetchExistingActivation(appFingerprint.value, appName.value)
+        if (existing) {
+          applyExistingActivation(existing)
+          return
+        }
+      } catch {
+        /* fall through to error message */
+      }
+    }
     submitStatus.value = 'error'
     errorMessage.value = error.message || 'Something went wrong. Please try again.'
   } finally {
@@ -440,15 +716,22 @@ async function handleVerify() {
   submitStatus.value = ''
   errorMessage.value = ''
   try {
-    const result = await verifyActivationOtp({
+    const payload = {
       appFingerprint: appFingerprint.value,
       appName: appName.value,
       email: submittedEmail.value || form.email.trim().toLowerCase(),
       otp: normalizeOtp(otp.value),
-    })
+    }
+    const result = recoverMode.value
+      ? await verifyLicenseRecovery(payload)
+      : await verifyActivationOtp(payload)
     offlineLicense.value = result.offlineLicense || null
+    licenseCode.value = result.licenseCode || ''
+    existingActivation.value = recoverMode.value
+    recoverMode.value = false
     step.value = 'done'
     submitStatus.value = 'success'
+    if (result.email) assignedLicense.value = result
   } catch (error) {
     submitStatus.value = 'error'
     errorMessage.value = error.message || 'Invalid verification code. Please try again.'
@@ -872,6 +1155,91 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.recover-lead {
+  margin: 0 0 8px;
+  color: var(--nt-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.link-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--nt-primary);
+  cursor: pointer;
+  font-size: 0.86rem;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.checking-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 220px;
+  color: var(--nt-text-muted);
+  text-align: center;
+}
+
+.checking-panel .pi {
+  font-size: 1.6rem;
+  color: var(--nt-primary);
+}
+
+.checking-panel p {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.assigned-license-panel {
+  margin-bottom: 8px;
+  padding: 20px;
+  background: var(--nt-dark-3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.checking-hint {
+  margin: 0;
+  color: var(--nt-text-muted);
+  font-size: 0.88rem;
+}
+
+.license-code-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--nt-dark-3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.license-code-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.license-code {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--nt-text-light);
+  word-break: break-all;
+}
+
+.copy-btn {
+  padding: 10px 16px;
+  font-size: 0.82rem;
 }
 
 .offline-lead {

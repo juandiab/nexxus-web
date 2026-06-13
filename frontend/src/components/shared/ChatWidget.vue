@@ -273,21 +273,30 @@
           <p class="demo-booking-lead">
             Pick a time on Google Calendar — your name, email, and demo notes are included in the booking link.
           </p>
-          <button
-            type="button"
-            class="btn-submit-enquiry"
-            :disabled="submitting"
+          <a
+            :href="demoBookingUrl"
+            class="btn-submit-enquiry demo-calendar-link"
+            target="_blank"
+            rel="noopener noreferrer"
             @click="openDemoCalendar"
           >
             <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-calendar'"></i>
             {{ submitting ? 'Opening...' : 'Continue to Google Calendar' }}
-          </button>
+          </a>
         </div>
 
         <div v-if="submitted" class="chat-success">
           <i class="pi pi-check-circle"></i>
           <p v-if="profile.enquiry_type === 'Book a demo'">
             Demo details saved! Complete your booking in the Google Calendar tab. Check your inbox for a summary.
+            <a
+              :href="demoBookingUrl"
+              class="demo-calendar-fallback"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open Google Calendar again
+            </a>
           </p>
           <p v-else>Enquiry sent! Check your inbox for a summary.</p>
         </div>
@@ -358,6 +367,7 @@ import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
 import { formatChatMessage } from '@/utils/formatChatMessage.js'
+import { JPILOT_DEMO_CALENDAR_URL } from '@/config/site.js'
 import { buildDemoBookingUrl, buildDemoBookingSummary } from '@/utils/demoBooking.js'
 
 const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
@@ -561,6 +571,11 @@ const compactMessageArea = computed(
 )
 
 const canSendEnquiry = computed(() => canSubmit.value || allowEarlySubmit.value)
+
+const demoBookingUrl = computed(() => {
+  if (profile.value.enquiry_type !== 'Book a demo') return JPILOT_DEMO_CALENDAR_URL
+  return buildDemoBookingUrl(profile.value)
+})
 
 const discoveryPlaceholder = computed(() => {
   const t = profile.value.enquiry_type
@@ -779,8 +794,11 @@ const confirmDemoDetails = () => {
 const openDemoCalendar = async () => {
   if (submitting.value) return
   submitting.value = true
+
   const summary = buildDemoBookingSummary(profile.value)
   discoveryMessages.value = [{ role: 'user', content: summary }]
+
+  // Calendar opens via the native <a target="_blank"> click — not window.open after await.
 
   try {
     await axios.post('/api/chat/submit', {
@@ -793,14 +811,12 @@ const openDemoCalendar = async () => {
     )
   }
 
-  const bookingUrl = buildDemoBookingUrl(profile.value)
   try {
-    await navigator.clipboard.writeText(buildDemoBookingSummary(profile.value))
+    await navigator.clipboard.writeText(summary)
   } catch {
     /* clipboard optional */
   }
 
-  window.open(bookingUrl, '_blank', 'noopener,noreferrer')
   submitted.value = true
   phase.value = 'submitted'
   submitting.value = false
@@ -1573,6 +1589,23 @@ onUnmounted(() => {
   line-height: 1.55;
   color: var(--nt-text-muted);
   text-align: center;
+}
+
+.demo-calendar-link {
+  text-decoration: none;
+  text-align: center;
+}
+
+.demo-calendar-fallback {
+  display: block;
+  margin-top: 10px;
+  color: var(--nt-primary-l);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.demo-calendar-fallback:hover {
+  text-decoration: underline;
 }
 
 .chat-intake-panel textarea {

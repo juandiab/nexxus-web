@@ -4,7 +4,7 @@ Managing NetScaler ADC at scale means juggling **Next-Gen API** endpoints, class
 
 Repository: [github.com/juandiab/nsagent](https://github.com/juandiab/nsagent) · Release **v0.02**
 
-> NSAgent is an independent project and is not affiliated with Citrix. NetScaler is a trademark of Citrix Systems, Inc.
+> JPilot is an independent project and is not affiliated with, endorsed by, or sponsored by Cloud Software Group, Inc., F5, Inc., or Cisco Systems, Inc. NetScaler is a trademark of Cloud Software Group, Inc. BIG-IP and F5 are trademarks of F5, Inc. Cisco and IOS are trademarks of Cisco Systems, Inc.
 
 ## Installation
 

@@ -1,16 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from routers import contact, blog, chat
-
-
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-    environment: str = "production"
-    cors_origins: str = "https://nexxus-tech.com,https://www.nexxus-tech.com"
-
-
-settings = Settings()
+from config import settings
+from routers import contact, blog, blog_admin, chat, chat_admin
 
 app = FastAPI(
     title="Nexxus Tech API",
@@ -26,13 +17,15 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 app.include_router(contact.router, prefix="/api")
 app.include_router(blog.router, prefix="/api")
+app.include_router(blog_admin.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
+app.include_router(chat_admin.router, prefix="/api")
 
 
 @app.get("/api/health")

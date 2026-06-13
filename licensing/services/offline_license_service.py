@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -11,6 +12,39 @@ OFFLINE_LICENSE_FORMAT = "nexxus-offline-license"
 OFFLINE_LICENSE_VERSION = 1
 OFFLINE_LICENSE_ALGORITHM = "AES-256-GCM+HKDF-SHA256"
 OFFLINE_LICENSE_EXTENSION = ".lic"
+
+
+def _application_name_query(app_name: str) -> dict[str, Any]:
+    cleaned = app_name.strip()
+    if not cleaned:
+        return {}
+    pattern = f"^{re.escape(cleaned)}$"
+    return {
+        "$or": [
+            {"application": {"$regex": pattern, "$options": "i"}},
+            {"appName": {"$regex": pattern, "$options": "i"}},
+        ]
+    }
+
+
+async def find_license_by_deployment(
+    db: AsyncIOMotorDatabase,
+    *,
+    app_fingerprint: str,
+    app_name: str,
+) -> dict[str, Any] | None:
+    cleaned_fingerprint = app_fingerprint.strip()
+    cleaned_application = app_name.strip()
+    if not cleaned_fingerprint or not cleaned_application:
+        return None
+
+    return await db.licenses.find_one(
+        {
+            "appFingerprint": cleaned_fingerprint,
+            **_application_name_query(cleaned_application),
+            "licenseCode": {"$exists": True, "$nin": ["", None]},
+        }
+    )
 
 
 def offline_license_filename(app_name: str, exported_at: datetime | str | None = None) -> str:
@@ -43,6 +77,22 @@ def build_offline_license_package(doc: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+async def find_verified_license_by_deployment(
+    db: AsyncIOMotorDatabase,
+    *,
+    app_fingerprint: str,
+    app_name: str,
+) -> dict[str, Any] | None:
+    doc = await find_license_by_deployment(
+        db,
+        app_fingerprint=app_fingerprint,
+        app_name=app_name,
+    )
+    if doc is None or not doc.get("emailVerifiedAt"):
+        return None
+    return doc
+
+
 async def find_verified_license(
     db: AsyncIOMotorDatabase,
     *,
@@ -56,14 +106,14 @@ async def find_verified_license(
     if not cleaned_fingerprint or not cleaned_application or not cleaned_email:
         return None
 
-    return await db.licenses.find_one(
-        {
-            "appFingerprint": cleaned_fingerprint,
-            "application": cleaned_application,
-            "email": cleaned_email,
-            "emailVerifiedAt": {"$exists": True},
-        }
+    doc = await find_verified_license_by_deployment(
+        db,
+        app_fingerprint=cleaned_fingerprint,
+        app_name=cleaned_application,
     )
+    if doc is None or doc.get("email") != cleaned_email:
+        return None
+    return doc
 
 
 async def get_offline_license_package(
