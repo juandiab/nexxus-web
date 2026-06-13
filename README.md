@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.15** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.16** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,9 @@
 ---
 
 ## Changelog
+
+### v0.16 — 2026-06-12
+- **SC Studio subdomain** — nginx terminates TLS for `scstudio.nexxus-tech.com`; routes UI to `scstudio-frontend:5173` (Vite dev) and API/JPilot paths (`/api/`, `/calibrations/`, `/skill-feedback`, `/health`) to `scstudio-backend-api:8000` on the shared Docker network (no host port publish on scstudio)
 
 ### v0.15 — 2026-06-11
 - **Products / JPilot videos** — demo clips served from `frontend/public/videos/` (not committed to git); documented filenames, 1080p export, MP4/WebM conversion, and server deploy steps
