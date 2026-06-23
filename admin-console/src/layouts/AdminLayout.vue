@@ -58,6 +58,7 @@ const navItems = computed(() => {
     items.push({ to: '/blogs', label: 'Blogs' })
   }
   if (canAccessSettings.value) {
+    items.push({ to: '/scstudio', label: 'SC Studio' })
     items.push({ to: '/settings', label: 'Settings' })
   }
   return items

@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.17** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.18** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,14 @@
 ---
 
 ## Changelog
+
+### v0.18 — 2026-06-22
+- **SC Studio license sync** — new `/licensing/scstudio/` API for SC Studio servers to register, pull an encrypted license catalog, and sync on demand
+- **Registration** — `POST /licensing/scstudio/register` with `serverName`, `serverFingerprint`, `ipAddress`, `publicIpAddress`; admin approves in **Admin console → SC Studio**
+- **Sync** — `POST /licensing/scstudio/sync` with `X-ScStudio-Api-Key` header and `{ "serverId" }` body; returns full `licenses` collection encrypted with the registered `serverFingerprint` (AES-256-GCM + HKDF-SHA256)
+- **Admin console** — dedicated **SC Studio** nav section: unified server table (registration + API key), approve/reject, view/copy/regenerate/disable/delete key, one API key per approved server
+- **Licensing API v0.8.0** — MongoDB collections `scstudioServers` and `scstudioApiKeys`; API keys stored hashed with Fernet-encrypted copy for admin retrieval
+- **nginx** — longer proxy timeouts for SC Studio API paths (`/api/`, `/calibrations/`, `/skill-feedback`) to support large sync payloads
 
 ### v0.17 — 2026-06-13
 - **Blog admin** — create, edit, delete, and publish posts from `/adminconsole/blogs`; MongoDB-backed store with role-gated API (`admin` or `blog`)
@@ -153,8 +161,10 @@ Nexxus Tech products can be licensed through this stack. The design keeps sensit
 |---|---|---|
 | Activation | `/licensing/activate` | End-user activates or recovers a deployment license (email OTP); shows existing license when fingerprint already registered |
 | Sync | `/licensing/sync` | Installed apps report fingerprint + app name; server returns current status, expiration, and an updated encrypted license blob |
-| Admin console | `/adminconsole` | Operators sign in (password + passkey), manage licenses and platform users |
-| Licensing API | `/licensing/` | REST API (health, auth, licenses, activation, sync) — proxied by nginx to the `licensing` container |
+| SC Studio register | `/licensing/scstudio/register` | SC Studio server first-time registration (pending until admin approval) |
+| SC Studio sync | `/licensing/scstudio/sync` | Approved SC Studio server pulls encrypted full license database (API key auth) |
+| Admin console | `/adminconsole` | Operators sign in (password + passkey), manage licenses, SC Studio servers, and platform users |
+| Licensing API | `/licensing/` | REST API (health, auth, licenses, activation, sync, scstudio) — proxied by nginx to the `licensing` container |
 
 **Typical flow**
 
@@ -163,12 +173,20 @@ Nexxus Tech products can be licensed through this stack. The design keeps sensit
 3. **Sync** — On a schedule (or on demand), the app syncs with the server to pick up admin changes (extended validity, type change, deactivation, forced expiry). Users receive email when admins change their license.
 4. **Administer** — From the admin console, operators can extend validity, change license type, force-expire, deactivate, or delete licenses. License changes trigger user notification emails when SMTP is configured.
 
+**SC Studio license database sync**
+
+1. **Register** — SC Studio calls `POST /licensing/scstudio/register` with its `serverName`, `serverFingerprint`, and IP addresses.
+2. **Approve** — An admin approves the server under **SC Studio** in the admin console; Nexxus generates a `serverId` and API key (shown once for the operator to paste into SC Studio).
+3. **Sync** — SC Studio calls `POST /licensing/scstudio/sync` with header `X-ScStudio-Api-Key` and body `{ "serverId": "..." }`. The response includes `encryptedDatabase`, encrypted with the registered `serverFingerprint` (not the API key). SC Studio decrypts locally and imports the catalog.
+4. **Manage** — Admins can view/copy/regenerate/disable keys, reject or delete registrations; each approved server has exactly one API key.
+
 **Admin console capabilities**
 
 - View licenses in a compact table (contact, organization, license type, status, validity)
 - Force-expire (blocks auto-renew for free licenses), deactivate/reactivate, extend days, change type, delete
 - Email notifications to license holders on extend, type change, edit, expire, deactivate, and reactivate
 - Manage admin users (create, deactivate, password reset, passkey management)
+- SC Studio server registrations and license-sync API keys (admin only)
 - Blog post management and AI assistant settings (admin / blog roles)
 
 **Configuration**

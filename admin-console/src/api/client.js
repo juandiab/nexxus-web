@@ -301,3 +301,59 @@ export async function testJpbotSettings(payload) {
     body: JSON.stringify(payload),
   })
 }
+
+export async function fetchScStudioServers() {
+  return request('/scstudio/servers')
+}
+
+export async function approveScStudioServer(registrationId) {
+  return request(`/scstudio/servers/${encodeURIComponent(registrationId)}/approve`, {
+    method: 'POST',
+  })
+}
+
+export async function rejectScStudioServer(registrationId) {
+  return request(`/scstudio/servers/${encodeURIComponent(registrationId)}/reject`, {
+    method: 'POST',
+  })
+}
+
+export async function regenerateScStudioApiKey(registrationId) {
+  return request(`/scstudio/servers/${encodeURIComponent(registrationId)}/regenerate-api-key`, {
+    method: 'POST',
+  })
+}
+
+export async function deleteScStudioServer(registrationId) {
+  return request(`/scstudio/servers/${encodeURIComponent(registrationId)}`, {
+    method: 'DELETE',
+  })
+}
+
+export async function fetchScStudioApiKeys() {
+  return request('/scstudio/api-keys')
+}
+
+export async function createScStudioApiKey(serverId) {
+  return request('/scstudio/api-keys', {
+    method: 'POST',
+    body: JSON.stringify({ serverId }),
+  })
+}
+
+export async function updateScStudioApiKey(keyId, payload) {
+  return request(`/scstudio/api-keys/${encodeURIComponent(keyId)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteScStudioApiKey(keyId) {
+  return request(`/scstudio/api-keys/${encodeURIComponent(keyId)}`, {
+    method: 'DELETE',
+  })
+}
+
+export async function fetchScStudioApiKeySecret(keyId) {
+  return request(`/scstudio/api-keys/${encodeURIComponent(keyId)}/secret`)
+}

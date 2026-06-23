@@ -12,8 +12,10 @@ from routers.activation import activate_router, router as activation_router
 from routers.auth import router as auth_router
 from routers.licenses import router as licenses_router
 from routers.users import router as users_router
+from routers.scstudio import router as scstudio_router
 from routers.sync import router as sync_router
 from routers.webauthn import router as webauthn_router
+from services.scstudio_service import ensure_scstudio_indexes
 from services.activation_service import ensure_activation_pending_indexes
 from services.license_service import ensure_license_indexes
 from services.user_service import ensure_default_admin, ensure_user_indexes
@@ -29,7 +31,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Nexxus Tech Licensing API",
     description="License management and activation API",
-    version="0.7.2",
+    version="0.8.0",
     docs_url="/docs" if settings.environment != "production" else None,
     redoc_url=None,
 )
@@ -51,6 +53,7 @@ app.include_router(licenses_router)
 app.include_router(activation_router)
 app.include_router(activate_router)
 app.include_router(sync_router)
+app.include_router(scstudio_router)
 
 
 @app.on_event("startup")
@@ -70,6 +73,7 @@ async def startup():
             await ensure_webauthn_indexes(db)
             await ensure_license_indexes(db)
             await ensure_activation_pending_indexes(db)
+            await ensure_scstudio_indexes(db)
             await ensure_default_admin(db)
             logger.info("MongoDB connected and indexes ready")
             return

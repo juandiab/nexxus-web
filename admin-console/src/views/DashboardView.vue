@@ -49,6 +49,11 @@ const quickLinks = computed(() => {
     links.push({ to: '/blogs', label: 'Blogs', copy: 'Create, edit, and delete blog posts.' })
   }
   if (canAccessSettings.value) {
+    links.push({
+      to: '/scstudio',
+      label: 'SC Studio',
+      copy: 'Approve servers and manage license sync API keys.',
+    })
     links.push({ to: '/settings', label: 'Settings', copy: 'Configure JPbot LLM provider and API key.' })
   }
   return links

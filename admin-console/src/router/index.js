@@ -55,6 +55,17 @@ const routes = [
     },
   },
   {
+    path: '/scstudio',
+    name: 'scstudio',
+    component: () => import('@/views/ScStudioView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresSetup: true,
+      requiresAdmin: true,
+      title: 'SC Studio',
+    },
+  },
+  {
     path: '/settings',
     name: 'settings',
     component: () => import('@/views/SettingsView.vue'),
