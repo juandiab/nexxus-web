@@ -23,8 +23,8 @@
   --nt-shadow:      0 4px 24px rgba(0, 0, 0, 0.45);
   --nt-shadow-glow: 0 0 40px rgba(0, 123, 167, 0.28);
   --nt-transition:  all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font-heading:   'Montserrat', 'Arial Black', sans-serif;
-  --font-body:      'Inter', 'Arial', sans-serif;
+  --font-heading:   'Montserrat Variable', 'Montserrat', 'Arial Black', sans-serif;
+  --font-body:      'Inter Variable', 'Inter', 'Arial', sans-serif;
 }
 
 /* ─── Reset & Base ───────────────────────────────────────────────────────────── */
@@ -207,12 +207,10 @@ a:hover { color: var(--nt-secondary-l); }
 /* ─── Scroll-reveal animation ────────────────────────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition: opacity 0.7s ease;
 }
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
 }
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
@@ -284,3 +282,37 @@ a:hover { color: var(--nt-secondary-l); }
 .page-enter-active, .page-leave-active { transition: opacity 0.3s, transform 0.3s; }
 .page-enter-from { opacity: 0; transform: translateY(12px); }
 .page-leave-to { opacity: 0; transform: translateY(-12px); }
+
+/* ─── Layout utilities (avoid inline style attributes for CSP) ──────────────── */
+.section-header-center { text-align: center; }
+.section-subtitle-center { margin: 0 auto; }
+.section-subtitle-muted { margin: 0 auto; color: #4A5568; }
+.section-title-navy { color: var(--nt-navy); }
+.section-subtitle-spaced { margin-top: 16px; }
+.tag-compact { font-size: 0.7rem; }
+
+/* ─── Blog cover palette ─────────────────────────────────────────────────────── */
+.cover-007BA7 { background: #007BA7; }
+.cover-00A8E0 { background: #00A8E0; }
+.cover-005F7F { background: #005F7F; }
+.cover-38383D { background: #38383D; }
+.cover-4DB8E0 { background: #4DB8E0; }
+.cover-6B5CE7 { background: #6B5CE7; }
+.cover-5B4FE8 { background: #5B4FE8; }
+.cover-1DD4B4 { background: #1DD4B4; }
+.cover-0C3A6B { background: #0C3A6B; }
+.cover-1A2340 { background: #1A2340; }
+
+/* ─── Service icon backgrounds ───────────────────────────────────────────────── */
+.service-icon-bg-waf { background: linear-gradient(135deg, rgba(0, 123, 167, 0.2), rgba(0, 123, 167, 0.05)); }
+.service-icon-bg-netscaler { background: linear-gradient(135deg, rgba(0, 168, 224, 0.18), rgba(0, 168, 224, 0.04)); }
+.service-icon-bg-zerotrust { background: linear-gradient(135deg, rgba(0, 123, 167, 0.2), rgba(0, 168, 224, 0.08)); }
+.service-icon-bg-cloud { background: linear-gradient(135deg, rgba(56, 56, 61, 0.5), rgba(0, 123, 167, 0.1)); }
+.service-icon-bg-ai { background: linear-gradient(135deg, rgba(0, 168, 224, 0.18), rgba(0, 123, 167, 0.12)); }
+.service-icon-bg-adc-migrations { background: linear-gradient(135deg, rgba(0, 123, 167, 0.15), rgba(38, 38, 42, 0.3)); }
+
+.service-accent-waf,
+.service-accent-netscaler { background: linear-gradient(135deg, #007BA7, #005F7F); }
+.service-accent-zerotrust,
+.service-accent-ai { background: linear-gradient(135deg, #007BA7, #007BA7); }
+.service-accent-cloud { background: linear-gradient(135deg, #38383D, #007BA7); }

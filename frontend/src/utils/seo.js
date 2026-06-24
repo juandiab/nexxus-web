@@ -2,8 +2,12 @@ import {
   SITE_URL,
   SITE_NAME,
   SITE_FAVICON,
+  APPLE_TOUCH_ICON,
+  SITE_MANIFEST,
   DEFAULT_OG_IMAGE,
   DEFAULT_OG_IMAGE_ALT,
+  SITE_OG_IMAGE_WIDTH,
+  SITE_OG_IMAGE_HEIGHT,
 } from '@/config/site.js'
 
 const MANAGED_ATTR = 'data-seo-managed'
@@ -89,6 +93,8 @@ export function applySeo({
   upsertMeta('property', 'og:site_name', SITE_NAME)
   upsertMeta('property', 'og:image', image)
   upsertMeta('property', 'og:image:alt', imageAlt)
+  upsertMeta('property', 'og:image:width', String(SITE_OG_IMAGE_WIDTH))
+  upsertMeta('property', 'og:image:height', String(SITE_OG_IMAGE_HEIGHT))
   upsertMeta('property', 'og:locale', 'en_US')
 
   upsertMeta('name', 'twitter:card', 'summary_large_image')
@@ -98,8 +104,9 @@ export function applySeo({
   upsertMeta('name', 'twitter:image:alt', imageAlt)
 
   upsertLink('canonical', canonical)
+  upsertLink('manifest', SITE_MANIFEST)
   upsertLink('icon', SITE_FAVICON, { type: 'image/png', sizes: '300x300' })
-  upsertLink('apple-touch-icon', SITE_FAVICON, { sizes: '300x300' })
+  upsertLink('apple-touch-icon', APPLE_TOUCH_ICON, { sizes: '180x180' })
 
   setJsonLd('seo-jsonld', jsonLd)
 }

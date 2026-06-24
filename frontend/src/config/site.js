@@ -4,8 +4,14 @@ export const SITE_NAME = 'Nexxus Tech'
 export const SITE_TAGLINE = 'WAF · NetScaler · Cloud Security · AI'
 export const SITE_EMAIL = 'contact@nexxus-tech.com'
 export const SITE_FAVICON = '/nexxus-tech-favicon.png'
-export const DEFAULT_OG_IMAGE = `${SITE_URL}${SITE_FAVICON}`
-export const DEFAULT_OG_IMAGE_ALT = 'Nexxus Tech logo'
+export const APPLE_TOUCH_ICON = '/apple-touch-icon.png'
+export const SITE_MANIFEST = '/site.webmanifest'
+export const SITE_OG_IMAGE = `${SITE_URL}/nexxus-tech-og.png`
+export const SITE_OG_IMAGE_WIDTH = 1200
+export const SITE_OG_IMAGE_HEIGHT = 630
+export const DEFAULT_OG_IMAGE = SITE_OG_IMAGE
+export const DEFAULT_OG_IMAGE_ALT =
+  'Nexxus Tech — WAF, NetScaler, cloud security, and AI consulting'
 export const JPILOT_DEMO_CALENDAR_URL = 'https://calendar.app.google/8tqyZPwSvSE8o6cS8'
 export const JPILOT_OG_IMAGE = `${SITE_URL}/jpilot-og.png`
 export const JPILOT_OG_IMAGE_ALT =
@@ -127,7 +133,7 @@ export const ROUTE_SEO = {
   home: {
     title: 'Nexxus Tech — WAF · NetScaler · Cloud Security · AI',
     description:
-      'Nexxus Tech delivers principal-level consulting in WAF, NetScaler ADC, Zero-Trust, multicloud security, and AI-driven infrastructure. 15+ years, 20+ countries, Fortune 500 & government clients.',
+      'Principal-level consulting in WAF, NetScaler ADC, Zero-Trust, multicloud security, and AI automation. 15+ years across 20+ countries.',
     path: '/',
   },
   services: {
@@ -139,7 +145,7 @@ export const ROUTE_SEO = {
   products: {
     title: 'JPilot — AI Management Platform for Network Appliances',
     description:
-      'Self-hosted AI management platform for network appliances. Chat to plan, configure, and troubleshoot NetScaler, F5 BIG-IP, and Cisco — bring your own AI keys, credentials never leave your network. Free edition.',
+      'Self-hosted AI platform for NetScaler, F5, and Cisco. Chat to plan, configure, and troubleshoot — your keys, your network. Free edition.',
     path: '/products',
     image: JPILOT_OG_IMAGE,
     imageAlt: JPILOT_OG_IMAGE_ALT,
@@ -147,25 +153,25 @@ export const ROUTE_SEO = {
   about: {
     title: 'About Us — Nexxus Tech',
     description:
-      'Meet the Nexxus Tech team: principal architects in WAF, NetScaler, Zero-Trust, telecom, enterprise networking, and AI-driven product design. Remote-first across Colombia, UAE, UK, and US.',
+      'Principal architects in WAF, NetScaler, Zero-Trust, telecom, and AI product design. Remote-first team across Colombia, UAE, UK, and US.',
     path: '/about',
   },
   blog: {
     title: 'Blog & Insights — Nexxus Tech',
     description:
-      'Technical insights on NetScaler WAF, Zero-Trust, multicloud security, post-quantum cryptography, and AI-powered ADC automation — written by practitioners at global scale.',
+      'Insights on NetScaler WAF, Zero-Trust, multicloud security, post-quantum crypto, and AI-powered ADC automation from global practitioners.',
     path: '/blog',
   },
   contact: {
     title: 'Contact — Nexxus Tech',
     description:
-      'Contact Nexxus Tech for WAF assessments, Zero-Trust roadmaps, NetScaler migrations, and AI automation consulting. Remote engagements worldwide. Response within 24 hours.',
+      'Contact Nexxus Tech for WAF assessments, Zero-Trust roadmaps, NetScaler migrations, and AI automation. Remote worldwide, reply within 24h.',
     path: '/contact',
   },
   faq: {
     title: 'FAQ — Nexxus Tech',
     description:
-      'Frequently asked questions about Nexxus Tech consulting services, F5 and NetScaler expertise, OWASP and API security, team specializations, remote and on-site delivery, discovery calls, and the JPilot AI copilot.',
+      'FAQs on WAF and NetScaler consulting, OWASP security, remote delivery, discovery calls, and the JPilot AI copilot for network appliances.',
     path: '/faq',
   },
   licensingActivate: {

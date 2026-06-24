@@ -35,7 +35,7 @@
             :class="`card blog-card reveal reveal-delay-${(i % 3) + 1}`"
             @click="$router.push(`/blog/${post.slug}`)"
           >
-            <div class="blog-card-header" :style="{ background: post.cover_color }">
+            <div class="blog-card-header" :class="coverColorClass(post.cover_color)">
               <div class="blog-card-overlay"></div>
               <span class="tag tag-on-cover">{{ post.category }}</span>
               <div v-if="post.featured" class="featured-badge">
@@ -92,6 +92,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+import { coverColorClass } from '@/utils/coverColor.js'
 
 const posts = ref([])
 const loading = ref(true)

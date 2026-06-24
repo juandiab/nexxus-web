@@ -5,7 +5,7 @@
     :class="imgClass"
     :width="width"
     :height="height"
-    loading="lazy"
+    :loading="loading"
     decoding="async"
   />
 </template>
@@ -36,6 +36,10 @@ const props = defineProps({
   height: {
     type: [Number, String],
     default: undefined,
+  },
+  loading: {
+    type: String,
+    default: 'lazy',
   },
 })
 

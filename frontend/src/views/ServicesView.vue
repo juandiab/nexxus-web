@@ -18,7 +18,7 @@
       <div class="container">
         <div class="service-detail-grid" :class="{ reverse: svc.reverse }">
           <div class="service-detail-text reveal">
-            <div class="service-detail-icon" :style="{ background: svc.iconBg }">
+            <div class="service-detail-icon" :class="`service-accent-${svc.id}`">
               <i :class="svc.icon"></i>
             </div>
             <span class="section-label">{{ svc.label }}</span>
@@ -39,7 +39,7 @@
           </div>
           <div class="service-detail-visual reveal reveal-delay-2">
             <div class="visual-card">
-              <div class="visual-header" :style="{ background: svc.iconBg }">
+              <div class="visual-header" :class="`service-accent-${svc.id}`">
                 <i :class="svc.icon" class="visual-icon"></i>
                 <h3>{{ svc.title }}</h3>
               </div>

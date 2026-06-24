@@ -5,6 +5,9 @@ import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
 import App from './App.vue'
 import router from './router'
+import '@fontsource-variable/montserrat/wght.css'
+import '@fontsource-variable/inter/wght.css'
+import 'primeicons/primeicons.css'
 import './assets/styles/main.css'
 
 const app = createApp(App)

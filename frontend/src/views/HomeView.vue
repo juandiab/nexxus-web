@@ -76,7 +76,7 @@
             :class="`card service-card reveal reveal-delay-${(i % 4) + 1}`"
             @click="$router.push(`/services#${svc.serviceHash || svc.id}`)"
           >
-            <div class="service-icon" :style="{ background: svc.bg }">
+            <div class="service-icon" :class="`service-icon-bg-${svc.id}`">
               <i :class="svc.icon"></i>
             </div>
             <h3 class="service-title">{{ svc.title }}</h3>
@@ -100,10 +100,10 @@
     <!-- ── PRODUCTS ───────────────────────────────────────────────────────────── -->
     <section class="section section-dark products-section">
       <div class="container">
-        <div class="section-header reveal" style="text-align:center">
+        <div class="section-header reveal section-header-center">
           <span class="section-label">Our Products</span>
           <h2 class="section-title">Technology That Empowers</h2>
-          <p class="section-subtitle" style="margin:0 auto">
+          <p class="section-subtitle section-subtitle-center">
             Tools that serve as a bridge between people, knowledge, and technology—
             so engineers can learn, grow, and move forward with confidence.
           </p>
@@ -116,7 +116,7 @@
         >
           <div class="product-feature-grid">
             <div class="product-feature-logo-wrap">
-              <JpilotLogo theme="dark" :alt="product.logoAlt" img-class="product-feature-logo" />
+              <JpilotLogo theme="dark" :alt="product.logoAlt" img-class="product-feature-logo" width="88" height="48" loading="eager" />
             </div>
             <div class="product-feature-body">
               <span class="section-label">{{ product.label }}</span>
@@ -203,10 +203,10 @@
     <!-- ── INDUSTRIES / KEY CLIENTS ───────────────────────────────────────────── -->
     <section class="section section-light clients-section">
       <div class="container">
-        <div class="section-header reveal" style="text-align:center">
+        <div class="section-header reveal section-header-center">
           <span class="section-label">Key Engagements</span>
-          <h2 class="section-title" style="color:var(--nt-navy)">Trusted by Industry Leaders</h2>
-          <p class="section-subtitle" style="margin:0 auto;color:#4A5568">
+          <h2 class="section-title section-title-navy">Trusted by Industry Leaders</h2>
+          <p class="section-subtitle section-subtitle-muted">
             Delivered security transformations for organizations across
             government, defense, finance, telecom, and aviation.
           </p>
@@ -220,7 +220,7 @@
             <div class="industry-icon">
               <i :class="ind.icon"></i>
             </div>
-            <h4>{{ ind.sector }}</h4>
+            <h3>{{ ind.sector }}</h3>
             <p>{{ ind.clients }}</p>
           </div>
         </div>
@@ -239,28 +239,43 @@
             All Posts <i class="pi pi-arrow-right"></i>
           </RouterLink>
         </div>
-        <div class="blog-grid" v-if="blogPosts.length">
-          <article
-            v-for="(post, i) in blogPosts"
-            :key="post.id"
-            :class="`card blog-card reveal reveal-delay-${i + 1}`"
-            @click="$router.push(`/blog/${post.slug}`)"
-          >
-            <div class="blog-card-header" :style="{ background: post.cover_color }">
-              <span class="tag tag-on-cover">{{ post.category }}</span>
-            </div>
-            <div class="blog-card-body">
-              <h3 class="blog-title">{{ post.title }}</h3>
-              <p class="blog-excerpt">{{ post.excerpt }}</p>
-              <div class="blog-meta">
-                <span><i class="pi pi-clock"></i> {{ post.read_time }} min read</span>
-                <span><i class="pi pi-calendar"></i> {{ formatDate(post.date) }}</span>
+        <div class="blog-grid">
+          <template v-if="blogLoading">
+            <article
+              v-for="n in 3"
+              :key="`skeleton-${n}`"
+              class="card blog-card blog-card-skeleton"
+              aria-hidden="true"
+            >
+              <div class="blog-card-header blog-card-skeleton-header"></div>
+              <div class="blog-card-body">
+                <div class="skeleton-line skeleton-line--title"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line skeleton-line--short"></div>
               </div>
-            </div>
-          </article>
-        </div>
-        <div v-else class="blog-loading">
-          <i class="pi pi-spin pi-spinner"></i> Loading posts...
+            </article>
+          </template>
+          <template v-else-if="blogPosts.length">
+            <article
+              v-for="(post, i) in blogPosts"
+              :key="post.id"
+              :class="`card blog-card reveal reveal-delay-${i + 1}`"
+              @click="$router.push(`/blog/${post.slug}`)"
+            >
+              <div class="blog-card-header" :class="coverColorClass(post.cover_color)">
+                <span class="tag tag-on-cover">{{ post.category }}</span>
+              </div>
+              <div class="blog-card-body">
+                <h3 class="blog-title">{{ post.title }}</h3>
+                <p class="blog-excerpt">{{ post.excerpt }}</p>
+                <div class="blog-meta">
+                  <span><i class="pi pi-clock"></i> {{ post.read_time }} min read</span>
+                  <span><i class="pi pi-calendar"></i> {{ formatDate(post.date) }}</span>
+                </div>
+              </div>
+            </article>
+          </template>
         </div>
       </div>
     </section>
@@ -296,10 +311,12 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 import { products } from '@/data/products.js'
+import { coverColorClass } from '@/utils/coverColor.js'
 import JpilotLogo from '@/components/shared/JpilotLogo.vue'
 
 const heroCanvas = ref(null)
 const blogPosts = ref([])
+const blogLoading = ref(true)
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
 const stats = [
@@ -401,6 +418,8 @@ onMounted(async () => {
     blogPosts.value = data
   } catch {
     // silently fail
+  } finally {
+    blogLoading.value = false
   }
   initHeroCanvas()
 })
@@ -686,6 +705,7 @@ onUnmounted(() => {
 }
 .product-feature-logo-wrap {
   width: 120px;
+  height: 80px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -846,7 +866,7 @@ onUnmounted(() => {
   font-size: 1.3rem;
   color: white;
 }
-.industry-card h4 { font-size: 0.95rem; color: var(--nt-navy); margin-bottom: 8px; }
+.industry-card h3 { font-size: 0.95rem; color: var(--nt-navy); margin-bottom: 8px; }
 .industry-card p { font-size: 0.8rem; color: #64748B; line-height: 1.5; }
 
 /* ── Blog preview ──────────────────────────────────────────────────────────── */
@@ -897,8 +917,26 @@ onUnmounted(() => {
   color: var(--nt-text-muted);
 }
 .blog-meta .pi { margin-right: 4px; }
-.blog-loading { text-align: center; color: var(--nt-text-muted); padding: 40px; font-size: 0.9rem; }
-.blog-loading .pi { margin-right: 8px; }
+.blog-card-skeleton { pointer-events: none; }
+.blog-card-skeleton-header {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+.skeleton-line--title { height: 18px; width: 85%; margin-bottom: 16px; }
+.skeleton-line--short { width: 55%; margin-bottom: 0; }
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
 /* ── CTA ─────────────────────────────────────────────────────────────────── */
 .cta-section { background: var(--nt-dark-2); }

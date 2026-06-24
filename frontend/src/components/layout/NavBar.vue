@@ -3,7 +3,7 @@
     <div class="container navbar-inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar-logo" @click="menuOpen = false">
-        <img :src="logoSrc" alt="Nexxus Tech" class="logo-img" />
+        <img :src="logoSrc" alt="Nexxus Tech" class="logo-img" width="324" height="52" decoding="async" />
       </RouterLink>
 
       <!-- Desktop nav -->
@@ -68,15 +68,15 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
-  transition: all 0.35s ease;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
   background: transparent;
   padding: 8px 0;
+  min-height: 88px;
 }
 .navbar.scrolled {
   background: rgba(28, 28, 30, 0.95);
   backdrop-filter: blur(16px);
   box-shadow: 0 1px 0 rgba(0, 123, 167, 0.15);
-  padding: 4px 0;
 }
 .navbar-inner {
   display: flex;
@@ -85,7 +85,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   height: 72px;
 }
 .navbar-logo { display: flex; align-items: center; }
-.logo-img { height: 52px; width: auto; display: block; }
+.logo-img { height: 52px; width: 324px; max-width: 100%; display: block; }
 
 .navbar-links {
   display: flex;
@@ -93,6 +93,11 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   gap: 8px;
 }
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 48px;
   font-family: var(--font-heading);
   font-size: 0.85rem;
   font-weight: 600;
@@ -115,7 +120,11 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .hamburger {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
+  min-width: 48px;
+  min-height: 48px;
   background: none;
   border: none;
   cursor: pointer;
@@ -144,6 +153,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   border-top: 1px solid rgba(0, 123, 167, 0.15);
 }
 .mobile-nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;

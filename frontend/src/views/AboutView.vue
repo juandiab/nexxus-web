@@ -71,7 +71,7 @@
               hardest problems — WAF policy at global scale, Zero-Trust for nation-state-level threats,
               and AI automation for infrastructure that never sleeps.
             </p>
-            <p class="section-subtitle" style="margin-top:16px">
+            <p class="section-subtitle section-subtitle-spaced">
               With a presence in Colombia, UAE, UK, and the US, we operate remotely but think globally —
               having delivered engagements across 20+ countries and every major industry vertical.
             </p>
@@ -92,9 +92,9 @@
     <!-- Team -->
     <section class="section section-light team-section">
       <div class="container">
-        <div class="section-header reveal" style="text-align:center">
+        <div class="section-header reveal section-header-center">
           <span class="section-label">The Team</span>
-          <h2 class="section-title" style="color:var(--nt-navy)">Meet the Team</h2>
+          <h2 class="section-title section-title-navy">Meet the Team</h2>
           <div class="team-controls">
             <button
               type="button"
@@ -164,10 +164,10 @@
     <!-- Presence -->
     <section class="section">
       <div class="container">
-        <div class="section-header reveal" style="text-align:center">
+        <div class="section-header reveal section-header-center">
           <span class="section-label">Global Presence</span>
           <h2 class="section-title">Remote-First. Worldwide Reach.</h2>
-          <p class="section-subtitle" style="margin:0 auto">
+          <p class="section-subtitle section-subtitle-center">
             With offices and presence in 4 countries and clients in 20+,
             we operate wherever our clients need us — without compromise.
           </p>

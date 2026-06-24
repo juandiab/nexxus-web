@@ -18,7 +18,7 @@
 
         <!-- Services col -->
         <nav class="footer-col" aria-label="Services">
-          <h4 class="footer-col-title">Services</h4>
+          <h3 class="footer-col-title">Services</h3>
           <ul>
             <li><RouterLink to="/services#waf">WAF & API Protection</RouterLink></li>
             <li><RouterLink to="/services#netscaler">NetScaler / ADC</RouterLink></li>
@@ -30,7 +30,7 @@
 
         <!-- Products col -->
         <nav class="footer-col" aria-label="Products">
-          <h4 class="footer-col-title">Products</h4>
+          <h3 class="footer-col-title">Products</h3>
           <ul>
             <li><RouterLink to="/products#jpilot">JPilot</RouterLink></li>
             <li><RouterLink to="/products">All Products</RouterLink></li>
@@ -39,7 +39,7 @@
 
         <!-- Company col -->
         <nav class="footer-col" aria-label="Company">
-          <h4 class="footer-col-title">Company</h4>
+          <h3 class="footer-col-title">Company</h3>
           <ul>
             <li><RouterLink to="/about">About Us</RouterLink></li>
             <li><RouterLink to="/faq">FAQ</RouterLink></li>
@@ -50,7 +50,7 @@
 
         <!-- Legal col -->
         <nav class="footer-col" aria-label="Legal">
-          <h4 class="footer-col-title">Legal</h4>
+          <h3 class="footer-col-title">Legal</h3>
           <ul>
             <li>
               <a href="https://jpilot.nexxus-tech.com/legal/privacy">Privacy</a>
@@ -63,7 +63,7 @@
 
         <!-- Contact col -->
         <div class="footer-col">
-          <h4 class="footer-col-title">Contact</h4>
+          <h3 class="footer-col-title">Contact</h3>
           <ul class="contact-list">
             <li>
               <i class="pi pi-envelope"></i>
@@ -130,7 +130,9 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
 }
 .footer-social { display: flex; gap: 10px; }
 .social-btn {
-  width: 40px; height: 40px;
+  width: 48px; height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   border-radius: 8px;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);

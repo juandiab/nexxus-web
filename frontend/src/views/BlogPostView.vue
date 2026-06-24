@@ -5,7 +5,7 @@
     </div>
     <div v-else-if="post">
       <!-- Hero -->
-      <section class="post-hero" :style="{ background: post.cover_color }">
+      <section class="post-hero" :class="coverColorClass(post.cover_color)">
         <div class="post-hero-overlay"></div>
         <div class="container post-hero-content">
           <span class="tag tag-on-cover">{{ post.category }}</span>
@@ -76,7 +76,7 @@
                   class="related-post"
                   @click="$router.push(`/blog/${rp.slug}`)"
                 >
-                  <span class="tag tag-teal" style="font-size:0.7rem">{{ rp.category }}</span>
+                  <span class="tag tag-teal tag-compact">{{ rp.category }}</span>
                   <p>{{ rp.title }}</p>
                 </div>
               </div>
@@ -97,6 +97,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { renderMarkdown } from '@/utils/renderMarkdown.js'
+import { coverColorClass } from '@/utils/coverColor.js'
 import { applySeo } from '@/utils/seo.js'
 import { jsonLdForRoute } from '@/data/structuredData.js'
 

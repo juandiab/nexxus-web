@@ -66,8 +66,10 @@ defineProps({
 }
 
 .social-icons .social-btn {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   padding: 0;
   justify-content: center;
   border-radius: 8px;

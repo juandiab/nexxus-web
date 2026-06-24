@@ -2,6 +2,7 @@ FROM nginx:stable-alpine
 
 # Copy Nginx configuration (certs mounted at runtime — see docker-compose.yml)
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY security-headers.conf /etc/nginx/security-headers.conf
 
 # Remove default site config
 RUN rm -f /etc/nginx/conf.d/default.conf

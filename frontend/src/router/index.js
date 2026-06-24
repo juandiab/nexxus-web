@@ -2,12 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { ROUTE_SEO } from '@/config/site.js'
 import { applySeo } from '@/utils/seo.js'
 import { jsonLdForRoute } from '@/data/structuredData.js'
+import HomeView from '@/views/HomeView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('@/views/HomeView.vue'),
+    component: HomeView,
     meta: { seo: ROUTE_SEO.home }
   },
   {

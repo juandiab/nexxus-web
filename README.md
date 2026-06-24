@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.18** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.19** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,13 @@
 ---
 
 ## Changelog
+
+### v0.19 — 2026-06-24
+- **SEO** — shortened meta descriptions; fixed heading hierarchy (`h3` nav/footer columns, industry cards); 1200×630 Open Graph image (`nexxus-tech-og.png`); canonical `www` → apex redirects on HTTP and HTTPS
+- **PWA** — `site.webmanifest` and dedicated `apple-touch-icon.png` (180×180)
+- **Security** — shared `nginx/security-headers.conf` with strict CSP (`script-src 'self'`; PrimeVue-compatible `style-src-elem` / `style-src-attr`); HSTS unchanged (`max-age=63072000; includeSubDomains; preload`)
+- **Performance** — self-hosted variable fonts and PrimeIcons (no Google Fonts / jsDelivr); inlined critical CSS with async main stylesheet load; blog preview skeletons; navbar/logo dimension fixes to reduce CLS; 48×48px tap targets on nav and social icons
+- **Frontend** — `coverColorClass()` utility for CSP-safe blog cover colors; homepage eager-loaded for faster LCP; Vite `deferAppCss` build plugin
 
 ### v0.18 — 2026-06-22
 - **SC Studio license sync** — new `/licensing/scstudio/` API for SC Studio servers to register, pull an encrypted license catalog, and sync on demand
