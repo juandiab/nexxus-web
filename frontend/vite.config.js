@@ -13,9 +13,8 @@ const criticalCss = readFileSync(
 
 function asyncStylesheetTag(href) {
   return (
-    `<link rel="preload" as="style" href="${href}" crossorigin>` +
-    `<link rel="stylesheet" href="${href}" media="print" onload="this.media='all';this.onload=null" crossorigin>` +
-    `<noscript><link rel="stylesheet" href="${href}" crossorigin></noscript>`
+    `<link rel="preload" as="style" href="${href}" crossorigin>\n    ` +
+    `<script src="/load-app-css.js"></script>`
   )
 }
 
@@ -26,19 +25,40 @@ function deferAppCss() {
     transformIndexHtml: {
       order: 'post',
       handler(html) {
-        const withoutBlockingCss = html
-          .replace(
-            /<link rel="preload" as="style" href="(\/assets\/[^"]+\.css)" crossorigin><link rel="stylesheet" crossorigin href="\1">/,
-            (_, href) => asyncStylesheetTag(href)
-          )
-          .replace(
-            /<link rel="stylesheet" crossorigin href="(\/assets\/[^"]+\.css)">/,
-            (_, href) => asyncStylesheetTag(href)
-          )
+        const cssHref = html.match(/\/assets\/index-[^"]+\.css/)?.[0]
+        let out = html
 
-        return withoutBlockingCss.replace(
-          '</head>',
-          `<style id="critical-css">${criticalCss}</style></head>`
+        if (cssHref) {
+          out = out
+            .replace(/<script src="\/load-app-css\.js"><\/script>\s*/g, '')
+            .replace(
+              new RegExp(
+                `<link rel="preload" as="style" href="${cssHref}" crossorigin[^>]*>`,
+                'g'
+              ),
+              ''
+            )
+            .replace(
+              new RegExp(`<link rel="stylesheet"[^>]*href="${cssHref}"[^>]*>`, 'g'),
+              ''
+            )
+            .replace(
+              new RegExp(
+                `<noscript><link rel="stylesheet" href="${cssHref}" crossorigin></noscript>`,
+                'g'
+              ),
+              ''
+            )
+
+          const asyncTag = asyncStylesheetTag(cssHref)
+          out = out.includes('<script type="module"')
+            ? out.replace('<script type="module"', `${asyncTag}\n    <script type="module"`)
+            : out.replace('</head>', `${asyncTag}\n  </head>`)
+        }
+
+        return out.replace(
+          '<meta charset="UTF-8" />',
+          `<meta charset="UTF-8" />\n    <style id="critical-css">${criticalCss}</style>`
         )
       },
     },

@@ -18,6 +18,7 @@
 ### v0.20 — 2026-06-24
 - **Book a demo** — embedded Google Calendar scheduler on `/book-demo`; JPbot opens an in-site modal instead of a new tab; Products CTA, navbar, footer, and Services discovery call link to the demo page
 - **Scheduling** — `AppointmentScheduler` component; `GOOGLE_APPOINTMENT_SCHEDULE_URL` replaces legacy `calendar.app.google` share link; enquiry pre-fill via query params
+- **Performance** — async app CSS via `load-app-css.js` (CSP-safe preload activation; replaces inline `onload` on stylesheet links)
 - **Security** — CSP `frame-src https://calendar.google.com` for inline calendar embed
 - **SEO** — `/book-demo` route meta, sitemap entry
 
