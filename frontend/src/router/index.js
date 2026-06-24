@@ -52,6 +52,12 @@ const routes = [
     meta: { seo: ROUTE_SEO.contact }
   },
   {
+    path: '/book-demo',
+    name: 'book-demo',
+    component: () => import('@/views/BookDemoView.vue'),
+    meta: { seo: ROUTE_SEO.bookDemo }
+  },
+  {
     path: '/faq',
     name: 'faq',
     component: () => import('@/views/FaqView.vue'),

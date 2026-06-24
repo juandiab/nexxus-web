@@ -271,32 +271,29 @@
 
         <div v-else-if="phase === 'demo_booking'" class="chat-demo-bar">
           <p class="demo-booking-lead">
-            Pick a time on Google Calendar — your name, email, and demo notes are included in the booking link.
+            Pick a time below — your name, email, and demo notes are passed into the scheduler.
           </p>
-          <a
-            :href="demoBookingUrl"
+          <button
+            type="button"
             class="btn-submit-enquiry demo-calendar-link"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click="openDemoCalendar"
+            :disabled="submitting"
+            @click="openDemoScheduler"
           >
             <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-calendar'"></i>
-            {{ submitting ? 'Opening...' : 'Continue to Google Calendar' }}
-          </a>
+            {{ submitting ? 'Loading...' : 'Pick a time' }}
+          </button>
         </div>
 
         <div v-if="submitted" class="chat-success">
           <i class="pi pi-check-circle"></i>
           <p v-if="profile.enquiry_type === 'Book a demo'">
-            Demo details saved! Complete your booking in the Google Calendar tab. Check your inbox for a summary.
-            <a
-              :href="demoBookingUrl"
-              class="demo-calendar-fallback"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open Google Calendar again
-            </a>
+            Demo details saved! Complete your booking in the scheduler. Check your inbox for a summary.
+            <button type="button" class="demo-calendar-fallback" @click="showSchedulerModal = true">
+              Open scheduler again
+            </button>
+            <router-link :to="bookDemoPageLink" class="demo-calendar-fallback demo-calendar-fallback--link">
+              Or book on the demo page
+            </router-link>
           </p>
           <p v-else>Enquiry sent! Check your inbox for a summary.</p>
         </div>
@@ -320,6 +317,36 @@
         </p>
       </div>
     </Transition>
+
+    <Teleport to="body">
+      <Transition name="scheduler-modal">
+        <div
+          v-if="showSchedulerModal"
+          class="scheduler-modal-backdrop"
+          @click.self="closeSchedulerModal"
+        >
+          <div
+            class="scheduler-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="jpbot-scheduler-title"
+          >
+            <div class="scheduler-modal-header">
+              <h2 id="jpbot-scheduler-title">Pick a time</h2>
+              <button
+                type="button"
+                class="scheduler-modal-close"
+                aria-label="Close scheduler"
+                @click="closeSchedulerModal"
+              >
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            <AppointmentScheduler :src="demoBookingUrl" :min-height="560" />
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
 
     <!-- Prominent contact invitation -->
     <Transition name="invite-pop">
@@ -367,8 +394,9 @@ import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
 import { formatChatMessage } from '@/utils/formatChatMessage.js'
-import { JPILOT_DEMO_CALENDAR_URL } from '@/config/site.js'
+import { GOOGLE_APPOINTMENT_SCHEDULE_URL } from '@/config/site.js'
 import { buildDemoBookingUrl, buildDemoBookingSummary } from '@/utils/demoBooking.js'
+import AppointmentScheduler from '@/components/shared/AppointmentScheduler.vue'
 
 const INVITE_DISMISS_KEY = 'nexxus-jpbot-invite-dismissed'
 const CHAT_SIZE_KEY = 'nexxus-jpbot-chat-size'
@@ -471,6 +499,7 @@ const inputText = ref('')
 const loading = ref(false)
 const submitting = ref(false)
 const submitted = ref(false)
+const showSchedulerModal = ref(false)
 const messagesEl = ref(null)
 const inputEl = ref(null)
 const services = SERVICES
@@ -573,8 +602,17 @@ const compactMessageArea = computed(
 const canSendEnquiry = computed(() => canSubmit.value || allowEarlySubmit.value)
 
 const demoBookingUrl = computed(() => {
-  if (profile.value.enquiry_type !== 'Book a demo') return JPILOT_DEMO_CALENDAR_URL
+  if (profile.value.enquiry_type !== 'Book a demo') return GOOGLE_APPOINTMENT_SCHEDULE_URL
   return buildDemoBookingUrl(profile.value)
+})
+
+const bookDemoPageLink = computed(() => {
+  if (profile.value.enquiry_type !== 'Book a demo') return '/book-demo'
+  const url = new URL(demoBookingUrl.value)
+  return {
+    path: '/book-demo',
+    query: Object.fromEntries(url.searchParams.entries()),
+  }
 })
 
 const discoveryPlaceholder = computed(() => {
@@ -786,19 +824,17 @@ const confirmDemoDetails = () => {
   intakePanel.value = null
   phase.value = 'demo_booking'
   pushAssistant(
-    'Almost done — tap **Continue to Google Calendar** below to pick a time. Your contact details and demo notes are passed into the booking link.'
+    'Almost done — tap **Pick a time** below to choose a slot. Your contact details and demo notes are passed into the scheduler.'
   )
   scrollToBottom()
 }
 
-const openDemoCalendar = async () => {
+const openDemoScheduler = async () => {
   if (submitting.value) return
   submitting.value = true
 
   const summary = buildDemoBookingSummary(profile.value)
   discoveryMessages.value = [{ role: 'user', content: summary }]
-
-  // Calendar opens via the native <a target="_blank"> click — not window.open after await.
 
   try {
     await axios.post('/api/chat/submit', {
@@ -807,7 +843,7 @@ const openDemoCalendar = async () => {
     })
   } catch {
     pushAssistant(
-      'We could not email a copy to our team, but you can still complete booking on Google Calendar.'
+      'We could not email a copy to our team, but you can still complete booking in the scheduler below.'
     )
   }
 
@@ -819,8 +855,13 @@ const openDemoCalendar = async () => {
 
   submitted.value = true
   phase.value = 'submitted'
+  showSchedulerModal.value = true
   submitting.value = false
   await scrollToBottom()
+}
+
+const closeSchedulerModal = () => {
+  showSchedulerModal.value = false
 }
 
 const confirmService = () => {
@@ -1594,6 +1635,8 @@ onUnmounted(() => {
 .demo-calendar-link {
   text-decoration: none;
   text-align: center;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .demo-calendar-fallback {
@@ -1602,6 +1645,16 @@ onUnmounted(() => {
   color: var(--nt-primary-l);
   font-weight: 700;
   text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.demo-calendar-fallback--link {
+  display: block;
 }
 
 .demo-calendar-fallback:hover {
@@ -1704,6 +1757,92 @@ onUnmounted(() => {
     border-right: none;
     border-bottom: none;
   }
+}
+
+.scheduler-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  background: rgba(5, 8, 18, 0.82);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.scheduler-modal {
+  width: min(920px, 100%);
+  max-height: min(92dvh, 860px);
+  background: var(--nt-dark-2);
+  border: 1px solid var(--nt-border);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.scheduler-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--nt-border);
+  background: var(--nt-dark-3);
+}
+
+.scheduler-modal-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-family: var(--font-heading);
+}
+
+.scheduler-modal-close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nt-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scheduler-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--nt-text);
+}
+
+.scheduler-modal :deep(.appointment-scheduler) {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  min-height: 560px;
+}
+
+.scheduler-modal-enter-active,
+.scheduler-modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.scheduler-modal-enter-active .scheduler-modal,
+.scheduler-modal-leave-active .scheduler-modal {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.scheduler-modal-enter-from,
+.scheduler-modal-leave-to {
+  opacity: 0;
+}
+
+.scheduler-modal-enter-from .scheduler-modal,
+.scheduler-modal-leave-to .scheduler-modal {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
 }
 
 @media (max-width: 400px) {

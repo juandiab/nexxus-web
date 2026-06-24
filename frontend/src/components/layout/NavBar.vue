@@ -56,6 +56,7 @@ const links = [
   { to: '/products', label: 'Products' },
   { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },
+  { to: '/book-demo', label: 'Book a Demo' },
 ]
 
 const onScroll = () => { isScrolled.value = window.scrollY > 40 }

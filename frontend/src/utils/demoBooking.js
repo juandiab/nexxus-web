@@ -1,8 +1,8 @@
-import { JPILOT_DEMO_CALENDAR_URL } from '@/config/site.js'
+import { GOOGLE_APPOINTMENT_SCHEDULE_URL } from '@/config/site.js'
 
 /** Build a Google Calendar booking URL with visitor details as query parameters. */
 export function buildDemoBookingUrl(profile) {
-  const url = new URL(JPILOT_DEMO_CALENDAR_URL)
+  const url = new URL(GOOGLE_APPOINTMENT_SCHEDULE_URL)
   const trimmedName = profile.name.trim()
   const [firstName, ...rest] = trimmedName.split(/\s+/)
   const lastName = rest.join(' ')

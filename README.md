@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.19** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.20** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,12 @@
 ---
 
 ## Changelog
+
+### v0.20 — 2026-06-24
+- **Book a demo** — embedded Google Calendar scheduler on `/book-demo`; JPbot opens an in-site modal instead of a new tab; Products CTA, navbar, footer, and Services discovery call link to the demo page
+- **Scheduling** — `AppointmentScheduler` component; `GOOGLE_APPOINTMENT_SCHEDULE_URL` replaces legacy `calendar.app.google` share link; enquiry pre-fill via query params
+- **Security** — CSP `frame-src https://calendar.google.com` for inline calendar embed
+- **SEO** — `/book-demo` route meta, sitemap entry
 
 ### v0.19 — 2026-06-24
 - **SEO** — shortened meta descriptions; fixed heading hierarchy (`h3` nav/footer columns, industry cards); 1200×630 Open Graph image (`nexxus-tech-og.png`); canonical `www` → apex redirects on HTTP and HTTPS

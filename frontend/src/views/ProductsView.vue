@@ -135,12 +135,7 @@
         <InstallBlock copy-id="footer" />
         <div class="cta-actions">
           <a href="#install" class="btn btn-primary">Install now</a>
-          <a
-            :href="JPILOT_DEMO_CALENDAR_URL"
-            class="btn btn-secondary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >Book a demo</a>
+          <router-link to="/book-demo" class="btn btn-secondary">Book a demo</router-link>
           <a href="mailto:support@nexxus-tech.com" class="btn btn-secondary">Contact us</a>
         </div>
       </div>
@@ -164,7 +159,6 @@
 <script setup>
 import InstallBlock from '@/components/shared/InstallBlock.vue'
 import DemoVideo from '@/components/shared/DemoVideo.vue'
-import { JPILOT_DEMO_CALENDAR_URL } from '@/config/site.js'
 
 const supportedVendors = [
   { name: 'NetScaler MPX', status: 'available' },

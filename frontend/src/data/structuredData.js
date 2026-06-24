@@ -355,6 +355,17 @@ export function jsonLdForRoute(routeName, extra = {}) {
           ]),
         },
       ]
+    case 'book-demo':
+      return [
+        ...base,
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Book a Demo', url: '/book-demo' },
+          ]),
+        },
+      ]
     case 'faq':
       return [
         ...base,

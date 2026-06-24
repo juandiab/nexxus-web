@@ -44,6 +44,7 @@
             <li><RouterLink to="/about">About Us</RouterLink></li>
             <li><RouterLink to="/faq">FAQ</RouterLink></li>
             <li><RouterLink to="/blog">Blog & Insights</RouterLink></li>
+            <li><RouterLink to="/book-demo">Book a Demo</RouterLink></li>
             <li><RouterLink to="/contact">Contact</RouterLink></li>
           </ul>
         </nav>

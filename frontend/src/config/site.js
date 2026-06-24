@@ -12,7 +12,11 @@ export const SITE_OG_IMAGE_HEIGHT = 630
 export const DEFAULT_OG_IMAGE = SITE_OG_IMAGE
 export const DEFAULT_OG_IMAGE_ALT =
   'Nexxus Tech — WAF, NetScaler, cloud security, and AI consulting'
-export const JPILOT_DEMO_CALENDAR_URL = 'https://calendar.app.google/8tqyZPwSvSE8o6cS8'
+/** Google Calendar appointment schedule — inline embed + share link base. */
+export const GOOGLE_APPOINTMENT_SCHEDULE_URL =
+  'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1XATx8OuwjeatDb843nItYEV0H4cnwGPJCw3yX7rnAjq3dcrlU7JfKXzu8qb2-jqn1bUXGrXMu?gv=true'
+/** @deprecated Use GOOGLE_APPOINTMENT_SCHEDULE_URL */
+export const JPILOT_DEMO_CALENDAR_URL = GOOGLE_APPOINTMENT_SCHEDULE_URL
 export const JPILOT_OG_IMAGE = `${SITE_URL}/jpilot-og.png`
 export const JPILOT_OG_IMAGE_ALT =
   'JPilot — self-hosted AI copilot for NetScaler, F5, and Cisco network appliances'
@@ -167,6 +171,12 @@ export const ROUTE_SEO = {
     description:
       'Contact Nexxus Tech for WAF assessments, Zero-Trust roadmaps, NetScaler migrations, and AI automation. Remote worldwide, reply within 24h.',
     path: '/contact',
+  },
+  bookDemo: {
+    title: 'Book a Demo — Nexxus Tech',
+    description:
+      'Schedule a live JPilot or services walkthrough with a Nexxus principal architect. Pick a time that works for you — remote worldwide.',
+    path: '/book-demo',
   },
   faq: {
     title: 'FAQ — Nexxus Tech',

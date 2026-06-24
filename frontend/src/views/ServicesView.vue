@@ -63,7 +63,7 @@
           <span class="section-label">Ready to Start?</span>
           <h2>Not sure which service you need?</h2>
           <p>Let's have a discovery call. We'll assess your environment and recommend the right approach — no obligation.</p>
-          <RouterLink to="/contact" class="btn btn-primary">
+          <RouterLink to="/book-demo" class="btn btn-primary">
             <i class="pi pi-calendar"></i> Book a Free Discovery Call
           </RouterLink>
         </div>
