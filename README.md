@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.20** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.21** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,10 @@
 ---
 
 ## Changelog
+
+### v0.21 — 2026-06-25
+- **nginx / SC Studio sync** — `www.nexxus-tech.com` now proxies `/licensing/` to the licensing service instead of 301 redirecting to apex, so `POST /licensing/scstudio/register` and `POST /licensing/scstudio/sync` work on both `www` and apex (fixes SC Studio clients that call the `www` URL)
+- **nginx** — extended proxy timeouts on the `www` licensing location for large encrypted catalog payloads; all other `www` paths still redirect to `nexxus-tech.com`
 
 ### v0.20 — 2026-06-24
 - **Book a demo** — embedded Google Calendar scheduler on `/book-demo`; JPbot opens an in-site modal instead of a new tab; Products CTA, navbar, footer, and Services discovery call link to the demo page
