@@ -273,6 +273,25 @@ a:hover { color: var(--nt-secondary-l); }
   box-shadow: 0 0 12px var(--nt-primary), 0 0 30px rgba(0,123,167,0.3);
 }
 
+/* ─── Term-OS blink cursor ───────────────────────────────────────────────────── */
+.ld-cursor::after {
+  content: '▍';
+  animation: blinkc 1s steps(2) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ld-cursor::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@keyframes blinkc {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--nt-dark-2); }

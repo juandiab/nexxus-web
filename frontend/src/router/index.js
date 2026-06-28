@@ -64,6 +64,12 @@ const routes = [
     meta: { seo: ROUTE_SEO.faq }
   },
   {
+    path: '/logo-test',
+    name: 'logo-test',
+    component: () => import('@/views/LogoTestView.vue'),
+    meta: { seo: ROUTE_SEO.home, noindex: true }
+  },
+  {
     path: '/licensing/activate',
     name: 'licensing-activate',
     component: () => import('@/views/LicensingActivateView.vue'),

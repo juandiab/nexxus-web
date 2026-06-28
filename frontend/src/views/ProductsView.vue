@@ -2,20 +2,51 @@
   <div id="jpilot" class="products-page">
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-bg"></div>
+      <div class="hero-bg" aria-hidden="true">
+        <MagicRings
+          v-if="HERO_BG_MAGIC_RINGS"
+          class="hero-bg-layer"
+          color="#00A8E0"
+          color-two="#007BA7"
+          :ring-count="6"
+          :speed="0.75"
+          :attenuation="11"
+          :line-thickness="1.8"
+          :base-radius="0.32"
+          :radius-step="0.09"
+          :scale-rate="0.09"
+          :opacity="0.55"
+          :noise-amount="0.06"
+          :ring-gap="1.5"
+          :fade-in="0.7"
+          :fade-out="0.5"
+        />
+        <Strands
+          v-if="HERO_BG_STRANDS"
+          class="hero-bg-layer"
+          :colors="['#00A8E0', '#007BA7', '#4DB8E0']"
+          :count="3"
+          :speed="0.45"
+          :amplitude="0.85"
+          :waviness="1"
+          :thickness="0.65"
+          :glow="2.2"
+          :taper="3"
+          :spread="1"
+          :intensity="0.55"
+          :saturation="1.3"
+          :opacity="0.85"
+          :scale="1.4"
+        />
+      </div>
       <div class="container hero-inner">
         <div class="hero-lockup">
           <p class="hero-eyebrow reveal">Introducing</p>
-          <img
-            src="/JPilot-logo-big-black.svg"
-            alt="JPilot"
-            class="hero-logo reveal"
-            width="88"
-            height="88"
+          <JpilotLogo
+            variant="hero"
+            tagline="AI Copilot for Network Appliances"
+            class="hero-brand reveal"
           />
-          <h1 class="hero-title reveal">
-            <span class="brand-accent">JP</span>ilot
-          </h1>
           <p class="hero-description reveal">
             JPilot is an AI management platform for your network appliances — chat to plan, configure, and troubleshoot your ADCs and network infrastructure, all running on hardware you control.
           </p>
@@ -134,9 +165,15 @@
         <p>One command. Self-hosted. Your infrastructure.</p>
         <InstallBlock copy-id="footer" />
         <div class="cta-actions">
-          <a href="#install" class="btn btn-primary">Install now</a>
-          <router-link to="/book-demo" class="btn btn-secondary">Book a demo</router-link>
-          <a href="mailto:support@nexxus-tech.com" class="btn btn-secondary">Contact us</a>
+          <GlowButton variant="primary">
+            <a href="#install" class="btn btn-primary">Install now</a>
+          </GlowButton>
+          <GlowButton variant="secondary">
+            <router-link to="/book-demo" class="btn btn-secondary">Book a demo</router-link>
+          </GlowButton>
+          <GlowButton variant="secondary">
+            <a href="mailto:support@nexxus-tech.com" class="btn btn-secondary">Contact us</a>
+          </GlowButton>
         </div>
       </div>
     </section>
@@ -159,6 +196,14 @@
 <script setup>
 import InstallBlock from '@/components/shared/InstallBlock.vue'
 import DemoVideo from '@/components/shared/DemoVideo.vue'
+import JpilotLogo from '@/components/shared/JpilotLogo.vue'
+import Strands from '@/components/shared/Strands.vue'
+import MagicRings from '@/components/shared/MagicRings.vue'
+import GlowButton from '@/components/shared/GlowButton.vue'
+
+/** Toggle hero background effects — flip to show Strands instead of MagicRings later. */
+const HERO_BG_STRANDS = false
+const HERO_BG_MAGIC_RINGS = true
 
 const supportedVendors = [
   { name: 'NetScaler MPX', status: 'available' },
@@ -185,9 +230,16 @@ const supportedVendors = [
 .hero-bg {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  opacity: 0.95;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(0, 168, 224, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 60%, rgba(0, 123, 167, 0.08) 0%, transparent 45%);
+    radial-gradient(ellipse at 50% 0%, rgba(0, 168, 224, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 60%, rgba(0, 123, 167, 0.05) 0%, transparent 45%);
+}
+
+.hero-bg-layer {
+  position: absolute;
+  inset: 0;
 }
 
 .hero-inner {
@@ -205,6 +257,10 @@ const supportedVendors = [
   margin-bottom: 24px;
 }
 
+.hero-brand {
+  margin: 0 0 22px;
+}
+
 .hero-eyebrow {
   margin: 0 0 6px;
   font-family: var(--font-heading);
@@ -213,27 +269,6 @@ const supportedVendors = [
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--nt-text-muted);
-}
-
-.hero-logo {
-  display: block;
-  width: 88px;
-  height: 88px;
-  margin: 0 0 8px;
-  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
-}
-
-.hero-title {
-  margin: 0 0 10px;
-  font-size: clamp(2.25rem, 5.5vw, 3.25rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--nt-white);
-}
-
-.brand-accent {
-  color: var(--nt-primary-l);
 }
 
 .hero-description {
@@ -522,14 +557,8 @@ const supportedVendors = [
     padding: 96px 0 40px;
   }
 
-  .hero-logo {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 6px;
-  }
-
-  .hero-title {
-    font-size: clamp(1.85rem, 9vw, 2.5rem);
+  .hero-brand {
+    margin-bottom: 18px;
   }
 
   .hero-description {

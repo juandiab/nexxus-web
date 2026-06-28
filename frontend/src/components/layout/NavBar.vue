@@ -3,7 +3,13 @@
     <div class="container navbar-inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar-logo" @click="menuOpen = false">
-        <img :src="logoSrc" alt="Nexxus Tech" class="logo-img" width="324" height="52" decoding="async" />
+        <NxConnectionRings size="nav" class="navbar-rings-mark" />
+        <span class="navbar-logo-stack">
+          <span class="navbar-wordmark ld-cursor">
+            <span class="navbar-wordmark__nexxus">NEXXUS</span><span class="navbar-wordmark__tech">TECH</span>
+          </span>
+          <span class="navbar-tagline">Consulting . Cloud . Security . AI</span>
+        </span>
       </RouterLink>
 
       <!-- Desktop nav -->
@@ -11,7 +17,9 @@
         <RouterLink v-for="link in links" :key="link.to" :to="link.to" class="nav-link">
           {{ link.label }}
         </RouterLink>
-        <RouterLink to="/contact" class="btn btn-primary nav-cta">Get in Touch</RouterLink>
+        <GlowButton variant="primary" class="nav-cta-glow">
+          <RouterLink to="/contact" class="btn btn-primary nav-cta">Get in Touch</RouterLink>
+        </GlowButton>
       </nav>
 
       <!-- Mobile hamburger -->
@@ -34,9 +42,11 @@
         >
           {{ link.label }}
         </RouterLink>
-        <RouterLink to="/contact" class="btn btn-primary w-full" @click="menuOpen = false">
-          Get in Touch
-        </RouterLink>
+        <GlowButton variant="primary" class="mobile-nav-glow mobile-nav-cta-glow">
+          <RouterLink to="/contact" class="btn btn-primary w-full" @click="menuOpen = false">
+            Get in Touch
+          </RouterLink>
+        </GlowButton>
       </div>
     </Transition>
   </header>
@@ -44,11 +54,11 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import logo from '@/assets/nexxus-tech-logo-full-large.svg'
+import GlowButton from '@/components/shared/GlowButton.vue'
+import NxConnectionRings from '@/components/shared/NxConnectionRings.vue'
 
 const isScrolled = ref(false)
 const menuOpen = ref(false)
-const logoSrc = logo
 
 const links = [
   { to: '/', label: 'Home' },
@@ -85,13 +95,58 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   justify-content: space-between;
   height: 72px;
 }
-.navbar-logo { display: flex; align-items: center; }
-.logo-img { height: 52px; width: 324px; max-width: 100%; display: block; }
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.navbar-rings-mark {
+  color: var(--nt-primary-l);
+  filter: drop-shadow(0 0 6px rgba(0, 168, 224, 0.45));
+}
+.navbar-logo-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  container-type: inline-size;
+  min-width: 0;
+}
+.navbar-wordmark {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.navbar-wordmark.ld-cursor {
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.1em;
+}
+.navbar-wordmark.ld-cursor::after {
+  color: var(--nt-primary-l);
+  font-size: 1.05em;
+}
+.navbar-wordmark__nexxus {
+  color: var(--nt-white);
+}
+.navbar-wordmark__tech {
+  color: var(--nt-primary-l);
+}
+.navbar-tagline {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: clamp(0.5rem, 4.2cqi, 0.65rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.024em;
+  word-spacing: -0.1em;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
 
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 .nav-link {
   display: inline-flex;
@@ -115,7 +170,13 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   color: var(--nt-white);
   background: rgba(0, 123, 167, 0.12);
 }
-.nav-cta { margin-left: 8px; padding: 10px 24px; font-size: 0.85rem; }
+.nav-cta-glow {
+  margin-left: 6px;
+}
+.nav-cta {
+  padding: 10px 24px;
+  font-size: 0.85rem;
+}
 
 /* Hamburger */
 .hamburger {
@@ -148,10 +209,16 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .mobile-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   padding: 16px 24px 24px;
   background: rgba(28, 28, 30, 0.98);
   border-top: 1px solid rgba(0, 123, 167, 0.15);
+}
+.mobile-nav-glow {
+  width: 100%;
+}
+.mobile-nav-cta-glow {
+  margin-top: 8px;
 }
 .mobile-nav-link {
   display: flex;
@@ -166,8 +233,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   text-decoration: none;
   transition: var(--nt-transition);
 }
-.mobile-nav-link:hover { color: white; background: rgba(0,123,167,0.15); }
-.w-full { width: 100%; justify-content: center; margin-top: 8px; }
+.mobile-nav-link:hover,
+.mobile-nav-link.router-link-active {
+  color: white;
+  background: rgba(0,123,167,0.15);
+}
+.w-full { width: 100%; justify-content: center; }
 
 /* Transition */
 .mobile-menu-enter-active, .mobile-menu-leave-active { transition: all 0.3s ease; }
@@ -176,5 +247,15 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 @media (max-width: 768px) {
   .navbar-links { display: none; }
   .hamburger { display: flex; }
+}
+
+@media (max-width: 480px) {
+  .navbar-wordmark.ld-cursor {
+    font-size: 1rem;
+  }
+
+  .navbar-tagline {
+    font-size: 0.48rem;
+  }
 }
 </style>

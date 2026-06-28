@@ -115,9 +115,9 @@
           @click="$router.push(`/products#${product.id}`)"
         >
           <div class="product-feature-grid">
-            <div class="product-feature-logo-wrap">
-              <JpilotLogo theme="dark" :alt="product.logoAlt" img-class="product-feature-logo" width="88" height="48" loading="eager" />
-            </div>
+        <div class="product-feature-logo-wrap">
+              <JpilotLogo variant="compact" title-tag="span" />
+        </div>
             <div class="product-feature-body">
               <span class="section-label">{{ product.label }}</span>
               <h3 class="product-feature-title">
@@ -294,12 +294,16 @@
             NetScaler automation — we're ready to help. Remote engagements worldwide.
           </p>
           <div class="cta-actions">
-            <RouterLink to="/contact" class="btn btn-primary">
-              <i class="pi pi-send"></i> Start a Conversation
-            </RouterLink>
-            <a href="mailto:contact@nexxus-tech.com" class="btn btn-outline">
-              <i class="pi pi-envelope"></i> contact@nexxus-tech.com
-            </a>
+            <GlowButton variant="primary">
+              <RouterLink to="/contact" class="btn btn-primary">
+                <i class="pi pi-send"></i> Start a Conversation
+              </RouterLink>
+            </GlowButton>
+            <GlowButton variant="outline">
+              <a href="mailto:contact@nexxus-tech.com" class="btn btn-outline">
+                <i class="pi pi-envelope"></i> contact@nexxus-tech.com
+              </a>
+            </GlowButton>
           </div>
         </div>
       </div>
@@ -313,6 +317,7 @@ import axios from 'axios'
 import { products } from '@/data/products.js'
 import { coverColorClass } from '@/utils/coverColor.js'
 import JpilotLogo from '@/components/shared/JpilotLogo.vue'
+import GlowButton from '@/components/shared/GlowButton.vue'
 
 const heroCanvas = ref(null)
 const blogPosts = ref([])
@@ -714,13 +719,6 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--nt-border);
   border-radius: 16px;
-}
-.product-feature-logo {
-  width: 100%;
-  height: auto;
-  max-height: 48px;
-  object-fit: contain;
-  display: block;
 }
 .product-feature-tagline {
   font-size: 0.88rem;

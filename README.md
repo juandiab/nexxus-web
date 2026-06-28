@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.21** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.22** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,14 @@
 ---
 
 ## Changelog
+
+### v0.22 — 2026-06-27
+- **Navbar branding** — static SVG replaced with animated Nexxus wordmark on all routes: `NxConnectionRings` loader (1px cyan rings), JetBrains Mono `NEXXUSTECH` title with Term-OS blinking cursor, and muted tagline (`Consulting . Cloud . Security . AI`)
+- **JPilot logo** — products hero and home product card use `TriArcLoader` (Tri-Arc CSS spinner) via `JpilotMark` / `JpilotLogo`; vertical lockup with `JPilot` wordmark, blinking cursor, and subtitle; sizes 88px hero / 40px compact
+- **Shared loaders** — new `TriArcLoader.vue`, `JpilotMark.vue`, and `NxConnectionRings.vue`; global `.ld-cursor` blink animation in `main.css`
+- **Fonts** — self-hosted JetBrains Mono via `@fontsource/jetbrains-mono`
+- **UI polish** — `GlowButton` / `BorderGlow` on navbar CTA, homepage CTAs, products CTAs, and install tabs; WebGL hero backgrounds on products page (`MagicRings`, `Strands`)
+- **Dev** — `/logo-test` route for navbar logo preview
 
 ### v0.21 — 2026-06-25
 - **nginx / SC Studio sync** — `www.nexxus-tech.com` now proxies `/licensing/` to the licensing service instead of 301 redirecting to apex, so `POST /licensing/scstudio/register` and `POST /licensing/scstudio/sync` work on both `www` and apex (fixes SC Studio clients that call the `www` URL)

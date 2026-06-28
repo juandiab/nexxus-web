@@ -23,25 +23,40 @@
     </div>
 
     <div class="install-platform-tabs" role="tablist" aria-label="Install platform">
-      <button
+      <BorderGlow
         v-for="platform in platforms"
         :key="platform.id"
-        type="button"
-        role="tab"
-        class="install-platform-tab"
-        :class="{ active: activePlatform === platform.id }"
-        :aria-selected="activePlatform === platform.id"
-        @click="activePlatform = platform.id"
+        class="install-platform-tab-glow"
+        :class="{ 'is-active': activePlatform === platform.id }"
+        :background-color="activePlatform === platform.id ? 'rgba(0, 123, 167, 0.18)' : 'rgba(0, 0, 0, 0.22)'"
+        :colors="['#00A8E0', '#007BA7', '#4DB8E0']"
+        glow-color="192 85 62"
+        :border-radius="10"
+        :glow-radius="22"
+        :glow-intensity="1.1"
+        :edge-sensitivity="28"
+        :cone-spread="28"
+        :fill-opacity="0.45"
       >
-        <i :class="platform.icon" aria-hidden="true"></i>
-        {{ platform.name }}
-      </button>
+        <button
+          type="button"
+          role="tab"
+          class="install-platform-tab"
+          :class="{ active: activePlatform === platform.id }"
+          :aria-selected="activePlatform === platform.id"
+          @click="activePlatform = platform.id"
+        >
+          <i :class="platform.icon" aria-hidden="true"></i>
+          {{ platform.name }}
+        </button>
+      </BorderGlow>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, onUnmounted, ref } from 'vue'
+import BorderGlow from '@/components/shared/BorderGlow.vue'
 
 const props = defineProps({
   copyId: {
@@ -168,32 +183,43 @@ onUnmounted(() => {
 
 .install-platform-tabs {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.install-platform-tab-glow {
+  box-shadow: none;
+}
+
+.install-platform-tab-glow.is-active {
+  border-color: rgba(0, 168, 224, 0.35);
+}
+
+.install-platform-tab-glow :deep(.border-glow-inner) {
+  overflow: visible;
 }
 
 .install-platform-tab {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
   padding: 8px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 168, 224, 0.2);
-  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: inherit;
+  background: transparent;
   color: var(--nt-text-muted);
   font-size: 0.8rem;
   font-weight: 600;
   font-family: var(--font-heading);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .install-platform-tab:hover,
 .install-platform-tab.active {
-  border-color: var(--nt-primary);
   color: var(--nt-primary-l);
-  background: rgba(0, 123, 167, 0.15);
 }
 
 .install-copy-btn {
