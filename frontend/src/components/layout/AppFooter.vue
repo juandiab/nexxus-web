@@ -101,8 +101,8 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
 
 <style scoped>
 .footer {
-  background: var(--nt-dark-2);
-  border-top: 1px solid var(--nt-border);
+  background: var(--nx-bg-base);
+  border-top: 1px solid var(--nx-border);
   padding: 80px 0 0;
   position: relative;
   overflow: hidden;
@@ -112,7 +112,7 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
   top: -100px; left: 50%;
   transform: translateX(-50%);
   width: 600px; height: 200px;
-  background: radial-gradient(ellipse, rgba(91,79,232,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(61,139,253,0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 .footer-grid {
@@ -124,7 +124,7 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
 .footer-logo { height: 48px; width: auto; margin-bottom: 20px; display: block; }
 .footer-desc {
   font-size: 0.9rem;
-  color: var(--nt-text-muted);
+  color: var(--nx-text-mut);
   line-height: 1.7;
   margin-bottom: 24px;
   max-width: 320px;
@@ -135,38 +135,37 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
   min-width: 48px;
   min-height: 48px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--nx-border);
   display: flex; align-items: center; justify-content: center;
-  color: var(--nt-text-muted);
+  color: var(--nx-text-mut);
   font-size: 1rem;
-  transition: var(--nt-transition);
+  transition: border-color var(--nx-dur) var(--nx-ease), color var(--nx-dur) var(--nx-ease), transform var(--nx-dur) var(--nx-ease);
   text-decoration: none;
 }
 .social-btn:hover {
-  background: var(--nt-primary);
-  border-color: var(--nt-primary);
-  color: white;
+  border-color: var(--nx-cyan-400);
+  color: var(--nx-cyan-400);
   transform: translateY(-2px);
 }
 .footer-col-title {
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-family: var(--nx-font-mono);
+  font-size: var(--nx-text-xs);
+  font-weight: 500;
+  letter-spacing: var(--nx-tracking-mono);
   text-transform: uppercase;
-  color: var(--nt-secondary);
+  color: var(--nx-text-mut);
   margin-bottom: 20px;
 }
 .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .footer-col ul li a,
 .footer-col ul li span {
   font-size: 0.9rem;
-  color: var(--nt-text-muted);
+  color: var(--nx-text-mut);
   text-decoration: none;
   transition: color 0.2s;
 }
-.footer-col ul li a:hover { color: var(--nt-white); }
+.footer-col ul li a:hover { color: var(--nx-text-hi); }
 .contact-list { gap: 14px !important; }
 .contact-list li {
   display: flex;
@@ -174,25 +173,25 @@ import SocialLinks from '@/components/shared/SocialLinks.vue'
   gap: 10px;
 }
 .contact-list .pi {
-  color: var(--nt-primary-l);
+  color: var(--nx-cyan-400);
   font-size: 0.9rem;
   flex-shrink: 0;
 }
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--nx-border);
   padding: 24px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
-  color: var(--nt-text-muted);
+  color: var(--nx-text-mut);
   flex-wrap: wrap;
   gap: 8px;
 }
-.highlight { color: var(--nt-secondary); }
+.highlight { color: var(--nx-cyan-400); }
 
 @media (max-width: 1024px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 }
 @media (max-width: 600px) {
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }

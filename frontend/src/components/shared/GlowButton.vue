@@ -12,7 +12,8 @@
 import { computed } from 'vue'
 import BorderGlow from '@/components/shared/BorderGlow.vue'
 
-const BRAND_COLORS = ['#00A8E0', '#007BA7', '#4DB8E0']
+/* Electric blue (61,139,253) / cyan (56,198,244) — matches --nx-blue-500 / --nx-cyan-400 */
+const BRAND_COLORS = ['#38C6F4', '#3D8BFD', '#66A6FF']
 
 const VARIANTS = {
   nav: {
@@ -22,9 +23,9 @@ const VARIANTS = {
     edgeSensitivity: 30,
     coneSpread: 26,
     fillOpacity: 0.42,
-    glowColor: '192 85 62',
+    glowColor: '210 90 62',
     backgroundColor: 'rgba(255, 255, 255, 0.03)',
-    activeBackgroundColor: 'rgba(0, 123, 167, 0.16)',
+    activeBackgroundColor: 'rgba(61, 139, 253, 0.16)',
   },
   primary: {
     borderRadius: 8,
@@ -33,9 +34,9 @@ const VARIANTS = {
     edgeSensitivity: 28,
     coneSpread: 28,
     fillOpacity: 0.48,
-    glowColor: '192 90 68',
-    backgroundColor: 'rgba(0, 123, 167, 0.92)',
-    activeBackgroundColor: 'rgba(0, 168, 224, 0.92)',
+    glowColor: '212 88 68',
+    backgroundColor: 'rgba(37, 99, 235, 0.95)',
+    activeBackgroundColor: 'rgba(56, 198, 244, 0.92)',
   },
   secondary: {
     borderRadius: 8,
@@ -44,9 +45,9 @@ const VARIANTS = {
     edgeSensitivity: 30,
     coneSpread: 26,
     fillOpacity: 0.4,
-    glowColor: '192 80 62',
+    glowColor: '195 85 62',
     backgroundColor: 'rgba(0, 0, 0, 0.18)',
-    activeBackgroundColor: 'rgba(0, 123, 167, 0.12)',
+    activeBackgroundColor: 'rgba(56, 198, 244, 0.12)',
   },
   outline: {
     borderRadius: 8,
@@ -55,9 +56,9 @@ const VARIANTS = {
     edgeSensitivity: 32,
     coneSpread: 24,
     fillOpacity: 0.38,
-    glowColor: '192 75 58',
+    glowColor: '205 80 58',
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    activeBackgroundColor: 'rgba(0, 123, 167, 0.1)',
+    activeBackgroundColor: 'rgba(61, 139, 253, 0.1)',
   },
 }
 
@@ -114,11 +115,11 @@ const glowProps = computed(() => {
 
 .glow-button--primary.is-active,
 .glow-button--primary:hover {
-  border-color: rgba(0, 168, 224, 0.45);
+  border-color: rgba(56, 198, 244, 0.45);
 }
 
 .glow-button--secondary {
-  border-color: rgba(77, 184, 224, 0.35);
+  border-color: rgba(56, 198, 244, 0.35);
 }
 
 .glow-button--outline {
@@ -126,6 +127,6 @@ const glowProps = computed(() => {
 }
 
 .glow-button--nav.is-active {
-  border-color: rgba(0, 168, 224, 0.32);
+  border-color: rgba(56, 198, 244, 0.32);
 }
 </style>
