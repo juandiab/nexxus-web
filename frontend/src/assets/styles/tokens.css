@@ -21,7 +21,6 @@
   --nx-graphite: #151B26;
 
   /* ─── Palette: Brand ───────────────────────────────────────────────────── */
-  --nx-blue-600: #2563EB;
   --nx-blue-500: #3D8BFD;
   --nx-blue-400: #66A6FF;
   --nx-cyan-400: #38C6F4;
@@ -199,9 +198,9 @@
 }
 
 .nx-btn--primary {
-  background: var(--nx-blue-600);
-  color: #FFFFFF;
-  border-color: var(--nx-blue-600);
+  background: var(--nx-blue-500);
+  color: var(--nx-text-hi);
+  border-color: var(--nx-blue-500);
   box-shadow: var(--nx-shadow-1);
 }
 .nx-btn--primary:hover {

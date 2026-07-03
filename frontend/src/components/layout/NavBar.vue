@@ -18,7 +18,7 @@
           {{ link.label }}
         </RouterLink>
         <GlowButton variant="primary" class="nav-cta-glow">
-          <RouterLink to="/contact" class="btn btn-primary nx-btn nx-btn--primary nav-cta">Get in Touch</RouterLink>
+          <RouterLink to="/contact" class="btn btn-primary nav-cta">Get in Touch</RouterLink>
         </GlowButton>
       </nav>
 
@@ -43,7 +43,7 @@
           {{ link.label }}
         </RouterLink>
         <GlowButton variant="primary" class="mobile-nav-glow mobile-nav-cta-glow">
-          <RouterLink to="/contact" class="btn btn-primary nx-btn nx-btn--primary w-full" @click="menuOpen = false">
+          <RouterLink to="/contact" class="btn btn-primary w-full" @click="menuOpen = false">
             Get in Touch
           </RouterLink>
         </GlowButton>
@@ -85,10 +85,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   min-height: 88px;
 }
 .navbar.scrolled {
-  background: rgba(7, 11, 18, 0.88);
+  background: rgba(28, 28, 30, 0.95);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: inset 0 -1px 0 var(--nx-border);
+  box-shadow: 0 1px 0 rgba(0, 123, 167, 0.15);
 }
 .navbar-inner {
   display: flex;
@@ -103,8 +102,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   text-decoration: none;
 }
 .navbar-rings-mark {
-  color: var(--nx-cyan-400);
-  filter: drop-shadow(0 0 6px rgba(56, 198, 244, 0.45));
+  color: var(--nt-primary-l);
+  filter: drop-shadow(0 0 6px rgba(0, 168, 224, 0.45));
 }
 .navbar-logo-stack {
   display: flex;
@@ -124,23 +123,23 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   letter-spacing: 0.1em;
 }
 .navbar-wordmark.ld-cursor::after {
-  color: var(--nx-cyan-400);
+  color: var(--nt-primary-l);
   font-size: 1.05em;
 }
 .navbar-wordmark__nexxus {
-  color: var(--nx-text-hi);
+  color: var(--nt-white);
 }
 .navbar-wordmark__tech {
-  color: var(--nx-cyan-400);
+  color: var(--nt-primary-l);
 }
 .navbar-tagline {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: clamp(0.625rem, 4.2cqi, 0.7rem);
+  font-size: clamp(0.5rem, 4.2cqi, 0.65rem);
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: 0.024em;
   word-spacing: -0.1em;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.55);
   white-space: nowrap;
 }
 
@@ -150,7 +149,6 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   gap: 6px;
 }
 .nav-link {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -161,31 +159,16 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--nx-text-mut);
+  color: rgba(255,255,255,0.75);
   padding: 8px 16px;
   border-radius: 6px;
-  transition: color var(--nx-dur) var(--nx-ease);
+  transition: var(--nt-transition);
   text-decoration: none;
-}
-.nav-link::after {
-  content: '';
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 6px;
-  height: 1px;
-  background: var(--nx-cyan-400);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform var(--nx-dur) var(--nx-ease);
 }
 .nav-link:hover,
 .nav-link.router-link-active {
-  color: var(--nx-text-hi);
-}
-.nav-link:hover::after,
-.nav-link.router-link-active::after {
-  transform: scaleX(1);
+  color: var(--nt-white);
+  background: rgba(0, 123, 167, 0.12);
 }
 .nav-cta-glow {
   margin-left: 6px;
@@ -213,9 +196,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   display: block;
   width: 26px;
   height: 2px;
-  background: var(--nx-text-hi);
+  background: var(--nt-white);
   border-radius: 2px;
-  transition: transform var(--nx-dur) var(--nx-ease), opacity var(--nx-dur) var(--nx-ease);
+  transition: var(--nt-transition);
   transform-origin: center;
 }
 .hamburger span.open:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
@@ -228,8 +211,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   flex-direction: column;
   gap: 6px;
   padding: 16px 24px 24px;
-  background: rgba(7, 11, 18, 0.98);
-  border-top: 1px solid var(--nx-border);
+  background: rgba(28, 28, 30, 0.98);
+  border-top: 1px solid rgba(0, 123, 167, 0.15);
 }
 .mobile-nav-glow {
   width: 100%;
@@ -244,16 +227,16 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--nx-text-mut);
+  color: rgba(255,255,255,0.8);
   padding: 14px 16px;
   border-radius: 8px;
   text-decoration: none;
-  transition: color var(--nx-dur) var(--nx-ease), background var(--nx-dur) var(--nx-ease);
+  transition: var(--nt-transition);
 }
 .mobile-nav-link:hover,
 .mobile-nav-link.router-link-active {
-  color: var(--nx-text-hi);
-  background: rgba(61, 139, 253, 0.12);
+  color: white;
+  background: rgba(0,123,167,0.15);
 }
 .w-full { width: 100%; justify-content: center; }
 
