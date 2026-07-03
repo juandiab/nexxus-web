@@ -5,12 +5,7 @@
       <div class="footer-grid">
         <!-- Brand col -->
         <div class="footer-brand">
-          <RouterLink to="/" class="footer-logo" aria-label="Nexxus Tech — home">
-            <NxConnectionRings size="nav" class="footer-logo-mark" />
-            <span class="footer-wordmark">
-              <span class="footer-wordmark__nexxus">NEXXUS</span><span class="footer-wordmark__tech">TECH</span>
-            </span>
-          </RouterLink>
+          <img src="@/assets/nexxus-tech-logo-full-large.svg" alt="Nexxus Tech" class="footer-logo" />
           <p class="footer-desc">
             Empowering people and organizations through consulting, architecture,
             shared knowledge, and AI-driven innovation. Inspiring growth, solving
@@ -102,7 +97,6 @@
 
 <script setup>
 import SocialLinks from '@/components/shared/SocialLinks.vue'
-import NxConnectionRings from '@/components/shared/NxConnectionRings.vue'
 </script>
 
 <style scoped>
@@ -127,26 +121,7 @@ import NxConnectionRings from '@/components/shared/NxConnectionRings.vue'
   gap: 32px;
   margin-bottom: 60px;
 }
-.footer-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  text-decoration: none;
-}
-.footer-logo-mark {
-  flex-shrink: 0;
-}
-.footer-wordmark {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-weight: 600;
-  font-size: 1.35rem;
-  letter-spacing: 0.1em;
-  line-height: 1;
-  white-space: nowrap;
-}
-.footer-wordmark__nexxus { color: var(--nx-text-hi); }
-.footer-wordmark__tech { color: var(--nx-cyan-400); }
+.footer-logo { height: 48px; width: auto; margin-bottom: 20px; display: block; }
 .footer-desc {
   font-size: 0.9rem;
   color: var(--nx-text-mut);
