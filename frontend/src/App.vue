@@ -24,6 +24,13 @@ import ChatWidget from '@/components/shared/ChatWidget.vue'
 
 // Global scroll-reveal
 onMounted(() => {
+  // Safety net: if IntersectionObserver is unavailable, just reveal everything
+  // instantly rather than leaving content stuck at opacity: 0.
+  if (typeof IntersectionObserver === 'undefined') {
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'))
+    return
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -65,11 +72,15 @@ main { flex: 1; }
   font-weight: 700;
   text-decoration: none;
   border-radius: 6px;
-  transition: top 0.2s ease;
+  transition: top var(--nx-dur) var(--nx-ease);
 }
 .skip-link:focus {
   top: 16px;
   outline: 2px solid var(--nt-secondary);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
 }
 </style>
