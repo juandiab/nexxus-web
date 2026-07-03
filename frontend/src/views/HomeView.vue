@@ -5,41 +5,56 @@
       <canvas ref="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-overlay"></div>
       <div class="container hero-content">
-        <div class="hero-badge nx-badge reveal">
-          <span class="glow-dot"></span>
-          <span>Trusted by Fortune 500 &amp; Government Agencies Worldwide</span>
+        <div class="hero-main">
+          <div class="hero-badge nx-badge reveal">
+            <span class="glow-dot"></span>
+            <span>Trusted by Fortune 500 &amp; Government Agencies Worldwide</span>
+          </div>
+          <h1 class="hero-title reveal reveal-delay-1">
+            Securing the World's<br />
+            <span class="gradient-text">Most Critical Applications</span>
+          </h1>
+          <p class="hero-subtitle reveal reveal-delay-2">
+            Enterprise cloud, cybersecurity, and AI consulting for CTOs who can't afford downtime.
+          </p>
+          <p class="hero-subtitle-sub reveal reveal-delay-2">
+            Principal-led engagements across <strong>20+ countries</strong> — from Zero-Trust rollouts to AI-driven NetScaler operations.
+          </p>
+          <p class="hero-prompt reveal reveal-delay-2" aria-hidden="true">
+            <span class="hero-prompt-prefix">&gt;</span> NetScaler ADC · F5 BIG-IP · Zero-Trust · secured at scale
+          </p>
+          <div class="hero-actions reveal reveal-delay-3">
+            <RouterLink to="/services" class="btn btn-primary nx-btn nx-btn--primary">
+              <i class="pi pi-shield"></i> Explore Services
+            </RouterLink>
+            <RouterLink to="/contact" class="btn btn-secondary nx-btn nx-btn--ghost">
+              <i class="pi pi-send"></i> Start a Project
+            </RouterLink>
+          </div>
+          <div class="hero-tech-stack reveal reveal-delay-4">
+            <span class="tech-label">SPECIALIZED IN</span>
+            <div class="tech-pills">
+              <span class="tech-pill nx-badge">NetScaler WAF</span>
+              <span class="tech-pill nx-badge">F5 BIG-IP</span>
+              <span class="tech-pill nx-badge">Zero-Trust</span>
+              <span class="tech-pill nx-badge">AWS Security</span>
+              <span class="tech-pill nx-badge">Azure AD</span>
+              <span class="tech-pill nx-badge">Okta</span>
+              <span class="tech-pill nx-badge">AI Automation</span>
+            </div>
+          </div>
         </div>
-        <h1 class="hero-title reveal reveal-delay-1">
-          Securing the World's<br />
-          <span class="gradient-text">Most Critical Applications</span>
-        </h1>
-        <p class="hero-subtitle reveal reveal-delay-2">
-          Enterprise cloud, cybersecurity, and AI consulting for CTOs who can't afford downtime.
-        </p>
-        <p class="hero-subtitle-sub reveal reveal-delay-2">
-          Principal-led engagements across <strong>20+ countries</strong> — from Zero-Trust rollouts to AI-driven NetScaler operations.
-        </p>
-        <p class="hero-prompt reveal reveal-delay-2" aria-hidden="true">
-          <span class="hero-prompt-prefix">$</span> nexxus deploy --secure --scale global
-        </p>
-        <div class="hero-actions reveal reveal-delay-3">
-          <RouterLink to="/services" class="btn btn-primary nx-btn nx-btn--primary">
-            <i class="pi pi-shield"></i> Explore Services
-          </RouterLink>
-          <RouterLink to="/contact" class="btn btn-secondary nx-btn nx-btn--ghost">
-            <i class="pi pi-send"></i> Start a Project
-          </RouterLink>
-        </div>
-        <div class="hero-tech-stack reveal reveal-delay-4">
-          <span class="tech-label">SPECIALIZED IN</span>
-          <div class="tech-pills">
-            <span class="tech-pill nx-badge">NetScaler WAF</span>
-            <span class="tech-pill nx-badge">F5 BIG-IP</span>
-            <span class="tech-pill nx-badge">Zero-Trust</span>
-            <span class="tech-pill nx-badge">AWS Security</span>
-            <span class="tech-pill nx-badge">Azure AD</span>
-            <span class="tech-pill nx-badge">Okta</span>
-            <span class="tech-pill nx-badge">AI Automation</span>
+
+        <!-- Live ops terminal (desktop only) -->
+        <div ref="terminalEl" class="hero-terminal reveal reveal-delay-2" aria-hidden="true">
+          <div class="term-chrome">
+            <span class="term-dot term-dot--r"></span>
+            <span class="term-dot term-dot--y"></span>
+            <span class="term-dot term-dot--g"></span>
+            <span class="term-title">netscaler-prod — ssh</span>
+          </div>
+          <div class="term-body">
+            <pre ref="termOut" class="term-out"></pre>
           </div>
         </div>
       </div>
@@ -64,7 +79,7 @@
     <!-- ── SERVICES OVERVIEW ──────────────────────────────────────────────────── -->
     <section class="section nx-section services-section nx-grid-bg">
       <div class="container">
-        <div class="section-header reveal">
+        <div class="section-header reveal nx-trunk-head">
           <span class="nx-eyebrow">What We Do</span>
           <h2 class="section-title">Expert-Level Security &amp; Delivery</h2>
           <p class="section-subtitle">
@@ -72,11 +87,11 @@
             principal-architect expertise to every engagement.
           </p>
         </div>
-        <div class="services-grid">
+        <div class="services-bento">
           <div
             v-for="(svc, i) in services"
             :key="svc.id"
-            :class="`nx-card service-card reveal reveal-delay-${(i % 4) + 1}`"
+            :class="[`nx-card service-card reveal reveal-delay-${(i % 4) + 1}`, svc.span ? `service-card--${svc.span}` : '']"
             @click="$router.push(`/services#${svc.serviceHash || svc.id}`)"
           >
             <div class="service-icon">
@@ -87,6 +102,23 @@
             <div class="service-tags">
               <span v-for="tag in svc.tags" :key="tag" class="tag nx-badge">{{ tag }}</span>
             </div>
+
+            <!-- In-card motif: mono stat line for the two strategic cells -->
+            <div v-if="svc.motif === 'stats'" class="service-motif" aria-hidden="true">
+              <span class="service-motif__line" v-for="stat in svc.motifStats" :key="stat.k">
+                <span class="service-motif__k">{{ stat.k }}</span>
+                <span class="service-motif__v">{{ stat.v }}</span>
+              </span>
+            </div>
+            <!-- In-card motif: tiny network diagram -->
+            <svg v-else-if="svc.motif === 'net'" class="service-motif-net" viewBox="0 0 200 60" aria-hidden="true">
+              <line x1="20" y1="30" x2="80" y2="12" /><line x1="20" y1="30" x2="80" y2="48" />
+              <line x1="80" y1="12" x2="140" y2="30" /><line x1="80" y1="48" x2="140" y2="30" />
+              <line x1="140" y1="30" x2="184" y2="30" />
+              <circle cx="20" cy="30" r="4" /><circle cx="80" cy="12" r="3.4" /><circle cx="80" cy="48" r="3.4" />
+              <circle cx="140" cy="30" r="4" /><circle class="net-edge" cx="184" cy="30" r="4.5" />
+            </svg>
+
             <span class="service-arrow">
               Learn more <i class="pi pi-arrow-right"></i>
             </span>
@@ -103,7 +135,7 @@
     <!-- ── PRODUCTS ───────────────────────────────────────────────────────────── -->
     <section class="section nx-section nx-section--navy products-section">
       <div class="container">
-        <div class="section-header reveal section-header-center">
+        <div class="section-header reveal section-header-center nx-trunk-head">
           <span class="nx-eyebrow">Our Products</span>
           <h2 class="section-title">Technology That Empowers</h2>
           <p class="section-subtitle section-subtitle-center">
@@ -155,8 +187,8 @@
     <!-- ── WHY NEXXUS TECH ────────────────────────────────────────────────────── -->
     <section class="section nx-section nx-section--raised why-section">
       <div class="container">
-        <div class="why-grid">
-          <div class="why-left reveal">
+        <div class="why-grid why-grid--sticky">
+          <div class="why-left reveal nx-trunk-head">
             <span class="nx-eyebrow">Why Nexxus Tech</span>
             <h2 class="section-title">
               Principals Who<br />
@@ -206,7 +238,7 @@
     <!-- ── INDUSTRIES / KEY CLIENTS ───────────────────────────────────────────── -->
     <section class="section nx-section clients-section">
       <div class="container">
-        <div class="section-header reveal section-header-center">
+        <div class="section-header reveal section-header-center nx-trunk-head">
           <span class="nx-eyebrow">Key Engagements</span>
           <h2 class="section-title">Trusted by Industry Leaders</h2>
           <p class="section-subtitle section-subtitle-center">
@@ -214,6 +246,12 @@
             government, defense, finance, telecom, and aviation.
           </p>
         </div>
+        <div class="clients-marquee reveal" aria-hidden="true">
+          <div class="clients-marquee__track">
+            <span v-for="(name, i) in marqueeClientsLoop" :key="`mq-${i}`" class="clients-marquee__item">{{ name }}</span>
+          </div>
+        </div>
+
         <div class="industries-grid">
           <div
             v-for="ind in industries"
@@ -323,6 +361,8 @@ import JpilotLogo from '@/components/shared/JpilotLogo.vue'
 import GlowButton from '@/components/shared/GlowButton.vue'
 
 const heroCanvas = ref(null)
+const terminalEl = ref(null)
+const termOut = ref(null)
 const blogPosts = ref([])
 const blogLoading = ref(true)
 
@@ -351,6 +391,8 @@ const services = [
     title: 'NetScaler / ADC',
     desc: 'Full lifecycle NetScaler ADC services — high availability, SSL offload, GSLB, content switching, and performance optimization at any scale.',
     tags: ['NetScaler', 'ADC', 'GSLB', 'SSL Offload'],
+    span: 'wide',
+    motif: 'net',
   },
   {
     id: 'zerotrust',
@@ -359,6 +401,13 @@ const services = [
     title: 'Zero-Trust Architecture',
     desc: 'End-to-end Zero-Trust transformations combining NetScaler Gateway, Okta, Azure AD, and DUO — proven across Fortune 500 and government deployments.',
     tags: ['Zero-Trust', 'Okta', 'Azure AD', 'DUO'],
+    span: 'tall',
+    motif: 'stats',
+    motifStats: [
+      { k: 'policy_enforce', v: 'deny-by-default' },
+      { k: 'mfa_coverage', v: '100%' },
+      { k: 'trust_score', v: 'continuous' },
+    ],
   },
   {
     id: 'cloud',
@@ -415,6 +464,15 @@ const industries = [
   { sector: 'Energy & Oil',         icon: 'pi pi-bolt',        clients: 'Saudi Aramco · PDO Oman · Maersk Oil' },
 ]
 
+// ── Marquee clients (drawn from engagements above) ──────────────────────────────
+const marqueeClients = [
+  'United Nations', 'Barclays', 'Emirates', 'Saudi Aramco', 'CME Group', 'IBM',
+  'Virgin Atlantic', 'TurkCell', 'Ooredoo', 'MTN', 'Central Bank of Oman',
+  'Smart Dubai', 'Jumeirah Group', 'Babcock International', 'Davivienda', 'PDO Oman',
+]
+// Duplicated track for a seamless CSS wrap.
+const marqueeClientsLoop = [...marqueeClients, ...marqueeClients]
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const formatDate = (d) =>
   new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
@@ -430,7 +488,109 @@ onMounted(async () => {
     blogLoading.value = false
   }
   initHeroCanvas()
+  initTerminal()
 })
+
+// ── Live-ops terminal engine (self-contained typewriter) ────────────────────────
+// Real NetScaler ADC health-check session. Illustrative output; real CLI syntax only.
+// prompt '>' = nscli (show/stat);  '#' = BSD shell (nsconmsg/nstrace).
+const TERM_SCRIPT = [
+  { t: 'cmd',    p: '>', s: 'show ha node' },
+  { t: 'dim',    s: 'Node 0  10.20.0.11   Primary    UP    Sync: ENABLED' },
+  { t: 'ok',     s: 'Node 1  10.20.0.12   Secondary  UP    heartbeats OK' },
+  { t: 'cmd',    p: '>', s: 'show lb vserver vs_web_prod' },
+  { t: 'dim',    s: 'State: UP   Effective State: UP   Method: LEASTCONNECTION' },
+  { t: 'ok',     s: '12 services bound · 12 UP · 0 DOWN' },
+  { t: 'cmd',    p: '>', s: 'stat ssl' },
+  { t: 'dim',    s: 'SSL sessions/s 8,412   handshakes/s 1,207   session hits 96.4%' },
+  { t: 'cmd',    p: '#', s: 'nsconmsg -d current -g CONN' },
+  { t: 'ok',     s: 'tot_client_conn 41,930   surge_queue 0   drops 0' },
+  { t: 'metric', s: 'HA in sync · 0 vservers DOWN · p95 41ms · uptime 99.99%' },
+]
+let termTimer = null
+let termIO = null
+let termRunning = false
+const prefersReduced = typeof window !== 'undefined'
+  && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+function esc(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+function lineHtml(step, text, done) {
+  const body = esc(text)
+  if (step.t === 'cmd')
+    return `<span class="t-prompt">${esc(step.p || '>')}</span> <span class="t-cmd">${body}</span>`
+  if (step.t === 'ok')
+    return `<span class="t-ok">✓</span> <span class="t-dim">${body}</span>`
+  if (step.t === 'metric')
+    return `<span class="t-ok">▸</span> <span class="t-hi">${body}</span>`
+  return `<span class="t-dim">${body}</span>`
+}
+function renderStatic() {
+  if (!termOut.value) return
+  termOut.value.innerHTML = TERM_SCRIPT
+    .map((step) => lineHtml(step, step.s, true))
+    .join('\n')
+}
+function runTerminal() {
+  const el = termOut.value
+  if (!el || termRunning) return
+  termRunning = true
+  let li = 0, ci = 0
+  const rendered = []
+  const cursor = '<span class="t-cursor"></span>'
+  const paint = (activePartial) => {
+    const done = rendered.join('\n')
+    el.innerHTML = done + (done && activePartial !== null ? '\n' : '') +
+      (activePartial !== null ? activePartial + cursor : (done ? '' : cursor))
+  }
+  const tick = () => {
+    if (document.hidden) { termTimer = setTimeout(tick, 400); return }
+    if (li >= TERM_SCRIPT.length) {
+      // breathe, then clear and loop
+      termTimer = setTimeout(() => {
+        rendered.length = 0; li = 0; ci = 0
+        paint('')
+        termTimer = setTimeout(tick, 500)
+      }, 2600)
+      return
+    }
+    const step = TERM_SCRIPT[li]
+    if (step.t === 'cmd') {
+      // typewriter effect for commands
+      ci++
+      const partial = lineHtml(step, step.s.slice(0, ci), false)
+      paint(partial)
+      if (ci >= step.s.length) {
+        rendered.push(lineHtml(step, step.s, true)); li++; ci = 0
+        termTimer = setTimeout(tick, 520)
+      } else {
+        termTimer = setTimeout(tick, 34 + Math.random() * 40)
+      }
+    } else {
+      // status/result lines appear whole
+      rendered.push(lineHtml(step, step.s, true)); li++
+      paint(null)
+      termTimer = setTimeout(tick, step.t === 'metric' ? 300 : 460)
+    }
+  }
+  tick()
+}
+function stopTerminal() {
+  if (termTimer) { clearTimeout(termTimer); termTimer = null }
+  termRunning = false
+}
+function initTerminal() {
+  if (!terminalEl.value || !termOut.value) return
+  if (prefersReduced) { renderStatic(); return }
+  termIO = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) runTerminal()
+      else stopTerminal()
+    })
+  }, { threshold: 0.25 })
+  termIO.observe(terminalEl.value)
+}
 
 // ── Hero Canvas Network Animation ─────────────────────────────────────────────
 let animFrame = null
@@ -446,7 +606,7 @@ function initHeroCanvas() {
   resize()
   window.addEventListener('resize', resize, { passive: true })
 
-  const NODES = 80
+  const NODES = 48
   const nodes = Array.from({ length: NODES }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -498,10 +658,24 @@ function initHeroCanvas() {
 
 onUnmounted(() => {
   if (animFrame) cancelAnimationFrame(animFrame)
+  stopTerminal()
+  if (termIO) { termIO.disconnect(); termIO = null }
 })
 </script>
 
 <style scoped>
+/* ── Reveal safety net ─────────────────────────────────────────────────────────
+ * Guarantees the scroll-reveal end-state wins in this view. Scoped selectors gain
+ * a [data-v-*] attribute, so this out-specifies any stray global `.reveal{opacity:0}`
+ * introduced by an earlier restyle. The global reveal system (main.css) is left
+ * untouched — this only completes the `.visible` pair locally so nothing renders at
+ * opacity 0 once observed. */
+.reveal { opacity: 0; transition: opacity var(--nx-dur-reveal, 0.7s) ease; }
+.reveal.visible { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transition: none; }
+}
+
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
 .hero {
   min-height: 100vh;
@@ -530,7 +704,71 @@ onUnmounted(() => {
   z-index: 2;
   padding-top: 120px;
   padding-bottom: 80px;
-  max-width: 760px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.hero-main { max-width: 640px; }
+
+/* ── Live ops terminal ─────────────────────────────────────────────────────── */
+.hero-terminal {
+  position: relative;
+  border-radius: var(--nx-radius-lg);
+  background: var(--nx-term-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--nx-term-glow);
+  overflow: hidden;
+  /* reserve height so streaming lines never shift layout */
+  min-height: 340px;
+}
+.term-chrome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--nx-term-chrome);
+  border-bottom: 1px solid var(--nx-border);
+}
+.term-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.term-dot--r { background: #ff5f57; }
+.term-dot--y { background: #febc2e; }
+.term-dot--g { background: #28c840; }
+.term-title {
+  margin-left: 10px;
+  font-family: var(--nx-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--nx-text-dim);
+}
+.term-body { padding: 18px 20px; }
+.term-out {
+  margin: 0;
+  font-family: var(--nx-font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--nx-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 268px;
+}
+.term-out :deep(.t-cmd) { color: var(--nx-cyan-300); }
+.term-out :deep(.t-prompt) { color: var(--nx-cyan-400); }
+.term-out :deep(.t-ok) { color: var(--nx-term-green); }
+.term-out :deep(.t-dim) { color: var(--nx-text-dim); }
+.term-out :deep(.t-hi) { color: var(--nx-text-hi); }
+.term-out :deep(.t-cursor) {
+  display: inline-block;
+  width: 8px;
+  height: 1.05em;
+  vertical-align: text-bottom;
+  background: var(--nx-cyan-400);
+  animation: termBlink 1.05s steps(2, start) infinite;
+}
+@keyframes termBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .term-out :deep(.t-cursor) { animation: none; opacity: 0; }
 }
 .hero-badge {
   gap: 10px;
@@ -688,14 +926,68 @@ onUnmounted(() => {
 
 /* ── Services ──────────────────────────────────────────────────────────────── */
 .section-header { margin-bottom: 56px; position: relative; z-index: 1; }
-.services-grid {
+
+/* ── Services bento ────────────────────────────────────────────────────────── */
+.services-bento {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(200px, auto);
+  gap: 0;
   position: relative;
   z-index: 1;
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-lg);
+  overflow: hidden;
+  background: var(--nx-border);
 }
+.services-bento .service-card {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  /* hairline board: 1px gaps show the grid's background through */
+  outline: 1px solid var(--nx-border);
+  outline-offset: 0;
+  background: var(--nx-bg-raised);
+}
+.services-bento .service-card:hover {
+  box-shadow: inset 0 0 0 1px var(--nx-border-accent), var(--nx-glow-blue);
+  border-color: transparent;
+  z-index: 2;
+}
+/* two strategic cells span the board */
+.service-card--wide { grid-column: span 2; }
+.service-card--tall { grid-column: span 2; grid-row: span 2; }
 .service-card { cursor: pointer; padding: 32px; display: flex; flex-direction: column; }
+
+/* In-card motifs */
+.service-motif {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 4px 0 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  background: rgba(0, 0, 0, 0.25);
+  font-family: var(--nx-font-mono);
+  font-size: 0.74rem;
+}
+.service-motif__line { display: flex; justify-content: space-between; gap: 12px; }
+.service-motif__k { color: var(--nx-text-dim); }
+.service-motif__v { color: var(--nx-cyan-300); }
+.service-motif-net {
+  width: 100%;
+  max-width: 220px;
+  height: 54px;
+  margin: 2px 0 14px;
+  opacity: 0.9;
+}
+.service-motif-net line { stroke: var(--nx-border-accent); stroke-width: 1; }
+.service-motif-net circle { fill: var(--nx-text-dim); }
+.service-motif-net circle.net-edge {
+  fill: var(--nx-cyan-400);
+  filter: drop-shadow(0 0 5px rgba(56, 198, 244, 0.7));
+}
 .service-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--nx-card-highlight), var(--nx-glow-blue), var(--nx-shadow-1);
@@ -921,6 +1213,106 @@ onUnmounted(() => {
 }
 .industry-card p { font-size: 0.88rem; color: var(--nx-text); line-height: 1.6; }
 
+/* ── Clients marquee wall ──────────────────────────────────────────────────── */
+.clients-marquee {
+  position: relative;
+  margin-top: 48px;
+  overflow: hidden;
+  /* full-bleed out of the container */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 8px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.clients-marquee__track {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  white-space: nowrap;
+  will-change: transform;
+  animation: marqueeScroll var(--nx-marquee-dur) linear infinite;
+}
+.clients-marquee:hover .clients-marquee__track { animation-play-state: paused; }
+.clients-marquee__item {
+  font-family: var(--nx-font-mono);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--nx-text-dim);
+  transition: color var(--nx-dur) var(--nx-ease);
+}
+.clients-marquee__item:hover { color: var(--nx-text-hi); }
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clients-marquee { -webkit-mask-image: none; mask-image: none; overflow-x: auto; }
+  .clients-marquee__track { animation: none; flex-wrap: wrap; white-space: normal; }
+}
+
+/* ── Trunk-line connective tissue ──────────────────────────────────────────── */
+.nx-trunk-head { position: relative; }
+.nx-trunk-head::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 1px;
+  height: calc(100% + var(--nx-section-y));
+  background: var(--nx-trunk);
+  pointer-events: none;
+  transform: translateX(-24px);
+  opacity: 0.55;
+}
+.nx-trunk-head::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -24px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--nx-cyan-400);
+  box-shadow: 0 0 10px var(--nx-cyan-400), 0 0 22px rgba(56, 198, 244, 0.45);
+  transform: translateX(-4px);
+  animation: trunkNodePulse 2.6s ease-in-out infinite;
+}
+@keyframes trunkNodePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--nx-cyan-400), 0 0 22px rgba(56, 198, 244, 0.45); }
+  50% { opacity: 0.6; box-shadow: 0 0 6px var(--nx-cyan-400), 0 0 12px rgba(56, 198, 244, 0.25); }
+}
+.section-header-center.nx-trunk-head::before { left: 50%; }
+.section-header-center.nx-trunk-head::after { left: 50%; transform: translateX(-4px); }
+@media (prefers-reduced-motion: reduce) {
+  .nx-trunk-head::after { animation: none; }
+}
+/* trunk connector descending from hero into the stats band */
+.stats-bar { position: relative; }
+.stats-bar::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 1px;
+  height: 40px;
+  transform: translate(-50%, -100%);
+  background: var(--nx-trunk);
+  pointer-events: none;
+}
+
+/* ── Sticky asymmetric Why layout ──────────────────────────────────────────── */
+@media (min-width: 1025px) {
+  .why-grid--sticky { align-items: start; }
+  .why-grid--sticky .why-left {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+}
+
 /* ── Blog preview ──────────────────────────────────────────────────────────── */
 .section-header-row {
   display: flex;
@@ -1041,7 +1433,16 @@ onUnmounted(() => {
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Hero collapses to single column; terminal hidden so the phone hero breathes */
+  .hero-content { grid-template-columns: 1fr; }
+  .hero-main { max-width: 760px; }
+  .hero-terminal { display: none; }
+
+  /* Bento steps down to 2 columns; spans normalize so cells stay tidy */
+  .services-bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(180px, auto); }
+  .service-card--wide { grid-column: span 2; }
+  .service-card--tall { grid-column: span 2; grid-row: auto; }
+
   .product-feature-grid { grid-template-columns: 1fr; }
   .product-feature-logo-wrap { margin: 0 auto; }
   .why-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -1054,11 +1455,14 @@ onUnmounted(() => {
   .stat-item:nth-child(2n) { border-right: none; }
 }
 @media (max-width: 640px) {
-  .services-grid { grid-template-columns: 1fr; }
+  .services-bento { grid-template-columns: 1fr; }
+  .service-card--wide, .service-card--tall { grid-column: auto; grid-row: auto; }
   .blog-grid { grid-template-columns: 1fr; }
   .industries-grid { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .cta-box { padding: 48px 24px; }
   .hero-actions { flex-direction: column; }
+  /* trunk node/line can crowd narrow screens — retract offset */
+  .nx-trunk-head::before, .nx-trunk-head::after { display: none; }
 }
 </style>

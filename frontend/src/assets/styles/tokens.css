@@ -60,7 +60,7 @@
   /* ─── Typography ───────────────────────────────────────────────────────── */
   --nx-font-mono: 'JetBrains Mono', monospace;
 
-  --nx-text-display: clamp(2.5rem, 5.5vw, 4.25rem);
+  --nx-text-display: clamp(2.75rem, 6vw, 4.75rem);
   --nx-text-h1: clamp(2.25rem, 4.4vw, 3.5rem);
   --nx-text-h2: clamp(1.75rem, 3.2vw, 2.5rem);
   --nx-text-h3: clamp(1.375rem, 2vw, 1.75rem);
@@ -118,6 +118,14 @@
   --nx-z-overlay: 9000;
   --nx-z-modal: 10050;
   --nx-z-toast: 11000;
+
+  /* ─── Elevation-pass additive tokens (terminal / marquee / trunk line) ─── */
+  --nx-term-bg: rgba(8, 13, 22, 0.82);
+  --nx-term-chrome: rgba(12, 18, 30, 0.9);
+  --nx-term-glow: 0 0 0 1px var(--nx-border), 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 42px rgba(56, 198, 244, 0.12);
+  --nx-term-green: var(--nx-success);
+  --nx-marquee-dur: 40s;
+  --nx-trunk: linear-gradient(180deg, rgba(56, 198, 244, 0.55), rgba(56, 198, 244, 0.12) 40%, transparent);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
