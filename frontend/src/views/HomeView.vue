@@ -665,19 +665,11 @@ onUnmounted(() => {
  * a [data-v-*] attribute, so this out-specifies any stray global `.reveal{opacity:0}`
  * introduced by an earlier restyle. The global reveal system (main.css) is left
  * untouched — this only completes the `.visible` pair locally so nothing renders at
- * opacity 0 once observed. Kept in exact lockstep with the global reveal spec
- * (translateY(16px) + blur(5px) → none, 700ms) so the two never fight. */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  filter: blur(5px);
-  transition: opacity var(--nx-dur-reveal) var(--nx-ease),
-    transform var(--nx-dur-reveal) var(--nx-ease),
-    filter var(--nx-dur-reveal) var(--nx-ease);
-}
-.reveal.visible { opacity: 1; transform: none; filter: none; }
+ * opacity 0 once observed. */
+.reveal { opacity: 0; transition: opacity var(--nx-dur-reveal, 0.7s) ease; }
+.reveal.visible { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+  .reveal { opacity: 1; transition: none; }
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
@@ -953,6 +945,7 @@ onUnmounted(() => {
   background: var(--nx-bg-raised);
 }
 .services-bento .service-card:hover {
+  box-shadow: inset 0 0 0 1px var(--nx-border-accent), var(--nx-glow-blue);
   border-color: transparent;
   z-index: 2;
 }
@@ -976,7 +969,7 @@ onUnmounted(() => {
 }
 .service-motif__line { display: flex; justify-content: space-between; gap: 12px; }
 .service-motif__k { color: var(--nx-text-dim); }
-.service-motif__v { color: var(--nx-text-hi); }
+.service-motif__v { color: var(--nx-cyan-300); }
 .service-motif-net {
   width: 100%;
   max-width: 220px;
@@ -990,67 +983,20 @@ onUnmounted(() => {
   fill: var(--nx-cyan-400);
   filter: drop-shadow(0 0 5px rgba(56, 198, 244, 0.7));
 }
-
-/* ── Border-scan hover (shared language: service / industry / blog cards) ───
- * A 1px gradient line sweeps once along the top edge on hover, plus a subtle
- * lift. transform/opacity only — no outer glow. */
-.service-card,
-.industry-card,
-.blog-card {
-  position: relative;
-  overflow: hidden;
-  transition: transform var(--nx-dur-fast) var(--nx-ease),
-    border-color var(--nx-dur) var(--nx-ease);
-}
-.service-card::before,
-.industry-card::before,
-.blog-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--nx-cyan-400), transparent);
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: transform var(--nx-dur-slow) var(--nx-ease), opacity var(--nx-dur-slow) var(--nx-ease);
-  pointer-events: none;
-  z-index: 3;
-}
-.service-card:hover::before,
-.industry-card:hover::before,
-.blog-card:hover::before {
-  transform: translateX(100%);
-  opacity: 1;
-}
-.service-card:hover,
-.industry-card:hover,
-.blog-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--nx-border-strong);
-}
-@media (prefers-reduced-motion: reduce) {
-  .service-card::before,
-  .industry-card::before,
-  .blog-card::before { transition: none; }
-  .service-card:hover,
-  .industry-card:hover,
-  .blog-card:hover { transform: none; }
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--nx-card-highlight), var(--nx-glow-blue), var(--nx-shadow-1);
+  border-color: var(--nx-border-accent);
 }
 .service-icon {
   width: 52px; height: 52px;
   border-radius: var(--nx-radius);
-  border: 1px solid var(--nx-border);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--nx-border-accent);
+  background: rgba(61, 139, 253, 0.06);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 20px;
   font-size: 1.3rem;
-  color: var(--nx-text-mut);
-  transition: color var(--nx-dur-fast) var(--nx-ease), border-color var(--nx-dur-fast) var(--nx-ease);
-}
-.service-card:hover .service-icon {
-  color: var(--nx-cyan-300);
-  border-color: var(--nx-border-accent);
+  color: var(--nx-cyan-400);
 }
 .service-title {
   font-size: var(--nx-text-h4);
@@ -1068,11 +1014,11 @@ onUnmounted(() => {
 .service-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
 .service-arrow {
   font-size: 0.82rem;
-  color: var(--nx-text-hi);
+  color: var(--nx-cyan-400);
   font-weight: 600;
   font-family: var(--font-heading);
   opacity: 0;
-  transition: opacity var(--nx-dur) var(--nx-ease);
+  transition: opacity 0.25s;
 }
 .service-card:hover .service-arrow { opacity: 1; }
 .services-cta { text-align: center; margin-top: 48px; position: relative; z-index: 1; }
@@ -1116,7 +1062,7 @@ onUnmounted(() => {
 }
 .product-feature-tagline {
   font-size: 0.88rem;
-  color: var(--nx-text-mut);
+  color: var(--nx-cyan-400);
   font-weight: 600;
   margin-bottom: 10px;
   font-family: var(--font-heading);
@@ -1162,12 +1108,12 @@ onUnmounted(() => {
 .product-feature-arrow {
   position: relative;
   font-size: 0.82rem;
-  color: var(--nx-text-hi);
+  color: var(--nx-cyan-400);
   font-weight: 600;
   font-family: var(--font-heading);
   align-self: flex-end;
   opacity: 0;
-  transition: opacity var(--nx-dur) var(--nx-ease);
+  transition: opacity 0.25s;
 }
 .product-feature-card:hover .product-feature-arrow { opacity: 1; }
 .products-cta { text-align: center; margin-top: 40px; }
@@ -1187,12 +1133,12 @@ onUnmounted(() => {
 }
 .why-check {
   width: 28px; height: 28px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--nx-border-strong);
+  background: rgba(56, 198, 244, 0.12);
+  border: 1px solid rgba(56, 198, 244, 0.3);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  color: var(--nx-text-mut);
+  color: var(--nx-cyan-400);
   font-size: 0.75rem;
   margin-top: 2px;
 }
@@ -1233,28 +1179,23 @@ onUnmounted(() => {
   background: var(--nx-bg-raised);
   text-align: left;
   padding: 32px 28px;
-  transition: background var(--nx-dur) var(--nx-ease),
-    transform var(--nx-dur-fast) var(--nx-ease),
-    border-color var(--nx-dur) var(--nx-ease);
+  transition: background var(--nx-dur) var(--nx-ease), box-shadow var(--nx-dur) var(--nx-ease);
+  position: relative;
 }
 .industry-card:hover {
   background: var(--nx-card-bg-hover);
+  box-shadow: inset 0 0 0 1px var(--nx-border-accent), var(--nx-glow-cyan);
   z-index: 1;
 }
 .industry-icon {
   width: 44px; height: 44px;
-  border: 1px solid var(--nx-border-strong);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--nx-border-accent);
+  background: rgba(56, 198, 244, 0.06);
   border-radius: var(--nx-radius-sm);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 18px;
   font-size: 1.1rem;
-  color: var(--nx-text-mut);
-  transition: color var(--nx-dur-fast) var(--nx-ease), border-color var(--nx-dur-fast) var(--nx-ease);
-}
-.industry-card:hover .industry-icon {
-  color: var(--nx-blue-400);
-  border-color: var(--nx-border-accent);
+  color: var(--nx-cyan-400);
 }
 .industry-card h3 {
   font-family: var(--nx-font-mono);
