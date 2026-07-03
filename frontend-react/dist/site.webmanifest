@@ -1,0 +1,31 @@
+{
+  "name": "Nexxus Tech",
+  "short_name": "Nexxus Tech",
+  "description": "Principal-level consulting in WAF, NetScaler ADC, Zero-Trust, multicloud security, and AI automation.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1C1C1E",
+  "theme_color": "#007BA7",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/nexxus-tech-favicon.png",
+      "sizes": "300x300",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/nexxus-tech-og.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
