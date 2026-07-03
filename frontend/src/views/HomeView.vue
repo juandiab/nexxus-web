@@ -429,9 +429,8 @@ onMounted(async () => {
   initHeroCanvas()
 })
 
-// ── Hero Canvas Network Animation (cursor-spotlight reveal) ──────────────────
+// ── Hero Canvas Network Animation ─────────────────────────────────────────────
 let animFrame = null
-let heroCleanup = null
 function initHeroCanvas() {
   const canvas = heroCanvas.value
   if (!canvas) return
@@ -453,36 +452,9 @@ function initHeroCanvas() {
     r: Math.random() * 2 + 1,
   }))
 
-  // Spotlight: follows the cursor over the hero; drifts on its own otherwise.
-  const SPOT_R = 260
-  const spot = { x: canvas.width * 0.6, y: canvas.height * 0.45 }
-  const mouse = { x: null, y: null }
-  const section = canvas.parentElement
-
-  const onMove = (e) => {
-    const rect = canvas.getBoundingClientRect()
-    mouse.x = e.clientX - rect.left
-    mouse.y = e.clientY - rect.top
-  }
-  const onLeave = () => { mouse.x = null; mouse.y = null }
-  section.addEventListener('pointermove', onMove, { passive: true })
-  section.addEventListener('pointerleave', onLeave, { passive: true })
-
-  const falloff = (d) => {
-    if (d >= SPOT_R) return 0
-    const f = 1 - d / SPOT_R
-    return f * f * (3 - 2 * f) // smoothstep
-  }
-
-  const draw = (t) => {
+  const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     const W = canvas.width, H = canvas.height
-
-    // Spotlight target: cursor, or a slow autonomous drift when idle
-    const tx = mouse.x ?? W * (0.55 + 0.28 * Math.sin(t * 0.00021))
-    const ty = mouse.y ?? H * (0.45 + 0.22 * Math.cos(t * 0.00017))
-    spot.x += (tx - spot.x) * 0.08
-    spot.y += (ty - spot.y) * 0.08
 
     nodes.forEach((n) => {
       n.x += n.vx; n.y += n.vy
@@ -490,29 +462,16 @@ function initHeroCanvas() {
       if (n.y < 0 || n.y > H) n.vy *= -1
     })
 
-    // Ambient glow at the spotlight center
-    const glow = ctx.createRadialGradient(spot.x, spot.y, 0, spot.x, spot.y, SPOT_R)
-    glow.addColorStop(0, 'rgba(0,168,224,0.06)')
-    glow.addColorStop(1, 'rgba(0,168,224,0)')
-    ctx.fillStyle = glow
-    ctx.fillRect(spot.x - SPOT_R, spot.y - SPOT_R, SPOT_R * 2, SPOT_R * 2)
-
-    // Edges: dim base, revealed brightly inside the spotlight
+    // Draw edges
     for (let i = 0; i < NODES; i++) {
       for (let j = i + 1; j < NODES; j++) {
         const dx = nodes[i].x - nodes[j].x
         const dy = nodes[i].y - nodes[j].y
         const dist = Math.sqrt(dx * dx + dy * dy)
         if (dist < 150) {
-          const mx = (nodes[i].x + nodes[j].x) / 2
-          const my = (nodes[i].y + nodes[j].y) / 2
-          const f = falloff(Math.hypot(mx - spot.x, my - spot.y))
-          const base = (1 - dist / 150) * 0.14
-          const alpha = base + (1 - dist / 150) * 0.55 * f
-          ctx.strokeStyle = f > 0.05
-            ? `rgba(0,168,224,${alpha})`
-            : `rgba(0,123,167,${alpha})`
-          ctx.lineWidth = 0.8 + f * 0.6
+          const alpha = (1 - dist / 150) * 0.25
+          ctx.strokeStyle = `rgba(0,123,167,${alpha})`
+          ctx.lineWidth = 0.8
           ctx.beginPath()
           ctx.moveTo(nodes[i].x, nodes[i].y)
           ctx.lineTo(nodes[j].x, nodes[j].y)
@@ -521,64 +480,26 @@ function initHeroCanvas() {
       }
     }
 
-    // Nodes: brighten and halo inside the spotlight
+    // Draw nodes
     nodes.forEach((n) => {
-      const f = falloff(Math.hypot(n.x - spot.x, n.y - spot.y))
-      if (f > 0.05) {
-        ctx.beginPath()
-        ctx.arc(n.x, n.y, n.r + 3 * f, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(0,168,224,${0.18 * f})`
-        ctx.fill()
-      }
       ctx.beginPath()
       ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(0,168,224,${0.45 + 0.55 * f})`
+      ctx.fillStyle = 'rgba(0,168,224,0.7)'
       ctx.fill()
     })
 
     animFrame = requestAnimationFrame(draw)
   }
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (reducedMotion) {
-    // Single static frame, spotlight resting near the headline — no loop
-    draw(0)
-    cancelAnimationFrame(animFrame)
-    animFrame = null
-  } else {
-    animFrame = requestAnimationFrame(draw)
-  }
-
-  heroCleanup = () => {
-    window.removeEventListener('resize', resize)
-    section.removeEventListener('pointermove', onMove)
-    section.removeEventListener('pointerleave', onLeave)
-  }
+  draw()
 }
 
 onUnmounted(() => {
   if (animFrame) cancelAnimationFrame(animFrame)
-  if (heroCleanup) heroCleanup()
 })
 </script>
 
 <style scoped>
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
-/* Hero load-in: staggered blur-rise (scoped to hero; global .reveal untouched) */
-@media (prefers-reduced-motion: no-preference) {
-  .hero .reveal.visible {
-    animation: heroRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  .hero .reveal-delay-1.visible { animation-delay: 0.14s; }
-  .hero .reveal-delay-2.visible { animation-delay: 0.28s; }
-  .hero .reveal-delay-3.visible { animation-delay: 0.42s; }
-  .hero .reveal-delay-4.visible { animation-delay: 0.56s; }
-}
-@keyframes heroRise {
-  from { opacity: 0; transform: translateY(22px); filter: blur(10px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
 .hero {
   min-height: 100vh;
   display: flex;
