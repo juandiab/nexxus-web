@@ -3,17 +3,13 @@ import vue from '@vitejs/plugin-vue'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 
-function readMinifiedCss(relativePath) {
-  return readFileSync(fileURLToPath(new URL(relativePath, import.meta.url)), 'utf8')
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-// Token layer (`--nx-*`) is the new single source of truth and is inlined
-// ahead of critical.css so both are available before first paint.
-const tokensCss = readMinifiedCss('./src/assets/styles/tokens.css')
-const criticalCss = tokensCss + ' ' + readMinifiedCss('./src/assets/styles/critical.css')
+const criticalCss = readFileSync(
+  fileURLToPath(new URL('./src/assets/styles/critical.css', import.meta.url)),
+  'utf8'
+)
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\s+/g, ' ')
+  .trim()
 
 function asyncStylesheetTag(href) {
   return (

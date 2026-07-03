@@ -12,7 +12,6 @@ import '@fontsource/jetbrains-mono/500.css'
 import '@fontsource/jetbrains-mono/600.css'
 import '@fontsource/jetbrains-mono/700.css'
 import 'primeicons/primeicons.css'
-import './assets/styles/tokens.css'
 import './assets/styles/main.css'
 
 const app = createApp(App)
