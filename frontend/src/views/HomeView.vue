@@ -11,13 +11,17 @@
             <span>Trusted by Fortune 500 &amp; Government Agencies Worldwide</span>
           </div>
           <h1 class="hero-title reveal reveal-delay-1">
-            Securing the world's most <span class="hero-accent">critical</span> applications
+            Securing the World's<br />
+            <span class="gradient-text">Most Critical Applications</span>
           </h1>
           <p class="hero-subtitle reveal reveal-delay-2">
             Enterprise cloud, cybersecurity, and AI consulting for CTOs who can't afford downtime.
           </p>
           <p class="hero-subtitle-sub reveal reveal-delay-2">
             Principal-led engagements across <strong>20+ countries</strong> — from Zero-Trust rollouts to AI-driven NetScaler operations.
+          </p>
+          <p class="hero-prompt reveal reveal-delay-2" aria-hidden="true">
+            <span class="hero-prompt-prefix">&gt;</span> NetScaler ADC · F5 BIG-IP · Zero-Trust · secured at scale
           </p>
           <div class="hero-actions reveal reveal-delay-3">
             <RouterLink to="/services" class="btn btn-primary nx-btn nx-btn--primary">
@@ -790,26 +794,17 @@ onUnmounted(() => {
 .hero-title {
   font-family: var(--font-heading);
   font-size: var(--nx-text-display);
-  font-weight: 800;
-  line-height: 1.06;
-  letter-spacing: -0.025em;
+  font-weight: 900;
+  line-height: var(--nx-leading-tight);
+  letter-spacing: var(--nx-tracking-tight);
   color: var(--nx-text-hi);
   margin-bottom: 24px;
-  text-wrap: balance;
 }
-.hero-title .hero-accent {
-  position: relative;
-  color: var(--nx-blue-400);
-}
-.hero-title .hero-accent::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.02em;
-  height: 2px;
-  background: linear-gradient(90deg, var(--nx-blue-500), var(--nx-cyan-400) 70%, transparent);
-  opacity: 0.85;
+.hero-title .gradient-text {
+  background: linear-gradient(90deg, var(--nx-blue-500), var(--nx-cyan-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .hero-subtitle {
   font-size: var(--nx-text-lg);
@@ -827,6 +822,17 @@ onUnmounted(() => {
   margin-bottom: 24px;
 }
 .hero-subtitle-sub strong { color: var(--nx-text); font-weight: 600; }
+.hero-prompt {
+  font-family: var(--nx-font-mono);
+  font-size: var(--nx-text-sm);
+  color: var(--nx-text-dim);
+  margin-bottom: 40px;
+  letter-spacing: 0.01em;
+}
+.hero-prompt-prefix {
+  color: var(--nx-cyan-400);
+  margin-right: 0.5em;
+}
 .hero-actions {
   display: flex;
   gap: 16px;
@@ -926,7 +932,6 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: minmax(200px, auto);
-  grid-auto-flow: dense;
   gap: 0;
   position: relative;
   z-index: 1;
@@ -951,7 +956,7 @@ onUnmounted(() => {
 }
 /* two strategic cells span the board */
 .service-card--wide { grid-column: span 2; }
-.service-card--tall { grid-column: span 2; }
+.service-card--tall { grid-column: span 2; grid-row: span 2; }
 .service-card { cursor: pointer; padding: 32px; display: flex; flex-direction: column; }
 
 /* In-card motifs */
@@ -1217,9 +1222,9 @@ onUnmounted(() => {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 6px 0;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  padding: 8px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 .clients-marquee__track {
   display: inline-flex;
@@ -1232,17 +1237,11 @@ onUnmounted(() => {
 .clients-marquee:hover .clients-marquee__track { animation-play-state: paused; }
 .clients-marquee__item {
   font-family: var(--nx-font-mono);
-  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--nx-text-dim);
   transition: color var(--nx-dur) var(--nx-ease);
-}
-.clients-marquee__item::after {
-  content: '·';
-  margin-left: clamp(2.5rem, 5vw, 5rem);
-  color: var(--nx-border-strong);
 }
 .clients-marquee__item:hover { color: var(--nx-text-hi); }
 @keyframes marqueeScroll {
@@ -1285,18 +1284,8 @@ onUnmounted(() => {
   0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--nx-cyan-400), 0 0 22px rgba(56, 198, 244, 0.45); }
   50% { opacity: 0.6; box-shadow: 0 0 6px var(--nx-cyan-400), 0 0 12px rgba(56, 198, 244, 0.25); }
 }
-/* centered variant: line + node sit ABOVE the label, never through it */
-.section-header-center.nx-trunk-head::before {
-  left: 50%;
-  top: -14px;
-  height: var(--nx-section-y);
-  transform: translate(-0.5px, -100%);
-}
-.section-header-center.nx-trunk-head::after {
-  left: 50%;
-  top: -18px;
-  transform: translateX(-50%);
-}
+.section-header-center.nx-trunk-head::before { left: 50%; }
+.section-header-center.nx-trunk-head::after { left: 50%; transform: translateX(-4px); }
 @media (prefers-reduced-motion: reduce) {
   .nx-trunk-head::after { animation: none; }
 }

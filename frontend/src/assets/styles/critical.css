@@ -255,14 +255,12 @@ main { flex: 1; }
 .hero-title {
   font-family: var(--font-heading);
   font-size: var(--nx-text-display);
-  font-weight: 800;
-  line-height: 1.06;
-  letter-spacing: -0.025em;
+  font-weight: 900;
+  line-height: var(--nx-leading-tight);
+  letter-spacing: var(--nx-tracking-tight);
   color: var(--nx-text-hi);
   margin-bottom: 24px;
-  text-wrap: balance;
 }
-.hero-title .hero-accent { color: var(--nx-blue-400); }
 .hero-subtitle {
   font-size: var(--nx-text-lg);
   color: var(--nx-text);
@@ -278,6 +276,13 @@ main { flex: 1; }
   max-width: 56ch;
   margin-bottom: 24px;
 }
+.hero-prompt {
+  font-family: var(--nx-font-mono);
+  font-size: var(--nx-text-sm);
+  color: var(--nx-text-dim);
+  margin-bottom: 40px;
+}
+.hero-prompt-prefix { color: var(--nx-cyan-400); margin-right: 0.5em; }
 .hero-actions {
   display: flex;
   gap: 16px;
