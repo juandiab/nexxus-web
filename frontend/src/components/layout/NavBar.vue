@@ -109,8 +109,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   display: flex;
   flex-direction: column;
   gap: 2px;
-  container-type: inline-size;
-  min-width: 0;
+  flex-shrink: 0;
 }
 .navbar-wordmark {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -134,7 +133,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 }
 .navbar-tagline {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: clamp(0.5rem, 4.2cqi, 0.65rem);
+  font-size: clamp(0.5rem, 0.75vw, 0.65rem);
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: 0.024em;
@@ -244,7 +243,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .mobile-menu-enter-active, .mobile-menu-leave-active { transition: all 0.3s ease; }
 .mobile-menu-enter-from, .mobile-menu-leave-to { opacity: 0; transform: translateY(-10px); }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .navbar-links { display: none; }
   .hamburger { display: flex; }
 }
