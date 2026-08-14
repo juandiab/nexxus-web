@@ -112,12 +112,11 @@
           </ul>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <img
+          <FeatureZoomImage
             src="/jpilot/feature-design.png"
             alt="JPilot design-to-execution workflow"
-            class="feature-image"
-            width="720"
-            height="480"
+            :width="720"
+            :height="480"
           />
         </div>
       </div>
@@ -139,12 +138,11 @@
           </ul>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <img
+          <FeatureZoomImage
             src="/jpilot/feature-troubleshoot.png"
             alt="JPilot troubleshooting and diagnostics"
-            class="feature-image"
-            width="720"
-            height="480"
+            :width="720"
+            :height="480"
           />
         </div>
       </div>
@@ -160,12 +158,11 @@
           </p>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <img
+          <FeatureZoomImage
             src="/jpilot/feature-isolation.png"
             alt="JPilot enterprise isolation — credentials stay on your infrastructure"
-            class="feature-image"
-            width="720"
-            height="480"
+            :width="720"
+            :height="480"
           />
         </div>
       </div>
@@ -181,12 +178,11 @@
           </p>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <img
+          <FeatureZoomImage
             src="/jpilot/feature-mcp.png"
             alt="JPilot MCP server connecting the copilot to appliance tools"
-            class="feature-image"
-            width="720"
-            height="420"
+            :width="720"
+            :height="420"
           />
         </div>
       </div>
@@ -264,6 +260,7 @@ import JpilotRegisterForm from '@/components/shared/JpilotRegisterForm.vue'
 import Strands from '@/components/shared/Strands.vue'
 import MagicRings from '@/components/shared/MagicRings.vue'
 import GlowButton from '@/components/shared/GlowButton.vue'
+import FeatureZoomImage from '@/components/shared/FeatureZoomImage.vue'
 import { isJpilotRegistered, markJpilotRegistered } from '@/utils/jpilotRegistration.js'
 
 const JPILOT_REDIRECT = 'https://jpilot.nexxus-tech.com'
@@ -471,15 +468,9 @@ const supportedVendors = [
   color: #4a5568;
 }
 
-.feature-image {
+.feature-media :deep(.feature-zoom-trigger) {
   width: 100%;
   height: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  object-position: center;
-  border-radius: var(--nt-radius);
-  display: block;
-  background: #05070c;
 }
 
 /* ── Early Access ─────────────────────────────────────────────────────────── */
@@ -742,7 +733,7 @@ const supportedVendors = [
     order: unset;
   }
 
-  .feature-image {
+  .feature-media {
     height: 240px;
     min-height: 240px;
   }

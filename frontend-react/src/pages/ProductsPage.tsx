@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ExternalLink, Copy, Check } from 'lucide-react'
+import { ExternalLink, Copy, Check, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Aurora from '@/components/Aurora'
 import SpotlightCard from '@/components/SpotlightCard'
@@ -65,6 +65,21 @@ function InstallBlock() {
 export default function ProductsPage() {
   const seo = ROUTE_SEO.products
   const [registered, setRegistered] = useState(false)
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
+
+  useEffect(() => {
+    if (!lightbox) return
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setLightbox(null)
+    }
+    document.addEventListener('keydown', onKeydown)
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKeydown)
+      document.body.style.overflow = previousOverflow
+    }
+  }, [lightbox])
 
   useEffect(() => {
     setRegistered(isJpilotRegistered())
@@ -243,13 +258,25 @@ export default function ProductsPage() {
               Operator for implementation — without leaving the conversation.
             </p>
           </div>
-          <img
-            src="/jpilot/feature-design.png"
-            alt="JPilot design-to-execution workflow"
-            className="h-full min-h-[240px] w-full rounded-[var(--nt-radius)] object-cover reveal reveal-delay-1"
-            width={720}
-            height={480}
-          />
+          <button
+            type="button"
+            className="reveal reveal-delay-1 h-full min-h-[240px] w-full cursor-zoom-in overflow-hidden rounded-[var(--nt-radius)] p-0 transition-[filter,transform] duration-200 hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--nt-primary-l)]"
+            aria-label="View larger: JPilot design-to-execution workflow"
+            onClick={() =>
+              setLightbox({
+                src: '/jpilot/feature-design.png',
+                alt: 'JPilot design-to-execution workflow',
+              })
+            }
+          >
+            <img
+              src="/jpilot/feature-design.png"
+              alt="JPilot design-to-execution workflow"
+              className="h-full min-h-[240px] w-full rounded-[var(--nt-radius)] object-cover"
+              width={720}
+              height={480}
+            />
+          </button>
         </div>
       </section>
 
@@ -297,6 +324,31 @@ export default function ProductsPage() {
           </div>
         </div>
       </section>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[10050] flex cursor-zoom-out items-center justify-center bg-[rgba(5,8,18,0.88)] px-12 py-7 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightbox.alt}
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            className="absolute top-4 right-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] bg-white/10 text-slate-200 hover:bg-white/20 hover:text-white"
+            aria-label="Close image"
+            onClick={() => setLightbox(null)}
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <img
+            src={lightbox.src}
+            alt={lightbox.alt}
+            className="max-h-[88dvh] max-w-[min(1280px,100%)] cursor-default rounded-xl object-contain shadow-[0_24px_80px_rgba(0,0,0,0.5)]"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   )
 }
