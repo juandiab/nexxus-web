@@ -113,7 +113,7 @@
         </div>
         <div class="feature-media reveal reveal-delay-1">
           <FeatureZoomImage
-            src="/jpilot/feature-design.png"
+            src="/jpilot/feature-operations.png"
             alt="JPilot design-to-execution workflow"
             :width="720"
             :height="480"
@@ -139,7 +139,7 @@
         </div>
         <div class="feature-media reveal reveal-delay-1">
           <FeatureZoomImage
-            src="/jpilot/feature-troubleshoot.png"
+            src="/jpilot/feature-reliability.png"
             alt="JPilot troubleshooting and diagnostics"
             :width="720"
             :height="480"

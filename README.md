@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.25** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.26** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,11 @@
 ---
 
 ## Changelog
+
+### v0.26 — 2026-08-14
+- **Products / JPilot** — dedicated Operations and Reliability MCP-style diagrams (`frontend/public/jpilot/feature-operations.png`, `feature-reliability.png`); Isolation and MCP graphics unchanged
+- **Products UX** — click-to-enlarge lightbox on feature images (Vue `FeatureZoomImage`; React lightbox)
+- **React** — Operations feature art wired to the new diagram
 
 ### v0.25 — 2026-08-14
 - **Products / JPilot** — section copy and feature graphics aligned with jpilot.nexxus-tech.com; original site logo (TriArc / `JpilotLogo`) kept — not the landing pulse-mark

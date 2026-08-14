@@ -264,13 +264,13 @@ export default function ProductsPage() {
             aria-label="View larger: JPilot design-to-execution workflow"
             onClick={() =>
               setLightbox({
-                src: '/jpilot/feature-design.png',
+                src: '/jpilot/feature-operations.png',
                 alt: 'JPilot design-to-execution workflow',
               })
             }
           >
             <img
-              src="/jpilot/feature-design.png"
+              src="/jpilot/feature-operations.png"
               alt="JPilot design-to-execution workflow"
               className="h-full min-h-[240px] w-full rounded-[var(--nt-radius)] object-cover"
               width={720}
