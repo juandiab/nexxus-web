@@ -302,6 +302,10 @@ export async function testJpbotSettings(payload) {
   })
 }
 
+export async function listJpilotLeads() {
+  return adminApiRequest('/jpilot/leads')
+}
+
 export async function fetchScStudioServers() {
   return request('/scstudio/servers')
 }

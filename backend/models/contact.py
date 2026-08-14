@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal, Self
 
 from pydantic import BaseModel, EmailStr, field_validator, model_validator
@@ -80,3 +81,15 @@ class JpilotInterestRequest(BaseModel):
 class ContactResponse(BaseModel):
     success: bool
     message: str
+
+
+class JpilotLead(BaseModel):
+    name: str = ""
+    email: str = ""
+    useType: str = ""
+    country: str = ""
+    company: str = ""
+    companySize: str = ""
+    createdAt: datetime | None = None
+    updatedAt: datetime | None = None
+    lastSeenAt: datetime | None = None

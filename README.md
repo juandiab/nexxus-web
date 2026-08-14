@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.26** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.27** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,10 @@
 ---
 
 ## Changelog
+
+### v0.27 — 2026-08-14
+- **JPilot registration email** — visitor auto-reply now includes the full install cookbook (Windows/macOS/Linux commands, wizard steps, early-access notes) in `backend/routers/contact.py`
+- **Admin console** — JPilot leads table at `/adminconsole/jpilot` (`GET /api/admin/jpilot/leads`, `jpilot_admin.py`, `JpilotLeadsView` / `JpilotLeadsPanel`)
 
 ### v0.26 — 2026-08-14
 - **Products / JPilot** — dedicated Operations and Reliability MCP-style diagrams (`frontend/public/jpilot/feature-operations.png`, `feature-reliability.png`); Isolation and MCP graphics unchanged

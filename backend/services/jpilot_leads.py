@@ -13,6 +13,7 @@ async def _ensure_indexes() -> None:
         return
     db = get_database()
     await db[COLLECTION].create_index("email", unique=True)
+    await db[COLLECTION].create_index("createdAt")
     _index_ready = True
 
 
@@ -38,3 +39,25 @@ async def upsert_jpilot_lead(data: JpilotInterestRequest) -> None:
         },
         upsert=True,
     )
+
+
+async def list_jpilot_leads() -> list[dict]:
+    await _ensure_indexes()
+    db = get_database()
+    cursor = db[COLLECTION].find({}).sort("createdAt", -1)
+    leads: list[dict] = []
+    async for doc in cursor:
+        leads.append(
+            {
+                "name": doc.get("name") or "",
+                "email": doc.get("email") or "",
+                "useType": doc.get("useType") or "",
+                "country": doc.get("country") or "",
+                "company": doc.get("company") or "",
+                "companySize": doc.get("companySize") or "",
+                "createdAt": doc.get("createdAt"),
+                "updatedAt": doc.get("updatedAt"),
+                "lastSeenAt": doc.get("lastSeenAt"),
+            }
+        )
+    return leads

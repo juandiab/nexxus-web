@@ -55,6 +55,17 @@ const routes = [
     },
   },
   {
+    path: '/jpilot',
+    name: 'jpilot',
+    component: () => import('@/views/JpilotLeadsView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresSetup: true,
+      requiresAdmin: true,
+      title: 'JPilot',
+    },
+  },
+  {
     path: '/scstudio',
     name: 'scstudio',
     component: () => import('@/views/ScStudioView.vue'),

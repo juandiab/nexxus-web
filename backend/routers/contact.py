@@ -43,6 +43,51 @@ _JPILOT_USE_LABELS = {
     "consultant": "Consultant",
     "personal": "Personal use",
 }
+_JPILOT_LANDING = "https://jpilot.nexxus-tech.com"
+_JPILOT_INSTALL = "https://install.nexxus-tech.com/jpilot"
+_JPILOT_INSTALL_PS1 = "https://install.nexxus-tech.com/jpilot/ps1"
+_JPILOT_REPO = "https://github.com/Nexxus-Tech-SAS/jpilot"
+_JPILOT_TERMS = "https://jpilot.nexxus-tech.com/legal/terms"
+_JPILOT_WIN_CMD = f"irm {_JPILOT_INSTALL_PS1} | iex"
+_JPILOT_UNIX_CMD = f"curl -fsSL {_JPILOT_INSTALL} | bash"
+_JPILOT_PLATFORMS = (
+    {
+        "name": "Windows",
+        "shell": "PowerShell",
+        "command": _JPILOT_WIN_CMD,
+        "hint": "Offers to install Git for Windows + Docker Desktop via winget if missing.",
+    },
+    {
+        "name": "macOS",
+        "shell": "Terminal",
+        "command": _JPILOT_UNIX_CMD,
+        "hint": "Offers to install git + Docker Desktop (Homebrew / Xcode CLT) if missing.",
+    },
+    {
+        "name": "Linux",
+        "shell": "Terminal · Ubuntu recommended",
+        "command": _JPILOT_UNIX_CMD,
+        "hint": "Offers to install git + Docker Engine (apt/dnf/yum/pacman/zypper/apk auto-detected) if missing.",
+    },
+)
+_JPILOT_STEPS = (
+    (
+        "Run the installer",
+        "Paste the command for your platform into PowerShell or a terminal and press Enter.",
+    ),
+    (
+        "Complete the setup wizard",
+        "Configure admin account, domain, TLS, and deploy mode in the browser wizard.",
+    ),
+    (
+        "Save your encryption key",
+        "On the Review step, copy the generated NSAGENT_ENCRYPTION_KEY—it is required to restore or migrate your install.",
+    ),
+    (
+        "Sign in and connect",
+        "Register your appliances and connect your AI provider keys.",
+    ),
+)
 
 
 def _build_team_notification_html(data: ContactRequest) -> str:
@@ -388,6 +433,44 @@ def _build_jpilot_team_html(data: JpilotInterestRequest) -> str:
     """
 
 
+def _jpilot_platform_html() -> str:
+    blocks: list[str] = []
+    for platform in _JPILOT_PLATFORMS:
+        name = escape(platform["name"])
+        shell = escape(platform["shell"])
+        command = escape(platform["command"])
+        hint = escape(platform["hint"])
+        blocks.append(
+            f"""
+            <tr>
+              <td style="padding:0 0 16px;">
+                <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:{_BRAND_DARK};">{name} <span style="font-weight:500;color:{_BRAND_GREY};">· {shell}</span></p>
+                <div style="background:#0F172A;border-radius:8px;padding:12px 14px;font-family:Consolas,'Courier New',monospace;font-size:12px;line-height:1.6;color:#E2E8F0;word-break:break-all;">{command}</div>
+                <p style="margin:6px 0 0;font-size:12px;line-height:1.55;color:{_BRAND_GREY};">{hint}</p>
+              </td>
+            </tr>
+            """
+        )
+    return "".join(blocks)
+
+
+def _jpilot_steps_html() -> str:
+    rows: list[str] = []
+    for index, (title, body) in enumerate(_JPILOT_STEPS, start=1):
+        rows.append(
+            f"""
+            <tr>
+              <td style="padding:8px 0;vertical-align:top;width:28px;font-size:14px;font-weight:700;color:{_BRAND_PRIMARY};">{index}.</td>
+              <td style="padding:8px 0;">
+                <p style="margin:0 0 2px;font-size:14px;font-weight:700;color:{_BRAND_DARK};">{escape(title)}</p>
+                <p style="margin:0;font-size:13px;line-height:1.55;color:#4B5563;">{escape(body)}</p>
+              </td>
+            </tr>
+            """
+        )
+    return "".join(rows)
+
+
 def _build_jpilot_auto_reply_html(data: JpilotInterestRequest) -> str:
     first_name = escape(data.name.split()[0] if data.name.strip() else "there")
     return f"""
@@ -409,17 +492,67 @@ def _build_jpilot_auto_reply_html(data: JpilotInterestRequest) -> str:
               </tr>
               <tr>
                 <td style="padding:0 40px 32px;">
-                  <p style="margin:0 0 20px;font-size:16px;line-height:1.75;color:#374151;">Dear {first_name},</p>
+                  <p style="margin:0 0 16px;font-size:16px;line-height:1.75;color:#374151;">Dear {first_name},</p>
                   <p style="margin:0 0 20px;font-size:15px;line-height:1.75;color:#4B5563;">
                     Thank you for registering your interest in
                     <strong style="color:{_BRAND_DARK};">JPilot</strong>.
                     You can continue to the platform at
-                    <a href="https://jpilot.nexxus-tech.com" style="color:{_BRAND_PRIMARY};text-decoration:none;">jpilot.nexxus-tech.com</a>.
+                    <a href="{_JPILOT_LANDING}" style="color:{_BRAND_PRIMARY};text-decoration:none;">jpilot.nexxus-tech.com</a>.
+                  </p>
+                  <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:{_BRAND_GREY};">Install JPilot</p>
+                  <p style="margin:0 0 16px;font-size:14px;line-height:1.7;color:#4B5563;">
+                    Docker is the only hard prerequisite. The installer can set up git and Docker for you.
+                    After install, the setup wizard opens in your browser (admin account, domain, TLS, deploy mode), then JPilot launches automatically.
+                  </p>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+                    {_jpilot_platform_html()}
+                  </table>
+                  <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:{_BRAND_GREY};">What to do next</p>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                    {_jpilot_steps_html()}
+                  </table>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{_BRAND_LIGHT_BG};border-radius:8px;margin-bottom:20px;">
+                    <tr>
+                      <td style="padding:16px 20px;">
+                        <p style="margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:{_BRAND_GREY};">Early Access · Free Edition</p>
+                        <p style="margin:0 0 10px;font-size:13px;line-height:1.65;color:#374151;">
+                          The Free edition lets your team explore JPilot with your own AI provider keys, on your own infrastructure.
+                          Install during Early Access and we will issue a free license under our
+                          <a href="{_JPILOT_TERMS}" style="color:{_BRAND_PRIMARY};text-decoration:none;">Terms of Use</a>.
+                        </p>
+                        <p style="margin:0;font-size:13px;line-height:1.65;color:#374151;">
+                          Early access is unlimited use in your own environment while we refine the product.
+                          It is not a permanent free tier — an honest preview while the product matures.
+                          Report issues and follow development in the
+                          <a href="{_JPILOT_REPO}" style="color:{_BRAND_PRIMARY};text-decoration:none;">jpilot repository</a>.
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin:0 0 8px;font-size:13px;line-height:1.65;color:#4B5563;">
+                    Installer URL:
+                    <a href="{_JPILOT_INSTALL}" style="color:{_BRAND_PRIMARY};text-decoration:none;">{_JPILOT_INSTALL}</a>
+                    (a thin, auditable proxy to the open-source bootstrap scripts — not a black box).
+                  </p>
+                  <p style="margin:0 0 20px;font-size:13px;line-height:1.65;color:#4B5563;">
+                    Questions? Email
+                    <a href="mailto:support@nexxus-tech.com" style="color:{_BRAND_PRIMARY};text-decoration:none;">support@nexxus-tech.com</a>.
                   </p>
                   <p style="margin:0;font-size:15px;line-height:1.75;color:#4B5563;">
                     With regards,<br>
-                    <strong style="color:{_BRAND_DARK};">The Nexxus Tech Team</strong>
+                    <strong style="color:{_BRAND_DARK};">The Nexxus Tech Team</strong><br>
+                    <span style="font-size:13px;color:{_BRAND_GREY};">WAF · NetScaler · Cloud Security · AI</span>
                   </p>
+                </td>
+              </tr>
+              <tr>
+                <td style="background:{_BRAND_DARK};padding:24px 40px;text-align:center;">
+                  <p style="margin:0 0 6px;font-size:13px;color:#E5E5E5;">
+                    <a href="mailto:contact@nexxus-tech.com" style="color:{_BRAND_PRIMARY_LIGHT};text-decoration:none;">contact@nexxus-tech.com</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://nexxus-tech.com" style="color:{_BRAND_PRIMARY_LIGHT};text-decoration:none;">nexxus-tech.com</a>
+                  </p>
+                  <p style="margin:0;font-size:11px;color:#9CA3AF;">Colombia · UAE · UK · US — Remote engagements worldwide</p>
                 </td>
               </tr>
             </table>
@@ -433,13 +566,37 @@ def _build_jpilot_auto_reply_html(data: JpilotInterestRequest) -> str:
 
 def _build_jpilot_auto_reply_plain(data: JpilotInterestRequest) -> str:
     first_name = data.name.split()[0] if data.name.strip() else "there"
+    platforms = "\n\n".join(
+        f"{p['name']} ({p['shell']})\n  {p['command']}\n  {p['hint']}" for p in _JPILOT_PLATFORMS
+    )
+    steps = "\n".join(
+        f"{index}. {title}\n   {body}" for index, (title, body) in enumerate(_JPILOT_STEPS, start=1)
+    )
     return (
         f"Dear {first_name},\n\n"
         "Thank you for registering your interest in JPilot. "
-        "You can continue to the platform at https://jpilot.nexxus-tech.com\n\n"
+        f"You can continue to the platform at {_JPILOT_LANDING}\n\n"
+        "INSTALL JPILOT\n"
+        "Docker is the only hard prerequisite. The installer can set up git and Docker for you.\n"
+        "After install, the setup wizard opens in your browser (admin account, domain, TLS, "
+        "deploy mode), then JPilot launches automatically.\n\n"
+        f"{platforms}\n\n"
+        "WHAT TO DO NEXT\n"
+        f"{steps}\n\n"
+        "EARLY ACCESS · FREE EDITION\n"
+        "The Free edition lets your team explore JPilot with your own AI provider keys, "
+        "on your own infrastructure. Install during Early Access and we will issue a free "
+        f"license under our Terms of Use: {_JPILOT_TERMS}\n\n"
+        "Early access is unlimited use in your own environment while we refine the product. "
+        "It is not a permanent free tier — an honest preview while the product matures. "
+        f"Report issues and follow development in the repo: {_JPILOT_REPO}\n\n"
+        f"Installer URL: {_JPILOT_INSTALL}\n"
+        "(A thin, auditable proxy to the open-source bootstrap scripts — not a black box.)\n\n"
+        "Questions? Email support@nexxus-tech.com\n\n"
         "With regards,\n"
         "The Nexxus Tech Team\n"
         "contact@nexxus-tech.com\n"
+        "https://nexxus-tech.com\n"
     )
 
 
@@ -482,7 +639,7 @@ async def deliver_jpilot_interest(data: JpilotInterestRequest) -> ContactRespons
         )
         await _send_email(
             to=data.email,
-            subject="Your JPilot registration",
+            subject="Your JPilot registration — install instructions",
             html=_build_jpilot_auto_reply_html(data),
             plain=_build_jpilot_auto_reply_plain(data),
             reply_to=CONTACT_TO,
