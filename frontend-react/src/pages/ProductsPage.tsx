@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ExternalLink, Copy, Check } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Aurora from '@/components/Aurora'
 import SpotlightCard from '@/components/SpotlightCard'
 import { SeoHead } from '@/components/SeoHead'
@@ -9,6 +9,10 @@ import { jsonLdForRoute } from '@/data/structuredData'
 import { products } from '@/data/products'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { JpilotRegisterForm } from '@/components/JpilotRegisterForm'
+import { isJpilotRegistered, markJpilotRegistered } from '@/utils/jpilotRegistration'
+
+const JPILOT_REDIRECT = 'https://jpilot.nexxus-tech.com'
 
 const product = products[0]
 
@@ -60,6 +64,19 @@ function InstallBlock() {
 
 export default function ProductsPage() {
   const seo = ROUTE_SEO.products
+  const [registered, setRegistered] = useState(false)
+
+  useEffect(() => {
+    setRegistered(isJpilotRegistered())
+  }, [])
+
+  const onRegistered = (email: string) => {
+    markJpilotRegistered(email)
+    setRegistered(true)
+    window.setTimeout(() => {
+      window.location.assign(JPILOT_REDIRECT)
+    }, 800)
+  }
 
   return (
     <div id="jpilot" className="products-page">
@@ -93,17 +110,52 @@ export default function ProductsPage() {
             <h1 className="reveal">
               <span className="text-[var(--nt-primary-l)]">JP</span>ilot
             </h1>
+            <p className="mt-2 text-sm tracking-wide text-white/60 reveal">{product.label}</p>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--nt-text-muted)] reveal reveal-delay-1">
               {product.tagline}
+            </p>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-[var(--nt-text-muted)] reveal reveal-delay-1">
+              {product.excerpt}
             </p>
             <p className="mt-2 text-sm text-[var(--nt-text-muted)] reveal reveal-delay-1">
               {product.subline}
             </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-4 reveal reveal-delay-1">
+              {registered ? (
+                <a
+                  href={JPILOT_REDIRECT}
+                  className={cn(buttonVariants({ variant: 'default' }), 'bg-[var(--nt-primary)]')}
+                >
+                  Open JPilot
+                </a>
+              ) : (
+                <a href="#register" className={cn(buttonVariants({ variant: 'default' }), 'bg-[var(--nt-primary)]')}>
+                  Register for access
+                </a>
+              )}
+              <a href={registered ? '#install' : '#register'} className={buttonVariants({ variant: 'outline' })}>
+                {registered ? 'Install JPilot' : 'Get install access'}
+              </a>
+            </div>
           </div>
 
-          <div id="install" className="mx-auto max-w-2xl reveal reveal-delay-2">
-            <InstallBlock />
+          <div className="mx-auto mb-10 max-w-3xl reveal reveal-delay-2">
+            <video
+              controls
+              preload="metadata"
+              poster="/videos/install-poster.jpg"
+              className="aspect-video w-full rounded-[var(--nt-radius)] bg-[var(--nt-dark-3)]"
+            >
+              <source src="/videos/install.webm" type="video/webm" />
+              <source src="/videos/install.mp4" type="video/mp4" />
+            </video>
           </div>
+
+          {registered && (
+            <div id="install" className="mx-auto max-w-2xl reveal reveal-delay-2">
+              <InstallBlock />
+            </div>
+          )}
 
           <div className="mt-8 flex flex-wrap justify-center gap-4 reveal reveal-delay-3">
             <a
@@ -130,8 +182,8 @@ export default function ProductsPage() {
         <div className="container text-center reveal">
           <h2 className="mb-4 text-[var(--nt-light-text)]">Early adopters get a free license</h2>
           <p className="mx-auto max-w-2xl text-gray-600">
-            Install JPilot during Early Access and we&apos;ll issue you a free license under our Terms of Use.
-            Bring your own AI keys, run it on your own infrastructure.
+            The Free edition lets your team explore JPilot with your own AI provider keys, on your own
+            infrastructure. Install during Early Access and we&apos;ll issue a free license under our Terms of Use.
           </p>
         </div>
       </section>
@@ -178,6 +230,60 @@ export default function ProductsPage() {
               <p className="text-sm text-[var(--nt-text-muted)]">{product.earlyAccess.body}</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container grid items-stretch gap-10 lg:grid-cols-2">
+          <div className="reveal flex flex-col justify-center">
+            <span className="section-label">Operations</span>
+            <h2 className="section-title">From design to execution</h2>
+            <p className="text-[var(--nt-text-muted)]">
+              Start in Architect for structured discovery and formal design documents, then hand off to
+              Operator for implementation — without leaving the conversation.
+            </p>
+          </div>
+          <img
+            src="/jpilot/feature-design.png"
+            alt="JPilot design-to-execution workflow"
+            className="h-full min-h-[240px] w-full rounded-[var(--nt-radius)] object-cover reveal reveal-delay-1"
+            width={720}
+            height={480}
+          />
+        </div>
+      </section>
+
+      <section id="register" className="section">
+        <div className="container mx-auto max-w-2xl reveal">
+          {registered ? (
+            <>
+              <div className="mb-8 text-center">
+                <h2 className="section-title">You&apos;re registered</h2>
+                <p className="text-[var(--nt-text-muted)]">
+                  Install JPilot with one command, then continue to the platform.
+                </p>
+              </div>
+              <InstallBlock />
+              <div className="mt-6 text-center">
+                <a
+                  href={JPILOT_REDIRECT}
+                  className={cn(buttonVariants({ variant: 'default' }), 'bg-[var(--nt-primary)]')}
+                >
+                  Open JPilot
+                </a>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mb-8 text-center">
+                <h2 className="section-title">Register for JPilot access</h2>
+                <p className="text-[var(--nt-text-muted)]">
+                  Leave your details to unlock the install command and continue to the platform.
+                </p>
+              </div>
+              <JpilotRegisterForm onRegistered={onRegistered} />
+            </>
+          )}
         </div>
       </section>
 

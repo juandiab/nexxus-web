@@ -44,23 +44,43 @@
           <p class="hero-eyebrow reveal">Introducing</p>
           <JpilotLogo
             variant="hero"
-            tagline="AI Copilot for Network Appliances"
+            tagline="AI-assisted appliance management"
             class="hero-brand reveal"
           />
+          <h2 class="hero-title reveal">Operate NetScaler, Cisco, and F5 with confidence</h2>
           <p class="hero-description reveal">
-            JPilot is an AI management platform for your network appliances — chat to plan, configure, and troubleshoot your ADCs and network infrastructure, all running on hardware you control.
+            JPilot connects your appliance inventory to your own AI provider keys — so your team can plan, configure, and troubleshoot with vendor-aware tools, not generic chat.
           </p>
           <p class="hero-subline reveal reveal-delay-1">
-            Free edition. Bring your own AI keys. Your credentials never leave your network.
+            Free edition. Bring your own AI keys. Credentials never leave your network.
           </p>
+          <div class="hero-stats reveal reveal-delay-1">
+            <div v-for="stat in heroStats" :key="stat.label" class="hero-stat">
+              <span class="hero-stat-value">{{ stat.value }}</span>
+              <span class="hero-stat-label">{{ stat.label }}</span>
+            </div>
+          </div>
+          <div class="hero-actions reveal reveal-delay-1">
+            <GlowButton v-if="!registered" variant="primary">
+              <a href="#register" class="btn btn-primary">Register for access</a>
+            </GlowButton>
+            <GlowButton v-else variant="primary">
+              <a href="https://jpilot.nexxus-tech.com" class="btn btn-primary">Open JPilot</a>
+            </GlowButton>
+            <GlowButton variant="secondary">
+              <a :href="registered ? '#install' : '#register'" class="btn btn-secondary">
+                {{ registered ? 'Install JPilot' : 'Get install access' }}
+              </a>
+            </GlowButton>
+          </div>
         </div>
 
-        <div id="install" class="hero-install reveal reveal-delay-2">
-          <InstallBlock copy-id="hero" />
-        </div>
-
-        <div class="hero-video reveal reveal-delay-3">
+        <div class="hero-video reveal reveal-delay-2">
           <DemoVideo name="install" variant="hero" :lazy="false" />
+        </div>
+
+        <div v-if="registered" id="install" class="hero-install reveal reveal-delay-3">
+          <InstallBlock copy-id="hero" />
         </div>
       </div>
     </section>
@@ -70,7 +90,7 @@
       <div class="container early-access-inner reveal">
         <h2>Early adopters get a free license</h2>
         <p>
-          Install JPilot during Early Access and we'll issue you a free license under our Terms of Use. Bring your own AI keys, run it on your own infrastructure — no cost during Early Access. It's our thank-you for trying JPilot early and helping shape it.
+          The Free edition lets your team explore JPilot with your own AI provider keys, on your own infrastructure. Install during Early Access and we'll issue a free license under our Terms of Use.
         </p>
         <RouterLink to="/legal" class="early-access-terms-link">Read the Terms of Use</RouterLink>
       </div>
@@ -80,13 +100,25 @@
     <section class="feature-section section-light">
       <div class="container feature-grid">
         <div class="feature-copy reveal">
-          <h2>Talk to your appliances in plain language</h2>
+          <span class="feature-badge">Operations</span>
+          <h2>From design to execution</h2>
           <p>
-            Ask JPilot to check a vServer's health, trace an nFactor flow, or explain why a policy isn't binding. It knows the CLI, the Next-Gen API, and the diagnostics — across NetScaler, F5 BIG-IP, and Cisco IOS/XE — so you don't have to remember every command.
+            Start in Architect for structured discovery and formal design documents, then hand off to Operator for implementation — without leaving the conversation.
           </p>
+          <ul class="feature-list">
+            <li>Guided jpilot-form blocks for load balancers and policies</li>
+            <li>Send to Operator from design deliverables in one click</li>
+            <li>Memory-guided RAG gates API and CLI usage before execution</li>
+          </ul>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <DemoVideo name="section-chat" />
+          <img
+            src="/jpilot/feature-design.png"
+            alt="JPilot design-to-execution workflow"
+            class="feature-image"
+            width="720"
+            height="480"
+          />
         </div>
       </div>
     </section>
@@ -95,13 +127,25 @@
     <section class="feature-section">
       <div class="container feature-grid feature-grid--reverse">
         <div class="feature-copy reveal">
-          <h2>Architect, Operator, Analyst</h2>
+          <span class="feature-badge">Reliability</span>
+          <h2>Troubleshoot with context</h2>
           <p>
-            Three roles, one platform. Architect plans designs and produces formal docs. Operator makes the changes on the appliance. Analyst troubleshoots read-first. Hand off a design straight to Operator with one click.
+            Analyst mode stays read-first while diagnostics, official documentation search, and appliance telemetry keep investigations grounded in your environment.
           </p>
+          <ul class="feature-list">
+            <li>NetScaler ping, traceroute, port checks, and nsconmsg collection</li>
+            <li>Brave Search limited to vendor official domains per platform</li>
+            <li>Dual-pane chat with model-aware context usage rings</li>
+          </ul>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <DemoVideo name="section-roles" />
+          <img
+            src="/jpilot/feature-troubleshoot.png"
+            alt="JPilot troubleshooting and diagnostics"
+            class="feature-image"
+            width="720"
+            height="480"
+          />
         </div>
       </div>
     </section>
@@ -110,13 +154,19 @@
     <section class="feature-section section-light">
       <div class="container feature-grid">
         <div class="feature-copy reveal">
-          <h2>Your keys, your data, your hardware</h2>
+          <h2>Your keys, your infrastructure</h2>
           <p>
-            JPilot is self-hosted Docker. Bring your own AI provider — OpenAI, Anthropic, Gemini, Bedrock, or a local LM Studio model. Appliance credentials are encrypted at rest with Fernet and are never sent to the LLM. Nexxus-Tech never sees your traffic or pays for your inference.
+            Point JPilot at a local model (LM Studio) or your enterprise LLM (Azure OpenAI, AWS Bedrock, private endpoints). Traffic and appliance context stay inside your infrastructure — not a shared SaaS pool. You choose the provider and pay for inference.
           </p>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <DemoVideo name="section-providers" />
+          <img
+            src="/jpilot/feature-isolation.png"
+            alt="JPilot enterprise isolation — credentials stay on your infrastructure"
+            class="feature-image"
+            width="720"
+            height="480"
+          />
         </div>
       </div>
     </section>
@@ -127,11 +177,17 @@
         <div class="feature-copy reveal">
           <h2>Built on MCP</h2>
           <p>
-            The copilot runs on a Model Context Protocol server with tools for the Next-Gen API, classic CLI over SSH, diagnostics, and SSL/CSR generation. Each vendor's knowledge lives in editable memory files — yours to audit and extend.
+            The copilot runs on a Model Context Protocol server with tools for the Next-Gen API, classic CLI over SSH, NITRO helpers, diagnostics, and SSL CSR generation. Architect, Operator, and Analyst workflows are shaped by NetScaler, Cisco, and F5 SME practice — plus recommended actions in the command menu.
           </p>
         </div>
         <div class="feature-media reveal reveal-delay-1">
-          <DemoVideo name="section-mcp" />
+          <img
+            src="/jpilot/feature-mcp.png"
+            alt="JPilot MCP server connecting the copilot to appliance tools"
+            class="feature-image"
+            width="720"
+            height="420"
+          />
         </div>
       </div>
     </section>
@@ -141,7 +197,7 @@
       <div class="container platforms-inner">
         <div class="platforms-header reveal">
           <h2>Supported platforms</h2>
-          <p>JPilot speaks each vendor's native CLI and API. More vendors are on the way.</p>
+          <p>Register NetScaler ADC, SDX, Cisco IOS/XE, and F5 BIG-IP — one inventory, native CLI and API for each vendor.</p>
         </div>
         <ul class="platforms-grid reveal reveal-delay-1">
           <li v-for="vendor in supportedVendors" :key="vendor.name" class="platform-card">
@@ -158,21 +214,27 @@
       </div>
     </section>
 
-    <!-- Bottom CTA -->
-    <section class="cta-section">
+    <!-- Registration CTA -->
+    <section id="register" class="cta-section">
       <div class="container cta-inner reveal">
-        <h2>Get started</h2>
-        <p>One command. Self-hosted. Your infrastructure.</p>
-        <InstallBlock copy-id="footer" />
+        <template v-if="!registered">
+          <h2>Register for JPilot access</h2>
+          <p>Leave your details to unlock the install command and continue to the platform.</p>
+          <JpilotRegisterForm class="cta-form" @registered="onRegistered" />
+        </template>
+        <template v-else>
+          <h2>You're registered</h2>
+          <p>Install JPilot with one command, then continue to the platform.</p>
+          <div class="cta-install">
+            <InstallBlock copy-id="footer" />
+          </div>
+        </template>
         <div class="cta-actions">
-          <GlowButton variant="primary">
-            <a href="#install" class="btn btn-primary">Install now</a>
+          <GlowButton v-if="registered" variant="primary">
+            <a href="https://jpilot.nexxus-tech.com" class="btn btn-primary">Open JPilot</a>
           </GlowButton>
           <GlowButton variant="secondary">
             <router-link to="/book-demo" class="btn btn-secondary">Book a demo</router-link>
-          </GlowButton>
-          <GlowButton variant="secondary">
-            <a href="mailto:support@nexxus-tech.com" class="btn btn-secondary">Contact us</a>
           </GlowButton>
         </div>
       </div>
@@ -186,7 +248,7 @@
           <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
         </p>
         <p class="product-disclaimer reveal">
-          Not affiliated with, endorsed by, or sponsored by Citrix, F5, or Cisco. All trademarks belong to their owners.
+          JPilot is an independent product by Nexxus-Tech SAS. It is not affiliated with, endorsed by, sponsored by, or certified by Cloud Software Group (Citrix / NetScaler), Cisco Systems, F5 Networks, or their affiliates. NetScaler, Citrix, Cisco, F5 BIG-IP, and related names are trademarks of their respective owners and are used here only for identification and interoperability.
         </p>
       </div>
     </section>
@@ -194,16 +256,40 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue'
 import InstallBlock from '@/components/shared/InstallBlock.vue'
 import DemoVideo from '@/components/shared/DemoVideo.vue'
 import JpilotLogo from '@/components/shared/JpilotLogo.vue'
+import JpilotRegisterForm from '@/components/shared/JpilotRegisterForm.vue'
 import Strands from '@/components/shared/Strands.vue'
 import MagicRings from '@/components/shared/MagicRings.vue'
 import GlowButton from '@/components/shared/GlowButton.vue'
+import { isJpilotRegistered, markJpilotRegistered } from '@/utils/jpilotRegistration.js'
+
+const JPILOT_REDIRECT = 'https://jpilot.nexxus-tech.com'
 
 /** Toggle hero background effects — flip to show Strands instead of MagicRings later. */
 const HERO_BG_STRANDS = false
 const HERO_BG_MAGIC_RINGS = true
+const registered = ref(false)
+
+onMounted(() => {
+  registered.value = isJpilotRegistered()
+})
+
+function onRegistered(email) {
+  markJpilotRegistered(email)
+  registered.value = true
+  window.setTimeout(() => {
+    window.location.assign(JPILOT_REDIRECT)
+  }, 800)
+}
+
+const heroStats = [
+  { value: '4', label: 'Vendor platforms' },
+  { value: 'BYOK', label: 'Your AI keys' },
+  { value: 'MCP', label: 'Tool-calling agent' },
+]
 
 const supportedVendors = [
   { name: 'NetScaler MPX', status: 'available' },
@@ -258,7 +344,56 @@ const supportedVendors = [
 }
 
 .hero-brand {
-  margin: 0 0 22px;
+  margin: 0 0 18px;
+}
+
+.hero-title {
+  margin: 0 0 12px;
+  max-width: 36rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px 28px;
+  margin: 20px 0 0;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 88px;
+}
+
+.hero-stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--nt-primary-l);
+}
+
+.hero-stat-label {
+  font-size: 0.75rem;
+  color: var(--nt-text-muted);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.hero-video {
+  width: 100%;
+  max-width: 720px;
+  margin: 8px auto 28px;
 }
 
 .hero-eyebrow {
@@ -293,10 +428,58 @@ const supportedVendors = [
   margin-bottom: 24px;
 }
 
-.hero-video {
+.feature-badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--nt-primary);
+  font-family: var(--font-heading);
+}
+
+.feature-list {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--nt-text-muted);
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nt-primary-l);
+}
+
+.section-light .feature-list li {
+  color: #4a5568;
+}
+
+.feature-image {
   width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--nt-radius);
+  display: block;
+  background: #05070c;
 }
 
 /* ── Early Access ─────────────────────────────────────────────────────────── */
@@ -347,7 +530,7 @@ const supportedVendors = [
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(28px, 4vw, 48px);
-  align-items: center;
+  align-items: stretch;
   max-width: 1080px;
   margin: 0 auto;
 }
@@ -362,6 +545,9 @@ const supportedVendors = [
 
 .feature-copy {
   max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .feature-copy h2 {
@@ -380,7 +566,10 @@ const supportedVendors = [
 .feature-media {
   width: 100%;
   max-width: 720px;
-  justify-self: center;
+  justify-self: stretch;
+  display: flex;
+  align-self: stretch;
+  min-height: 0;
 }
 
 .section-light .feature-copy p {
@@ -475,6 +664,7 @@ const supportedVendors = [
 .cta-section {
   padding: clamp(48px, 7vh, 72px) 0;
   border-top: 1px solid rgba(0, 123, 167, 0.15);
+  scroll-margin-top: 96px;
 }
 
 .cta-inner {
@@ -494,7 +684,9 @@ const supportedVendors = [
   font-size: 0.95rem;
 }
 
-.cta-inner :deep(.install-block) {
+.cta-form,
+.cta-install {
+  max-width: 640px;
   margin: 0 auto 28px;
 }
 
@@ -550,6 +742,11 @@ const supportedVendors = [
     order: unset;
   }
 
+  .feature-image {
+    height: 240px;
+    min-height: 240px;
+  }
+
 }
 
 @media (max-width: 767px) {
@@ -558,7 +755,7 @@ const supportedVendors = [
   }
 
   .hero-brand {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .hero-description {

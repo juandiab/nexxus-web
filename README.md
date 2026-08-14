@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.22** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.25** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,15 @@
 ---
 
 ## Changelog
+
+### v0.25 — 2026-08-14
+- **Products / JPilot** — section copy and feature graphics aligned with jpilot.nexxus-tech.com; original site logo (TriArc / `JpilotLogo`) kept — not the landing pulse-mark
+- **Hero** — demo video restored (`/videos/install`); feature images aligned to section height; new “Built on MCP” graphic (`frontend/public/jpilot/feature-mcp.png`)
+- **Registration** — English CTA: Name, Email, Use type (Company / Consultant / Personal use), Country; Company + company size when Company; optional company for Consultant; install instructions hidden until registered
+- **Lead capture** — after register: upsert MongoDB `jpilotLeads`, email the team, reveal install, redirect to https://jpilot.nexxus-tech.com
+- **Returning visitors** — localStorage `jpilotRegistered` + cookie `jpilot_registered` show install again
+- **Backend** — `POST /api/jpilot-interest` via `backend/services/jpilot_leads.py`; nginx rate limit on the new endpoint
+- **React** — products page aligned where applicable
 
 ### v0.22 — 2026-06-27
 - **Navbar branding** — static SVG replaced with animated Nexxus wordmark on all routes: `NxConnectionRings` loader (1px cyan rings), JetBrains Mono `NEXXUSTECH` title with Term-OS blinking cursor, and muted tagline (`Consulting . Cloud . Security . AI`)

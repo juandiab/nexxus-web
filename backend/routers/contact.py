@@ -7,7 +7,8 @@ from email.mime.multipart import MIMEMultipart
 from fastapi import APIRouter, HTTPException
 
 from models.chat import ChatProfile
-from models.contact import ContactRequest, ContactResponse
+from models.contact import ContactRequest, ContactResponse, JpilotInterestRequest
+from services.jpilot_leads import upsert_jpilot_lead
 from services.jpbot_email import (
     build_team_jpbot_html,
     build_team_plain_text,
@@ -33,6 +34,15 @@ SUCCESS_MESSAGE = (
     "Thank you — your message has been received. "
     "A confirmation has been sent to your inbox; we will be in touch within one business day."
 )
+JPILOT_INTEREST_MESSAGE = (
+    "Thank you — your JPilot registration has been received. "
+    "You can continue to the platform."
+)
+_JPILOT_USE_LABELS = {
+    "company": "Company",
+    "consultant": "Consultant",
+    "personal": "Personal use",
+}
 
 
 def _build_team_notification_html(data: ContactRequest) -> str:
@@ -316,6 +326,178 @@ async def deliver_jpbot_enquiry(
         ) from exc
 
 
+def _build_jpilot_team_html(data: JpilotInterestRequest) -> str:
+    name = escape(data.name)
+    email = escape(data.email)
+    country = escape(data.country)
+    use_type = escape(_JPILOT_USE_LABELS.get(data.use_type, data.use_type))
+    company = escape(data.company) if data.company else "—"
+    company_size = escape(data.company_size) if data.company_size else "—"
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <body style="margin:0;padding:0;background:{_BRAND_LIGHT_BG};font-family:'Segoe UI',Arial,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{_BRAND_LIGHT_BG};padding:32px 16px;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+              <tr>
+                <td style="background:linear-gradient(135deg,{_BRAND_DARK} 0%,#2E2E32 100%);padding:28px 32px;">
+                  <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{_BRAND_PRIMARY_LIGHT};">JPilot Registration</p>
+                  <h1 style="margin:0;font-size:22px;font-weight:700;color:#FFFFFF;">New access request from {name}</h1>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:32px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;width:130px;color:{_BRAND_GREY};font-size:13px;font-weight:600;">Name</td>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_DARK};font-size:14px;">{name}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_GREY};font-size:13px;font-weight:600;">Email</td>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;font-size:14px;"><a href="mailto:{email}" style="color:{_BRAND_PRIMARY};text-decoration:none;">{email}</a></td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_GREY};font-size:13px;font-weight:600;">Use type</td>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_DARK};font-size:14px;">{use_type}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_GREY};font-size:13px;font-weight:600;">Country</td>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_DARK};font-size:14px;">{country}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_GREY};font-size:13px;font-weight:600;">Company</td>
+                      <td style="padding:10px 0;border-bottom:1px solid #E5E7EB;color:{_BRAND_DARK};font-size:14px;">{company}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 0;color:{_BRAND_GREY};font-size:13px;font-weight:600;">Company size</td>
+                      <td style="padding:10px 0;color:{_BRAND_DARK};font-size:14px;">{company_size}</td>
+                    </tr>
+                  </table>
+                  <p style="margin:24px 0 0;font-size:12px;color:#9CA3AF;">Reply directly to this sender — Reply-To is set to their address.</p>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:16px 0 0;font-size:11px;color:#9CA3AF;">Sent via nexxus-tech.com JPilot registration form</p>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+    """
+
+
+def _build_jpilot_auto_reply_html(data: JpilotInterestRequest) -> str:
+    first_name = escape(data.name.split()[0] if data.name.strip() else "there")
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <body style="margin:0;padding:0;background:{_BRAND_LIGHT_BG};font-family:'Segoe UI',Arial,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{_BRAND_LIGHT_BG};padding:40px 16px;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+              <tr>
+                <td style="height:4px;background:linear-gradient(90deg,{_BRAND_PRIMARY},{_BRAND_PRIMARY_LIGHT});"></td>
+              </tr>
+              <tr>
+                <td style="padding:40px 40px 24px;text-align:center;">
+                  <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:{_BRAND_PRIMARY};">JPilot</p>
+                  <h1 style="margin:0;font-size:26px;font-weight:700;color:{_BRAND_DARK};line-height:1.3;">You're registered</h1>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 40px 32px;">
+                  <p style="margin:0 0 20px;font-size:16px;line-height:1.75;color:#374151;">Dear {first_name},</p>
+                  <p style="margin:0 0 20px;font-size:15px;line-height:1.75;color:#4B5563;">
+                    Thank you for registering your interest in
+                    <strong style="color:{_BRAND_DARK};">JPilot</strong>.
+                    You can continue to the platform at
+                    <a href="https://jpilot.nexxus-tech.com" style="color:{_BRAND_PRIMARY};text-decoration:none;">jpilot.nexxus-tech.com</a>.
+                  </p>
+                  <p style="margin:0;font-size:15px;line-height:1.75;color:#4B5563;">
+                    With regards,<br>
+                    <strong style="color:{_BRAND_DARK};">The Nexxus Tech Team</strong>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+    """
+
+
+def _build_jpilot_auto_reply_plain(data: JpilotInterestRequest) -> str:
+    first_name = data.name.split()[0] if data.name.strip() else "there"
+    return (
+        f"Dear {first_name},\n\n"
+        "Thank you for registering your interest in JPilot. "
+        "You can continue to the platform at https://jpilot.nexxus-tech.com\n\n"
+        "With regards,\n"
+        "The Nexxus Tech Team\n"
+        "contact@nexxus-tech.com\n"
+    )
+
+
+def _jpilot_team_plain(data: JpilotInterestRequest) -> str:
+    use_type = _JPILOT_USE_LABELS.get(data.use_type, data.use_type)
+    return (
+        f"New JPilot registration\n"
+        f"Name: {data.name}\n"
+        f"Email: {data.email}\n"
+        f"Use type: {use_type}\n"
+        f"Country: {data.country}\n"
+        f"Company: {data.company or '—'}\n"
+        f"Company size: {data.company_size or '—'}\n"
+    )
+
+
+async def deliver_jpilot_interest(data: JpilotInterestRequest) -> ContactResponse:
+    try:
+        await upsert_jpilot_lead(data)
+    except Exception as exc:
+        print(f"[JPILOT DB ERROR] {exc}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to save registration. Please try again or email contact@nexxus-tech.com directly.",
+        ) from exc
+
+    if not SMTP_USER or not SMTP_PASS:
+        print(f"[JPILOT] (dev) Team notification → {CONTACT_TO}")
+        print(_jpilot_team_plain(data))
+        print(f"[JPILOT] (dev) Auto-reply → {data.email}")
+        return ContactResponse(success=True, message=JPILOT_INTEREST_MESSAGE)
+
+    try:
+        await _send_email(
+            to=CONTACT_TO,
+            subject=f"[JPilot] New registration from {data.name}",
+            html=_build_jpilot_team_html(data),
+            plain=_jpilot_team_plain(data),
+            reply_to=data.email,
+        )
+        await _send_email(
+            to=data.email,
+            subject="Your JPilot registration",
+            html=_build_jpilot_auto_reply_html(data),
+            plain=_build_jpilot_auto_reply_plain(data),
+            reply_to=CONTACT_TO,
+        )
+    except Exception as exc:
+        print(f"[JPILOT EMAIL ERROR] {exc}")
+
+    return ContactResponse(success=True, message=JPILOT_INTEREST_MESSAGE)
+
+
 @router.post("/contact", response_model=ContactResponse)
 async def send_contact(data: ContactRequest):
     return await deliver_contact_enquiry(data)
+
+
+@router.post("/jpilot-interest", response_model=ContactResponse)
+async def send_jpilot_interest(data: JpilotInterestRequest):
+    return await deliver_jpilot_interest(data)

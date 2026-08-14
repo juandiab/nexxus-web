@@ -13,14 +13,13 @@ export const products = [
     logoLight: JPILOT_LOGOS.light,
     logoAlt: 'JPilot',
     edition: 'Free Edition',
-    label: 'AI Copilot for Network Appliances',
-    eyebrow: 'AI copilot for network appliances',
-    tagline:
-      'AI copilot for NetScaler, F5, and Cisco — self-hosted on your infrastructure, BYO AI keys.',
+    label: 'AI-assisted appliance management',
+    eyebrow: 'AI-assisted appliance management',
+    tagline: 'Operate NetScaler, Cisco, and F5 with confidence',
     subline:
-      'Free edition. Bring your own AI keys. Your credentials never leave your network.',
+      'Free edition. Bring your own AI keys. Credentials never leave your network.',
     excerpt:
-      'Self-hosted AI copilot for NetScaler, F5, and Cisco. Plain-language CLI and API access, BYO keys.',
+      'JPilot connects your appliance inventory to your own AI provider keys — plan, configure, and troubleshoot with vendor-aware tools.',
     tags: ['NetScaler', 'Cisco', 'F5', 'BYO AI', 'Open Source'],
     metrics: [
       { value: '3', label: 'Agent Roles' },
@@ -80,34 +79,34 @@ export const products = [
     },
     capabilities: [
       {
-        title: 'Multi-vendor appliances',
+        title: 'Multi-vendor inventory',
         icon: 'pi pi-sitemap',
-        body: 'NetScaler ADC (MPX/VPX), NetScaler SDX, Cisco IOS/XE, and F5 BIG-IP—one interface, same guardrails on every stack.',
+        body: 'Register NetScaler ADC, SDX, Cisco IOS/XE, and F5 BIG-IP with encrypted credentials and tags for filtering.',
       },
       {
-        title: 'Bring your own AI',
-        icon: 'pi pi-key',
-        body: 'Connect OpenAI, Anthropic, Gemini, Grok, DeepSeek, OpenRouter, LM Studio, or any OpenAI-compatible endpoint. For enterprise privacy, use AWS Bedrock or Azure OpenAI so inference runs in your AWS or Azure account—your data stays in your company’s cloud, not a shared public API. You hold the keys and pay your provider; JPilot only connects to what you configure.',
-      },
-      {
-        title: 'Role-based agents',
+        title: 'JPilot chat roles',
         icon: 'pi pi-users',
-        body: 'Architect (design docs), Operator (configure), Analyst (read-first troubleshooting)—tool-calling chat with human approval gates.',
+        body: 'Architect, Operator, and Analyst personas with tool-calling bound to the selected appliance — credentials never sent to the LLM.',
       },
       {
-        title: 'Design → operate workflow',
-        icon: 'pi pi-arrow-right-arrow-left',
-        body: 'Memory-guided MCP tools for Next-Gen API, CLI-over-SSH, diagnostics, and SSL—search real syntax before suggesting or executing work.',
+        title: 'Bring your own keys',
+        icon: 'pi pi-key',
+        body: 'Connect OpenAI, Anthropic, Gemini, Azure OpenAI, AWS Bedrock, OpenRouter, or a local endpoint. You choose the provider and pay for inference.',
       },
       {
-        title: 'Credential isolation',
-        icon: 'pi pi-shield',
-        body: 'Appliance credentials are encrypted and never sent to the LLM.',
+        title: 'SME engineer skills',
+        icon: 'pi pi-book',
+        body: 'Architect, Operator, and Analyst workflows, prompts, and memory files are built from NetScaler, Cisco, and F5 SME practice — plus recommended actions in the command menu.',
       },
       {
-        title: 'Passkey access',
+        title: 'MCP tool server',
+        icon: 'pi pi-wrench',
+        body: 'Next-Gen API, classic CLI over SSH, NITRO helpers, diagnostics, and SSL CSR generation exposed to the agent.',
+      },
+      {
+        title: 'Enterprise-ready auth',
         icon: 'pi pi-lock',
-        body: 'Sign in with passkeys (biometrics) for phishing-resistant access to JPilot. Admins can configure passkey policy under Settings → Security—optional, enabled, or enforced for your team.',
+        body: 'Password login, optional passkeys, account recovery, and admin user management with role-based access.',
       },
     ],
     trust: {
@@ -132,9 +131,10 @@ export const products = [
     },
     links: {
       install: 'https://install.nexxus-tech.com/jpilot',
+      landing: 'https://jpilot.nexxus-tech.com',
       blog: '/blog/jpilot-ai-management-platform',
     },
     disclaimer:
-      'JPilot is an independent project and is not affiliated with, endorsed by, or sponsored by Cloud Software Group, Inc., F5, Inc., or Cisco Systems, Inc. NetScaler is a trademark of Cloud Software Group, Inc. BIG-IP and F5 are trademarks of F5, Inc. Cisco and IOS are trademarks of Cisco Systems, Inc.',
+      'JPilot is an independent product by Nexxus-Tech SAS. It is not affiliated with, endorsed by, sponsored by, or certified by Cloud Software Group (Citrix / NetScaler), Cisco Systems, F5 Networks, or their affiliates. NetScaler, Citrix, Cisco, F5 BIG-IP, and related names are trademarks of their respective owners and are used here only for identification and interoperability.',
   },
 ]
