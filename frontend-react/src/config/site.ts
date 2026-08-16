@@ -125,6 +125,8 @@ export const SOFTWARE_PRODUCTS = [
 
 /** Static blog slugs for sitemap generation (mirrors backend/data/blog_posts.json). */
 export const BLOG_SLUGS = [
+  'deploying-my-first-apple-watch-app',
+  'build-a-terminal-llm-helper-for-ubuntu-in-python',
   'jpilot-ai-management-platform',
   'netscaler-hybrid-post-quantum-cryptography',
   'netscaler-waf-top10-owasp-2024',

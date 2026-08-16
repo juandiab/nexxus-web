@@ -41,6 +41,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://nexxus-tech.com/blog/deploying-my-first-apple-watch-app</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nexxus-tech.com/blog/build-a-terminal-llm-helper-for-ubuntu-in-python</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://nexxus-tech.com/blog/jpilot-ai-management-platform</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>yearly</changefreq>
