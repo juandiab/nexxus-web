@@ -4,6 +4,8 @@ Most of my production deploys involve load balancers, WAF profiles, and change w
 
 This is a first-ship guide, not a SwiftUI tutorial. If the app already runs in the simulator, the remaining work is project shape, signing, TestFlight, and App Store Connect metadata.
 
+![A late-night desk: SwiftUI on the laptop and the watch app running on a charging puck.](/images/blog/watch-desk-first-ship.jpg)
+
 ## Pick the project shape before you write more code
 
 Apple supports three shapes. Pick one on day one. Changing later is possible, but it rewrites bundle IDs, entitlements, and the App Store record.
@@ -13,6 +15,8 @@ Apple supports three shapes. Pick one on day one. Changing later is possible, bu
 | **Watch-only** | The iPhone app would be an empty shell | Apple Watch only |
 | **Independent watch + iPhone** | Phone and watch are useful on their own | Either, or both |
 | **Dependent watch + iPhone** | The watch app cannot work without the phone | Watch waits until the iPhone app is installed |
+
+![Watch-only, independent, and dependent project shapes.](/images/blog/watch-project-shapes.jpg)
 
 For a first app, **Watch-only** is the cleanest path if you do not need HealthKit sync, WatchConnectivity, or a phone UI. Apple documents this as an [independent watchOS app](https://developer.apple.com/documentation/watchos-apps/creating-independent-watchos-apps/). Users expect the watch app to work when the iPhone is in another room. Independent is the default you want unless you have a hard dependency.
 
@@ -92,6 +96,8 @@ Also decide **export compliance** early. If the app only uses HTTPS through Appl
 
 This is the step that feels wrong the first time.
 
+![Validate, upload, and TestFlight — the archive still ships as an iOS-shaped box.](/images/blog/watch-archive-upload.jpg)
+
 1. Select **Any watchOS Device (arm64_32)** — not a simulator.
 2. Confirm the scheme's **Archive** action builds the iOS container, which embeds the watch app.
 3. **Product → Archive**
@@ -127,6 +133,8 @@ Testers install **TestFlight on iPhone**, accept the invite, then install the wa
 A build stays testable for **90 days**. Bump the build number for every upload. Keep the marketing version stable until you actually ship 1.0.
 
 Walk the watch with the phone in another room. That is the test the simulator cannot fake: independent install, permissions, and any network call you assumed would ride the phone.
+
+![The real test: the watch app running on a wrist while the phone stays behind.](/images/blog/watch-independent-wrist.jpg)
 
 ## The mistakes that blocked my first upload
 

@@ -52,6 +52,19 @@ function titlesMatch(a, b) {
   return a.trim().toLowerCase() === b.trim().toLowerCase()
 }
 
+const IMAGE_LINE = /^!\[([^\]]*)\]\(([^)]+)\)$/
+
+function renderImage(line) {
+  const match = line.trim().match(IMAGE_LINE)
+  if (!match) return ''
+  const alt = escapeHtml(match[1])
+  const src = escapeHtml(match[2])
+  const caption = match[1]
+    ? `<figcaption>${escapeHtml(match[1])}</figcaption>`
+    : ''
+  return `<figure class="md-figure"><img src="${src}" alt="${alt}" loading="lazy">${caption}</figure>`
+}
+
 /**
  * @param {string} md
  * @param {{ skipTitle?: string }} [options]
@@ -135,6 +148,12 @@ export function renderMarkdown(md, options = {}) {
       continue
     }
 
+    if (IMAGE_LINE.test(line.trim())) {
+      htmlParts.push(renderImage(line))
+      index += 1
+      continue
+    }
+
     if (line.startsWith('> ')) {
       const quoteLines = []
       while (index < lines.length && lines[index].startsWith('> ')) {
@@ -165,6 +184,7 @@ export function renderMarkdown(md, options = {}) {
       !lines[index].startsWith('> ') &&
       !/^```/.test(lines[index]) &&
       !/^[-*] /.test(lines[index]) &&
+      !IMAGE_LINE.test(lines[index].trim()) &&
       !(lines[index].includes('|') && index + 1 < lines.length && isTableSeparator(lines[index + 1]))
     ) {
       paragraphLines.push(lines[index])
