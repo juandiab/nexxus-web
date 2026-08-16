@@ -99,6 +99,7 @@ Short wrap-up.
 - `` `inline code` ``
 - ` ``` ` fenced code blocks (optional language label)
 - `[link text](/contact)` or `[text](https://...)`
+- `![caption](/images/blog/your-image.png)` — full-width figure (put files in `frontend/public/images/blog/`)
 - Blank line between paragraphs
 
 ### Tips for consistent look
