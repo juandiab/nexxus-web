@@ -37,7 +37,7 @@ docker compose restart backend
 | `title` | Yes | Headline on the card and article page. |
 | `excerpt` | Yes | 1–2 sentences for the blog listing card (plain text). |
 | `content` | Yes | Full article in **Markdown** (see style guide below). |
-| `category` | Yes | One of: `WAF & Security`, `Zero-Trust`, `AI & Automation`, `Cloud Security` (or add a new one — it will appear in filters). |
+| `category` | Yes | One of: `WAF & Security`, `Zero-Trust`, `AI & Automation`, `Cloud Security`, `Mobile Development` (or add a new one — it will appear in filters). |
 | `tags` | Yes | Array of strings, e.g. `["NetScaler", "WAF"]`. |
 | `author` | Yes | Display name. |
 | `author_role` | Yes | Subtitle under author name. |

@@ -19,6 +19,7 @@ CATEGORIES = [
     "Zero-Trust",
     "AI & Automation",
     "Cloud Security",
+    "Mobile Development",
 ]
 
 COVER_COLORS = ["#007BA7", "#00A8E0", "#005F7F", "#38383D", "#4DB8E0"]
