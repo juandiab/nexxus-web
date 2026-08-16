@@ -229,8 +229,31 @@ watch(() => route.params.slug, (slug) => fetchPost(slug))
 .markdown-body :deep(p + h2),
 .markdown-body :deep(p + h3),
 .markdown-body :deep(ul + h2),
-.markdown-body :deep(.code-block + h2) {
+.markdown-body :deep(.code-block + h2),
+.markdown-body :deep(.md-figure + h2) {
   margin-top: 3rem;
+}
+
+.markdown-body :deep(figure.md-figure) {
+  margin: 1.75rem 0 2rem;
+  border-radius: var(--nt-radius);
+  border: 1px solid var(--nt-border);
+  background: var(--nt-dark-3);
+  overflow: hidden;
+}
+
+.markdown-body :deep(figure.md-figure img) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.markdown-body :deep(figure.md-figure figcaption) {
+  padding: 0.7rem 1rem 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--nt-text-muted);
+  border-top: 1px solid var(--nt-border);
 }
 
 .markdown-body :deep(ul) {
