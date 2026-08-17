@@ -38,6 +38,7 @@
           <h3 class="footer-col-title">Products</h3>
           <ul>
             <li><RouterLink to="/products#jpilot">JPilot</RouterLink></li>
+            <li><RouterLink to="/cafeina">Cafeina</RouterLink></li>
             <li><RouterLink to="/products">All Products</RouterLink></li>
           </ul>
         </nav>
@@ -60,6 +61,9 @@
           <ul>
             <li>
               <a href="https://jpilot.nexxus-tech.com/legal/privacy">Privacy</a>
+            </li>
+            <li>
+              <RouterLink to="/cafeina/privacy">Cafeina Privacy</RouterLink>
             </li>
             <li>
               <a href="https://jpilot.nexxus-tech.com/legal/terms">Terms of Use</a>

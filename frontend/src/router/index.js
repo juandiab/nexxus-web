@@ -76,6 +76,18 @@ const routes = [
     meta: { seo: ROUTE_SEO.licensingActivate }
   },
   {
+    path: '/cafeina',
+    name: 'cafeina',
+    component: () => import('@/views/CafeinaView.vue'),
+    meta: { seo: ROUTE_SEO.cafeina }
+  },
+  {
+    path: '/cafeina/privacy',
+    name: 'cafeina-privacy',
+    component: () => import('@/views/CafeinaPrivacyView.vue'),
+    meta: { seo: ROUTE_SEO.cafeinaPrivacy }
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }

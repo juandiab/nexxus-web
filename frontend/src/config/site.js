@@ -121,6 +121,16 @@ export const SOFTWARE_PRODUCTS = [
     operatingSystem: 'Docker, Linux, Windows, macOS',
     offers: { price: '0', priceCurrency: 'USD' },
   },
+  {
+    name: 'Cafeina',
+    description:
+      'Personal macOS menu bar utility that keeps your Mac awake while enabled. Runs locally with no personal data collection.',
+    url: 'https://nexxus-tech.com/cafeina',
+    downloadUrl: 'https://github.com/juandiab/Cafeina',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'macOS 13 or later',
+    offers: { price: '0', priceCurrency: 'USD' },
+  },
 ]
 
 /** Static blog slugs for sitemap generation (mirrors backend/data/blog_posts.json). */
@@ -191,5 +201,17 @@ export const ROUTE_SEO = {
     description: 'Activate your Nexxus Tech software license.',
     path: '/licensing/activate',
     noindex: true,
+  },
+  cafeina: {
+    title: 'Cafeina — macOS Menu Bar Utility',
+    description:
+      'Cafeina is a personal macOS menu bar app that keeps your Mac awake while enabled. macOS 13+, no personal data collection.',
+    path: '/cafeina',
+  },
+  cafeinaPrivacy: {
+    title: 'Cafeina Privacy Policy',
+    description:
+      'Cafeina does not collect, store, transmit, or sell personal data. No analytics, tracking, accounts, or advertising SDKs.',
+    path: '/cafeina/privacy',
   },
 }

@@ -112,11 +112,12 @@
           v-for="product in products"
           :key="product.id"
           class="product-feature-card card reveal"
-          @click="$router.push(`/products#${product.id}`)"
+          @click="$router.push(product.href || `/products#${product.id}`)"
         >
           <div class="product-feature-grid">
         <div class="product-feature-logo-wrap">
-              <JpilotLogo variant="compact" title-tag="span" />
+              <JpilotLogo v-if="product.mark === 'jpilot'" variant="compact" title-tag="span" />
+              <span v-else class="product-text-mark" aria-hidden="true">{{ product.name.slice(0, 1) }}</span>
         </div>
             <div class="product-feature-body">
               <span class="section-label">{{ product.label }}</span>
@@ -719,6 +720,13 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--nt-border);
   border-radius: 16px;
+}
+.product-text-mark {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--nt-primary-l);
+  letter-spacing: 0.04em;
 }
 .product-feature-tagline {
   font-size: 0.88rem;

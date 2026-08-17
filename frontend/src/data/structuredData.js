@@ -154,7 +154,10 @@ export function aboutTeamPersonSchemas() {
 export function softwareApplicationSchemas() {
   return SOFTWARE_PRODUCTS.map((product) => ({
     '@type': 'SoftwareApplication',
-    '@id': `${SITE_URL}/products#${product.name.toLowerCase()}`,
+    '@id':
+      product.name === 'Cafeina'
+        ? `${SITE_URL}/cafeina`
+        : `${SITE_URL}/products#${product.name.toLowerCase()}`,
     name: product.name,
     alternateName: product.alternateName,
     description: product.description,
@@ -162,7 +165,10 @@ export function softwareApplicationSchemas() {
     downloadUrl: product.downloadUrl,
     applicationCategory: product.applicationCategory,
     operatingSystem: product.operatingSystem,
-    author: { '@id': `${SITE_URL}/#organization` },
+    author:
+      product.name === 'Cafeina'
+        ? { '@type': 'Person', name: 'Juan Pablo Otalvaro A' }
+        : { '@id': `${SITE_URL}/#organization` },
     offers: {
       '@type': 'Offer',
       price: product.offers.price,
@@ -177,22 +183,40 @@ export function productsPageSchema() {
     '@id': `${SITE_URL}/products#productspage`,
     name: 'Nexxus Tech Products',
     description:
-      'Software products built by Nexxus Tech practitioners, including JPilot NetScaler AI copilot.',
+      'Software products and utilities associated with Nexxus Tech, including JPilot and Cafeina.',
     url: `${SITE_URL}/products`,
     publisher: { '@id': `${SITE_URL}/#organization` },
-    hasPart: products.map((p) => ({
-      '@type': 'SoftwareApplication',
-      '@id': `${SITE_URL}/products#${p.id}`,
-      name: p.name,
-      description:
-        'Self-hosted AI management platform for network appliances — chat to plan, configure, and troubleshoot NetScaler, F5, and Cisco. BYO AI keys.',
-      image: `${SITE_URL}${JPILOT_LOGOS.dark}`,
-      url: `${SITE_URL}/products#${p.id}`,
-      downloadUrl: p.links.install,
-      applicationCategory: 'BusinessApplication',
-      operatingSystem: 'Docker, Linux, Windows, macOS',
-      author: { '@id': `${SITE_URL}/#organization` },
-    })),
+    hasPart: products.map((p) => {
+      if (p.id === 'cafeina') {
+        return {
+          '@type': 'SoftwareApplication',
+          '@id': `${SITE_URL}/cafeina`,
+          name: p.name,
+          description: p.excerpt,
+          url: `${SITE_URL}/cafeina`,
+          downloadUrl: p.repoUrl,
+          applicationCategory: 'UtilitiesApplication',
+          operatingSystem: 'macOS 13 or later',
+          author: {
+            '@type': 'Person',
+            name: 'Juan Pablo Otalvaro A',
+          },
+        }
+      }
+      return {
+        '@type': 'SoftwareApplication',
+        '@id': `${SITE_URL}/products#${p.id}`,
+        name: p.name,
+        description:
+          'Self-hosted AI management platform for network appliances — chat to plan, configure, and troubleshoot NetScaler, F5, and Cisco. BYO AI keys.',
+        image: `${SITE_URL}${JPILOT_LOGOS.dark}`,
+        url: `${SITE_URL}/products#${p.id}`,
+        downloadUrl: p.links?.install,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Docker, Linux, Windows, macOS',
+        author: { '@id': `${SITE_URL}/#organization` },
+      }
+    }),
   }
 }
 
@@ -375,6 +399,29 @@ export function jsonLdForRoute(routeName, extra = {}) {
           ...breadcrumbSchema([
             { name: 'Home', url: '/' },
             { name: 'FAQ', url: '/faq' },
+          ]),
+        },
+      ]
+    case 'cafeina':
+      return [
+        ...base,
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Cafeina', url: '/cafeina' },
+          ]),
+        },
+      ]
+    case 'cafeina-privacy':
+      return [
+        ...base,
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Cafeina', url: '/cafeina' },
+            { name: 'Privacy Policy', url: '/cafeina/privacy' },
           ]),
         },
       ]

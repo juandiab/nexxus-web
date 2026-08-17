@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.27** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.28** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,10 @@
 ---
 
 ## Changelog
+
+### v0.28 — 2026-08-17
+- **Cafeina** — product landing at `/cafeina` and App Store privacy policy at `/cafeina/privacy` (no personal data collection; macOS 13+)
+- **Products** — Cafeina listed on the homepage products section, products page teaser, and footer; sitemap + SEO routes added
 
 ### v0.27 — 2026-08-14
 - **JPilot registration email** — visitor auto-reply now includes the full install cookbook (Windows/macOS/Linux commands, wizard steps, early-access notes) in `backend/routers/contact.py`

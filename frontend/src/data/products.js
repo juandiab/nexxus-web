@@ -9,6 +9,7 @@ export const products = [
   {
     id: 'jpilot',
     name: 'JPilot',
+    mark: 'jpilot',
     logo: JPILOT_LOGOS.dark,
     logoLight: JPILOT_LOGOS.light,
     logoAlt: 'JPilot',
@@ -136,5 +137,28 @@ export const products = [
     },
     disclaimer:
       'JPilot is an independent product by Nexxus-Tech SAS. It is not affiliated with, endorsed by, sponsored by, or certified by Cloud Software Group (Citrix / NetScaler), Cisco Systems, F5 Networks, or their affiliates. NetScaler, Citrix, Cisco, F5 BIG-IP, and related names are trademarks of their respective owners and are used here only for identification and interoperability.',
+  },
+  {
+    id: 'cafeina',
+    name: 'Cafeina',
+    mark: 'cafeina',
+    edition: 'macOS',
+    label: 'Personal menu bar utility',
+    tagline: 'Keep your Mac awake from the menu bar',
+    excerpt:
+      'A lightweight native macOS utility by Juan Pablo Otalvaro A. Runs locally on your Mac — no personal data collection.',
+    tags: ['macOS 13+', 'Menu Bar', 'Privacy-first', 'Open Source'],
+    metrics: [
+      { value: '13+', label: 'macOS' },
+      { value: 'Local', label: 'On-device' },
+      { value: '0', label: 'Data collected' },
+    ],
+    href: '/cafeina',
+    repoUrl: 'https://github.com/juandiab/Cafeina',
+    support: {
+      email: 'support@nexxus-tech.com',
+    },
+    disclaimer:
+      'Cafeina is a personal app by Juan Pablo Otalvaro A. It is not affiliated with Caffeine or any similarly named apps.',
   },
 ]

@@ -248,6 +248,28 @@
         </p>
       </div>
     </section>
+
+    <!-- Cafeina -->
+    <section id="cafeina" class="cafeina-teaser-section">
+      <div class="container cafeina-teaser reveal">
+        <span class="section-label">Also available</span>
+        <h2>Cafeina</h2>
+        <p>
+          A personal macOS menu bar utility that keeps your Mac awake while enabled.
+          Runs locally — no personal data collection. Requires macOS 13 or later.
+        </p>
+        <div class="cafeina-teaser-actions">
+          <RouterLink to="/cafeina" class="btn btn-primary">Learn more</RouterLink>
+          <RouterLink to="/cafeina/privacy" class="btn btn-secondary">Privacy Policy</RouterLink>
+          <a
+            href="https://github.com/juandiab/Cafeina"
+            class="btn btn-outline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub</a>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -721,6 +743,31 @@ const supportedVendors = [
   text-align: center;
 }
 
+.cafeina-teaser-section {
+  padding: 64px 0 88px;
+  border-top: 1px solid var(--nt-border);
+  background: var(--nt-dark-2);
+}
+.cafeina-teaser {
+  max-width: 720px;
+  text-align: center;
+}
+.cafeina-teaser h2 {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  margin: 10px 0 14px;
+}
+.cafeina-teaser p {
+  color: var(--nt-text-muted);
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+.cafeina-teaser-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .feature-grid,
@@ -767,6 +814,15 @@ const supportedVendors = [
   }
 
   .cta-actions .btn {
+    justify-content: center;
+  }
+
+  .cafeina-teaser-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cafeina-teaser-actions .btn {
     justify-content: center;
   }
 }
