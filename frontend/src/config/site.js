@@ -131,6 +131,16 @@ export const SOFTWARE_PRODUCTS = [
     operatingSystem: 'macOS 13 or later',
     offers: { price: '0', priceCurrency: 'USD' },
   },
+  {
+    name: 'ConneXt',
+    description:
+      'Free native SSH terminal for iPhone and iPad. Liquid Glass navigation, split terminals, reusable imported keys, and an optional Command Assistant. No subscription, no in-app purchases.',
+    url: 'https://nexxus-tech.com/connext',
+    downloadUrl: 'https://apps.apple.com/app/connext',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'iOS, iPadOS',
+    offers: { price: '0', priceCurrency: 'USD' },
+  },
 ]
 
 /** Static blog slugs for sitemap generation (mirrors backend/data/blog_posts.json). */
@@ -213,5 +223,35 @@ export const ROUTE_SEO = {
     description:
       'Cafeina does not collect, store, transmit, or sell personal data. No analytics, tracking, accounts, or advertising SDKs.',
     path: '/cafeina/privacy',
+  },
+  connext: {
+    title: 'ConneXt — Free SSH Terminal for iPhone & iPad',
+    description:
+      'ConneXt is a free native SSH client for iOS and iPadOS by Nexxus-Tech. Liquid Glass navigation, split terminals, reusable keys, optional Command Assistant. No subscription.',
+    path: '/connext',
+  },
+  connextPrivacy: {
+    title: 'ConneXt Privacy Policy',
+    description:
+      'ConneXt does not create user accounts or sell personal data. SSH credentials stay in iOS Keychain. Optional AI keys stay on device; prompts go only to the provider you enable.',
+    path: '/connext/privacy',
+  },
+  connextSupport: {
+    title: 'ConneXt Support',
+    description:
+      'Get help with ConneXt, the free native SSH terminal for iPhone and iPad. Requirements, how to reach us, and what the app is.',
+    path: '/connext/support',
+  },
+  privacy: {
+    title: 'ConneXt Privacy Policy',
+    description:
+      'ConneXt does not create user accounts or sell personal data. SSH credentials stay in iOS Keychain. Optional AI keys stay on device; prompts go only to the provider you enable.',
+    path: '/privacy',
+  },
+  support: {
+    title: 'ConneXt Support',
+    description:
+      'Get help with ConneXt, the free native SSH terminal for iPhone and iPad. Requirements, how to reach us, and what the app is.',
+    path: '/support',
   },
 }

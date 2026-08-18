@@ -152,29 +152,34 @@ export function aboutTeamPersonSchemas() {
 }
 
 export function softwareApplicationSchemas() {
-  return SOFTWARE_PRODUCTS.map((product) => ({
-    '@type': 'SoftwareApplication',
-    '@id':
-      product.name === 'Cafeina'
-        ? `${SITE_URL}/cafeina`
-        : `${SITE_URL}/products#${product.name.toLowerCase()}`,
-    name: product.name,
-    alternateName: product.alternateName,
-    description: product.description,
-    url: product.url,
-    downloadUrl: product.downloadUrl,
-    applicationCategory: product.applicationCategory,
-    operatingSystem: product.operatingSystem,
-    author:
-      product.name === 'Cafeina'
-        ? { '@type': 'Person', name: 'Juan Pablo Otalvaro A' }
-        : { '@id': `${SITE_URL}/#organization` },
-    offers: {
-      '@type': 'Offer',
-      price: product.offers.price,
-      priceCurrency: product.offers.priceCurrency,
-    },
-  }))
+  return SOFTWARE_PRODUCTS.map((product) => {
+    const isCafeina = product.name === 'Cafeina'
+    const isConnext = product.name === 'ConneXt'
+    return {
+      '@type': 'SoftwareApplication',
+      '@id': product.url,
+      name: product.name,
+      alternateName: product.alternateName,
+      description: product.description,
+      url: product.url,
+      downloadUrl: product.downloadUrl,
+      applicationCategory: product.applicationCategory,
+      operatingSystem: product.operatingSystem,
+      author:
+        isCafeina || isConnext
+          ? {
+              '@type': 'Person',
+              name: 'Juan Pablo Otalvaro',
+              worksFor: { '@id': `${SITE_URL}/#organization` },
+            }
+          : { '@id': `${SITE_URL}/#organization` },
+      offers: {
+        '@type': 'Offer',
+        price: product.offers.price,
+        priceCurrency: product.offers.priceCurrency,
+      },
+    }
+  })
 }
 
 export function productsPageSchema() {
@@ -183,7 +188,7 @@ export function productsPageSchema() {
     '@id': `${SITE_URL}/products#productspage`,
     name: 'Nexxus Tech Products',
     description:
-      'Software products and utilities associated with Nexxus Tech, including JPilot and Cafeina.',
+      'Software products and utilities associated with Nexxus Tech, including JPilot, ConneXt, and Cafeina.',
     url: `${SITE_URL}/products`,
     publisher: { '@id': `${SITE_URL}/#organization` },
     hasPart: products.map((p) => {
@@ -200,6 +205,28 @@ export function productsPageSchema() {
           author: {
             '@type': 'Person',
             name: 'Juan Pablo Otalvaro A',
+          },
+        }
+      }
+      if (p.id === 'connext') {
+        return {
+          '@type': 'SoftwareApplication',
+          '@id': `${SITE_URL}/connext`,
+          name: p.name,
+          description: p.excerpt,
+          url: `${SITE_URL}/connext`,
+          downloadUrl: p.appStoreUrl,
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'iOS, iPadOS',
+          author: {
+            '@type': 'Person',
+            name: 'Juan Pablo Otalvaro',
+            worksFor: { '@id': `${SITE_URL}/#organization` },
+          },
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
           },
         }
       }
@@ -422,6 +449,46 @@ export function jsonLdForRoute(routeName, extra = {}) {
             { name: 'Home', url: '/' },
             { name: 'Cafeina', url: '/cafeina' },
             { name: 'Privacy Policy', url: '/cafeina/privacy' },
+          ]),
+        },
+      ]
+    case 'connext':
+      return [
+        ...base,
+        ...softwareApplicationSchemas()
+          .filter((s) => s.name === 'ConneXt')
+          .map((s) => ({ '@context': SCHEMA_CONTEXT, ...s })),
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'ConneXt', url: '/connext' },
+          ]),
+        },
+      ]
+    case 'connext-privacy':
+    case 'privacy':
+      return [
+        ...base,
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'ConneXt', url: '/connext' },
+            { name: 'Privacy Policy', url: '/connext/privacy' },
+          ]),
+        },
+      ]
+    case 'connext-support':
+    case 'support':
+      return [
+        ...base,
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'ConneXt', url: '/connext' },
+            { name: 'Support', url: '/connext/support' },
           ]),
         },
       ]

@@ -88,6 +88,36 @@ const routes = [
     meta: { seo: ROUTE_SEO.cafeinaPrivacy }
   },
   {
+    path: '/connext',
+    name: 'connext',
+    component: () => import('@/views/ConneXtView.vue'),
+    meta: { seo: ROUTE_SEO.connext }
+  },
+  {
+    path: '/connext/privacy',
+    name: 'connext-privacy',
+    component: () => import('@/views/ConneXtPrivacyView.vue'),
+    meta: { seo: ROUTE_SEO.connextPrivacy }
+  },
+  {
+    path: '/connext/support',
+    name: 'connext-support',
+    component: () => import('@/views/ConneXtSupportView.vue'),
+    meta: { seo: ROUTE_SEO.connextSupport }
+  },
+  {
+    path: '/privacy',
+    name: 'privacy',
+    component: () => import('@/views/ConneXtPrivacyView.vue'),
+    meta: { seo: ROUTE_SEO.privacy }
+  },
+  {
+    path: '/support',
+    name: 'support',
+    component: () => import('@/views/ConneXtSupportView.vue'),
+    meta: { seo: ROUTE_SEO.support }
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }

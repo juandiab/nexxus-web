@@ -249,6 +249,24 @@
       </div>
     </section>
 
+    <!-- ConneXt -->
+    <section id="connext" class="cafeina-teaser-section">
+      <div class="container cafeina-teaser reveal">
+        <span class="section-label">iOS &amp; iPadOS</span>
+        <h2>ConneXt</h2>
+        <p>
+          A free native SSH terminal for iPhone and iPad. Liquid Glass navigation,
+          split terminals, reusable imported keys, and an optional Command Assistant.
+          No subscription. No in-app purchases.
+        </p>
+        <div class="cafeina-teaser-actions">
+          <RouterLink to="/connext" class="btn btn-primary">Learn more</RouterLink>
+          <RouterLink to="/connext/privacy" class="btn btn-secondary">Privacy Policy</RouterLink>
+          <RouterLink to="/connext/support" class="btn btn-outline">Support</RouterLink>
+        </div>
+      </div>
+    </section>
+
     <!-- Cafeina -->
     <section id="cafeina" class="cafeina-teaser-section">
       <div class="container cafeina-teaser reveal">

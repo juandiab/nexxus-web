@@ -139,6 +139,30 @@ export const products = [
       'JPilot is an independent product by Nexxus-Tech SAS. It is not affiliated with, endorsed by, sponsored by, or certified by Cloud Software Group (Citrix / NetScaler), Cisco Systems, F5 Networks, or their affiliates. NetScaler, Citrix, Cisco, F5 BIG-IP, and related names are trademarks of their respective owners and are used here only for identification and interoperability.',
   },
   {
+    id: 'connext',
+    name: 'ConneXt',
+    mark: 'connext',
+    edition: 'Free',
+    label: 'Native SSH terminal',
+    tagline: 'A native, beautiful SSH client for iPhone and iPad',
+    excerpt:
+      'Liquid Glass navigation, split terminals, reusable imported keys, and an optional Command Assistant. Free — no subscription, no in-app purchases. Created by Nexxus-Tech.',
+    tags: ['iOS', 'iPadOS', 'SSH', 'Free'],
+    metrics: [
+      { value: 'Free', label: 'No IAP' },
+      { value: 'iOS', label: 'iPhone & iPad' },
+      { value: 'BYO', label: 'Your AI keys' },
+    ],
+    href: '/connext',
+    /** Placeholder until the App Store listing is live. */
+    appStoreUrl: 'https://apps.apple.com/app/connext',
+    support: {
+      email: 'support@nexxus-tech.com',
+    },
+    disclaimer:
+      'ConneXt is a product of Nexxus-Tech, created by Juan Pablo Otalvaro. SSH, OpenAI, Gemini, Anthropic, iPhone, iPad, iOS, and iPadOS are trademarks of their respective owners.',
+  },
+  {
     id: 'cafeina',
     name: 'Cafeina',
     mark: 'cafeina',
