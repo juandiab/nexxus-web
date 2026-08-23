@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.28** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.30** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,17 @@
 ---
 
 ## Changelog
+
+### v0.30 — 2026-08-23
+- **About / Global Presence** — Spain added as the fifth country card (grid widened to 5 columns); country lists in the footer, contact page, FAQ, and SEO copy updated to match (Vue + React)
+- **Favicon cache** — icon URLs now carry `?v=2` (`index.html`, `SITE_FAVICON` / `APPLE_TOUCH_ICON`, `site.webmanifest`, `/favicon.ico` redirect). The icon is served `immutable` for 30 days, so browsers kept painting the old artwork on the first load of `/`; bump the `?v=` number whenever the artwork changes
+- **Blog** — "ConneXt: a free native SSH terminal" post published
+- **Auto-deploy** — `scripts/auto-deploy.sh` plus systemd units in `scripts/systemd/` watch `origin/main` and redeploy on new commits (see [Automatic deploys](#automatic-deploys-from-main))
+- **git** — `nginx/ssl/*` (certs and keys) and the stray root `FETCH_HEAD` are now ignored
+
+### v0.29 — 2026-08-18
+- **ConneXt** — product landing at `/connext`, plus App Store support (`/connext/support`) and privacy (`/connext/privacy`) pages required by App Store Connect for the free iOS SSH client
+- **Products** — ConneXt added to the products page, footer, sitemap, and structured data
 
 ### v0.28 — 2026-08-17
 - **Cafeina** — product landing at `/cafeina` and App Store privacy policy at `/cafeina/privacy` (no personal data collection; macOS 13+)
@@ -268,6 +279,39 @@ docker compose up -d --build
 The site will be available at:
 - **https://nexxus-tech.com** (port 443)
 - **http://nexxus-tech.com** → redirects to HTTPS (port 80)
+
+---
+
+## Automatic deploys from `main`
+
+`scripts/auto-deploy.sh` fetches `origin/main` and, when new commits landed, pulls
+(`--ff-only`) and rebuilds the frontend containers. It **skips the deploy when the
+working tree is dirty**, so manual edits on the server are never discarded, and it
+takes a `flock` so a slow build never overlaps the next run. nginx is recreated only
+when something under `nginx/` changed.
+
+```bash
+./scripts/auto-deploy.sh            # one check, deploy if main moved
+./scripts/auto-deploy.sh --status   # local vs origin HEAD, plus tree state
+./scripts/auto-deploy.sh --force    # redeploy even with no new commits
+./scripts/auto-deploy.sh --loop     # keep checking every INTERVAL seconds
+```
+
+Environment: `INTERVAL` (loop delay, default 120), `SERVICES` (default
+`frontend frontend-react`), `LOG_FILE` (default `/var/log/nexxus-auto-deploy.log`).
+
+Installed on the server as a systemd timer that fires every 2 minutes:
+
+```bash
+cp scripts/systemd/nexxus-auto-deploy.* /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable --now nexxus-auto-deploy.timer
+
+systemctl list-timers nexxus-auto-deploy.timer   # next run
+journalctl -u nexxus-auto-deploy.service -n 50   # or: tail /var/log/nexxus-auto-deploy.log
+```
+
+To pause automatic deploys: `systemctl disable --now nexxus-auto-deploy.timer`.
 
 ---
 
