@@ -72,7 +72,7 @@
               and AI automation for infrastructure that never sleeps.
             </p>
             <p class="section-subtitle section-subtitle-spaced">
-              With a presence in Colombia, UAE, UK, and the US, we operate remotely but think globally —
+              With a presence in Colombia, UAE, UK, Spain, and the US, we operate remotely but think globally —
               having delivered engagements across 20+ countries and every major industry vertical.
             </p>
           </div>
@@ -168,7 +168,7 @@
           <span class="section-label">Global Presence</span>
           <h2 class="section-title">Remote-First. Worldwide Reach.</h2>
           <p class="section-subtitle section-subtitle-center">
-            With offices and presence in 4 countries and clients in 20+,
+            With offices and presence in 5 countries and clients in 20+,
             we operate wherever our clients need us — without compromise.
           </p>
         </div>
@@ -348,6 +348,7 @@ const presence = [
   { flag: '🇨🇴', country: 'Colombia', desc: 'Headquarters and primary engineering base. Deep LATAM network and Spanish/Portuguese-speaking engagements.' },
   { flag: '🇦🇪', country: 'UAE', desc: 'Middle East hub. Extensive experience with UAE government, financial, and telecom sectors.' },
   { flag: '🇬🇧', country: 'United Kingdom', desc: 'European base for EMEA engagements. Strong relationships with UK financial and defense clients.' },
+  { flag: '🇪🇸', country: 'Spain', desc: 'Continental Europe hub for EU engagements. Spanish-speaking delivery bridging LATAM and EMEA.' },
   { flag: '🇺🇸', country: 'United States', desc: 'North American presence for Fortune 500 and government clients. Remote-capable nationwide.' },
 ]
 </script>
@@ -534,7 +535,7 @@ const presence = [
 .skill-category { font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.12em; }
 .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 
-.presence-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 48px; }
+.presence-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-top: 48px; }
 .presence-card { text-align: center; }
 .presence-flag { font-size: 2.5rem; margin-bottom: 12px; }
 .presence-card h3 { font-size: 1.1rem; margin-bottom: 8px; }

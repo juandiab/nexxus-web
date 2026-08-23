@@ -1,0 +1,13 @@
+# Install:  cp scripts/systemd/nexxus-auto-deploy.* /etc/systemd/system/
+#           systemctl daemon-reload && systemctl enable --now nexxus-auto-deploy.timer
+[Unit]
+Description=Pull origin/main and redeploy the Nexxus Tech stack
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/nexxus-web
+ExecStart=/opt/nexxus-web/scripts/auto-deploy.sh
+# git needs the deploy key that can read the private repo
+Environment=GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=accept-new

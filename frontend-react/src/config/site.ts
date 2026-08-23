@@ -3,8 +3,9 @@ export const SITE_URL = 'https://nexxus-tech.com'
 export const SITE_NAME = 'Nexxus Tech'
 export const SITE_TAGLINE = 'WAF · NetScaler · Cloud Security · AI'
 export const SITE_EMAIL = 'contact@nexxus-tech.com'
-export const SITE_FAVICON = '/nexxus-tech-favicon.png'
-export const APPLE_TOUCH_ICON = '/apple-touch-icon.png'
+/** Icon URLs carry ?v= — bump it whenever the artwork changes so the 30-day immutable cache is invalidated. */
+export const SITE_FAVICON = '/nexxus-tech-favicon.png?v=2'
+export const APPLE_TOUCH_ICON = '/apple-touch-icon.png?v=2'
 export const SITE_MANIFEST = '/site.webmanifest'
 export const SITE_OG_IMAGE = `${SITE_URL}/nexxus-tech-og.png`
 export const SITE_OG_IMAGE_WIDTH = 1200
@@ -125,6 +126,7 @@ export const SOFTWARE_PRODUCTS = [
 
 /** Static blog slugs for sitemap generation (mirrors backend/data/blog_posts.json). */
 export const BLOG_SLUGS = [
+  'connext-free-native-ssh-terminal',
   'deploying-my-first-apple-watch-app',
   'build-a-terminal-llm-helper-for-ubuntu-in-python',
   'jpilot-ai-management-platform',
@@ -159,7 +161,7 @@ export const ROUTE_SEO = {
   about: {
     title: 'About Us — Nexxus Tech',
     description:
-      'Principal architects in WAF, NetScaler, Zero-Trust, telecom, and AI product design. Remote-first team across Colombia, UAE, UK, and US.',
+      'Principal architects in WAF, NetScaler, Zero-Trust, telecom, and AI product design. Remote-first team across Colombia, UAE, UK, Spain, and US.',
     path: '/about',
   },
   blog: {

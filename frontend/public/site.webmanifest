@@ -10,13 +10,13 @@
   "lang": "en",
   "icons": [
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/apple-touch-icon.png?v=2",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/nexxus-tech-favicon.png",
+      "src": "/nexxus-tech-favicon.png?v=2",
       "sizes": "300x300",
       "type": "image/png",
       "purpose": "any"

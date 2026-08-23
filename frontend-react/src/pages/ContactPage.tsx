@@ -229,7 +229,7 @@ export default function ContactPage() {
                   nexxus-tech.com
                 </InfoItem>
                 <InfoItem icon={MapPin} label="Global Presence">
-                  Colombia · UAE · UK · US
+                  Colombia · UAE · UK · Spain · US
                 </InfoItem>
               </div>
             </div>

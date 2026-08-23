@@ -57,7 +57,7 @@ const services = [
 
 const whyItems = [
   { title: 'Principal-Led Engagements', desc: 'Every project is led by a senior architect — no bait-and-switch.' },
-  { title: 'Global Delivery', desc: 'Remote-first team across Colombia, UAE, UK, and US.' },
+  { title: 'Global Delivery', desc: 'Remote-first team across Colombia, UAE, UK, Spain, and US.' },
   { title: 'Vendor Deep Expertise', desc: 'Citrix SME, AWS Security Specialty, and 15+ years in the trenches.' },
 ]
 

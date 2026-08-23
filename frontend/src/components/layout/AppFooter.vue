@@ -92,7 +92,7 @@
             </li>
             <li>
               <i class="pi pi-map-marker"></i>
-              <span>Colombia · UAE · UK · US</span>
+              <span>Colombia · UAE · UK · Spain · US</span>
             </li>
           </ul>
         </div>

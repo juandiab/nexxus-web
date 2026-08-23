@@ -75,7 +75,7 @@ export default function AppFooter() {
                 </a>
               </li>
               <li>nexxus-tech.com</li>
-              <li>Colombia · UAE · UK · US</li>
+              <li>Colombia · UAE · UK · Spain · US</li>
             </ul>
           </div>
         </div>

@@ -13,3 +13,10 @@ frontend/public/videos/*.mp4
 frontend/public/videos/*.webm
 frontend/public/videos/*.mov
 frontend/public/videos/*-poster.jpg
+
+# TLS certificates and keys — installed on the server out of band
+nginx/ssl/*
+!nginx/ssl/README.md
+
+# Stray artifact from `git fetch` run at the repo root
+FETCH_HEAD

@@ -123,7 +123,7 @@
                 <div class="info-icon"><i class="pi pi-map-marker"></i></div>
                 <div>
                   <span class="info-label">Global Presence</span>
-                  <span>Colombia · UAE · UK · US</span>
+                  <span>Colombia · UAE · UK · Spain · US</span>
                 </div>
               </div>
               <div class="info-item">
