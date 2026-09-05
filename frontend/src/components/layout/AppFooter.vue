@@ -30,7 +30,7 @@
             <li><RouterLink to="/services#zerotrust">Zero-Trust Architecture</RouterLink></li>
             <li><RouterLink to="/services#cloud">Cloud Security</RouterLink></li>
             <li><RouterLink to="/services#ai">AI & Automation</RouterLink></li>
-            <li><RouterLink to="/ai-integration">AI Integration Consulting</RouterLink></li>
+            <li><RouterLink to="/ai-integration" class="footer-link-nowrap">AI Tech</RouterLink></li>
           </ul>
         </nav>
 
@@ -202,6 +202,7 @@ import NxConnectionRings from '@/components/shared/NxConnectionRings.vue'
   transition: color 0.2s;
 }
 .footer-col ul li a:hover { color: var(--nt-white); }
+.footer-link-nowrap { white-space: nowrap; }
 .contact-list { gap: 14px !important; }
 .contact-list li {
   display: flex;

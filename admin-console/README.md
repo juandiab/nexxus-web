@@ -2,6 +2,8 @@
 
 Consulting lead tracking at `/adminconsole/leads` (admin role required). Public `/ai-integration` enquiries and contact/JPbot submissions land here as `source=web_form` leads.
 
+Edit/create lead form uses PrimeVue `Select` with `option-label` / `option-value` so dropdowns show labels (e.g. “New”, “Web form”) instead of raw option objects.
+
 ## Leads bot API key
 
 JP generates a key in **Admin → Leads keys** (`/adminconsole/leads-api-keys`), then gives the raw key to the Leads bot operator. The bot sends it on every ingestion request:

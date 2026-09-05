@@ -313,13 +313,13 @@ export function aiIntegrationPageSchema() {
   return {
     '@type': 'Service',
     '@id': `${SITE_URL}/ai-integration#service`,
-    name: 'AI Integration Consulting',
+    name: 'AI Tech for your company',
     description:
-      'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, and retainer engagements.',
+      'AI automation for small and medium businesses — customer communication on WhatsApp and email, sales follow‑up, internal processes, and a website agent that updates your site in real time. Founder‑led, LatAm and Spain.',
     url: `${SITE_URL}/ai-integration`,
     provider: { '@id': `${SITE_URL}/#organization` },
     areaServed: ORGANIZATION.areaServed,
-    serviceType: 'AI Integration Consulting',
+    serviceType: 'AI Tech for your company',
   }
 }
 
@@ -379,7 +379,7 @@ export function jsonLdForRoute(routeName, extra = {}) {
           '@context': SCHEMA_CONTEXT,
           ...breadcrumbSchema([
             { name: 'Home', url: '/' },
-            { name: 'AI Integration Consulting', url: '/ai-integration' },
+            { name: 'AI Tech for your company', url: '/ai-integration' },
           ]),
         },
       ]

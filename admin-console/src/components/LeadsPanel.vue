@@ -176,15 +176,36 @@
         </div>
         <div class="flex flex-column gap-2">
           <label for="locale" class="field-label">Locale</label>
-          <Select id="locale" v-model="form.locale" :options="localeOptions" class="w-full" />
+          <Select
+            id="locale"
+            v-model="form.locale"
+            :options="localeOptions"
+            option-label="label"
+            option-value="value"
+            class="w-full"
+          />
         </div>
         <div class="flex flex-column gap-2">
           <label for="source" class="field-label">Source</label>
-          <Select id="source" v-model="form.source" :options="sourceOptions" class="w-full" />
+          <Select
+            id="source"
+            v-model="form.source"
+            :options="sourceOptions"
+            option-label="label"
+            option-value="value"
+            class="w-full"
+          />
         </div>
         <div class="flex flex-column gap-2">
           <label for="status" class="field-label">Status</label>
-          <Select id="status" v-model="form.status" :options="statusOptions" class="w-full" />
+          <Select
+            id="status"
+            v-model="form.status"
+            :options="statusOptions"
+            option-label="label"
+            option-value="value"
+            class="w-full"
+          />
         </div>
         <div class="flex flex-column gap-2">
           <label for="package_interest" class="field-label">Package interest</label>
@@ -192,6 +213,8 @@
             id="package_interest"
             v-model="form.package_interest"
             :options="packageOptions"
+            option-label="label"
+            option-value="value"
             class="w-full"
           />
         </div>
@@ -201,6 +224,8 @@
             id="proposal_status"
             v-model="form.proposal_status"
             :options="proposalOptions"
+            option-label="label"
+            option-value="value"
             class="w-full"
           />
         </div>

@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.31** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.32** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,13 @@
 ---
 
 ## Changelog
+
+### v0.32 — 2026-09-05
+- **AI Tech** — public page at `/ai-integration` refocused for SMB/PYME: EN | ES locale toggle, four use-case cards (customer communication, sales, internal processes, website agent), `CenterFlow` hero visual, engagement pipeline and workflow graph; “you don’t need to know AI” positioning; JPilot/ADC bridge removed from this page
+- **Nav & footer** — link label **AI Tech** (single line); tighter navbar spacing so the label fits on one row
+- **Book a demo** — AI Tech CTAs open `/book-demo` with SMB-focused copy (20‑min call) instead of JPilot demo language
+- **Contact & SEO** — service names updated to “AI Tech for your company” / “AI Tech en tu empresa”; structured data and `ROUTE_SEO` aligned
+- **Admin Leads** — edit-lead form Select dropdowns show human labels instead of raw `{label,value}` objects (`option-label` / `option-value`)
 
 ### v0.31 — 2026-09-05
 - **AI Integration** — public consulting page at `/ai-integration` with EN | ES locale toggle; nav, footer, sitemap, structured data, and `ROUTE_SEO` entry

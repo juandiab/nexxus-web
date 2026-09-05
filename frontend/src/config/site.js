@@ -110,9 +110,9 @@ export const SERVICES = [
   },
   {
     id: 'ai-integration',
-    name: 'AI Integration Consulting',
+    name: 'AI Tech for your company',
     description:
-      'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, and retainer engagements.',
+      'Principal-led AI integration for your company — bots and apps on real operations. Diagnostic, pilot, system, and retainer engagements.',
     url: `${SITE_URL}/ai-integration`,
   },
 ]
@@ -178,9 +178,9 @@ export const ROUTE_SEO = {
     path: '/services',
   },
   aiIntegration: {
-    title: 'AI Integration Consulting | Nexxus Tech',
+    title: 'AI Tech for your company | Nexxus Tech',
     description:
-      'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, retainer. Talk to us at business@nexxus-tech.com',
+      'AI automation for small and medium businesses — customer communication on WhatsApp and email, sales follow‑up, internal processes, and a website agent that updates your site in real time. Founder‑led, LatAm and Spain. business@nexxus-tech.com',
     path: '/ai-integration',
   },
   products: {

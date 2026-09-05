@@ -3,11 +3,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">Book a demo</span>
-        <h1 class="reveal reveal-delay-1">Schedule a<br /><span class="gradient-text">Live Walkthrough</span></h1>
+        <span class="section-label reveal">{{ hero.label }}</span>
+        <h1 class="reveal reveal-delay-1">{{ hero.titleLine1 }}<br /><span class="gradient-text">{{ hero.titleHighlight }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          Pick a time for a JPilot demo or services discovery call with a Nexxus principal architect.
-          Remote worldwide — no obligation.
+          {{ hero.subtitle }}
         </p>
       </div>
     </section>
@@ -34,9 +33,51 @@ import { GOOGLE_APPOINTMENT_SCHEDULE_URL } from '@/config/site.js'
 
 const route = useRoute()
 
+const isAiIntegrationBooking = computed(
+  () => route.query.source === 'ai-integration',
+)
+
+const hero = computed(() => {
+  if (isAiIntegrationBooking.value) {
+    const es = route.query.locale === 'es'
+    return es
+      ? {
+          label: 'Agendar llamada',
+          titleLine1: 'Reserva una',
+          titleHighlight: 'llamada de 20 min',
+          subtitle:
+            'Elige un horario para hablar de automatización con IA en tu empresa con los fundadores de Nexxus. Remoto — sin compromiso.',
+        }
+      : {
+          label: 'Book a call',
+          titleLine1: 'Schedule a',
+          titleHighlight: '20‑min call',
+          subtitle:
+            'Pick a time to talk about AI automation for your company with Nexxus founders. Remote worldwide — no obligation.',
+        }
+  }
+
+  return {
+    label: 'Book a demo',
+    titleLine1: 'Schedule a',
+    titleHighlight: 'Live Walkthrough',
+    subtitle:
+      'Pick a time for a JPilot demo or services discovery call with a Nexxus principal architect. Remote worldwide — no obligation.',
+  }
+})
+
 const scheduleUrl = computed(() => {
   const { name, email, company, service, topic, details, enquiry } = route.query
-  if (!name && !email) return GOOGLE_APPOINTMENT_SCHEDULE_URL
+  if (!name && !email) {
+    if (isAiIntegrationBooking.value) {
+      const url = new URL(GOOGLE_APPOINTMENT_SCHEDULE_URL)
+      if (service) url.searchParams.set('service', String(service))
+      if (topic) url.searchParams.set('topic', String(topic))
+      if (enquiry) url.searchParams.set('enquiry', String(enquiry))
+      return url.toString()
+    }
+    return GOOGLE_APPOINTMENT_SCHEDULE_URL
+  }
 
   return buildDemoBookingUrl({
     name: String(name || ''),

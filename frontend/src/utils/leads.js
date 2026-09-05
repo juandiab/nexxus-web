@@ -20,7 +20,7 @@ export const LEAD_SOURCE_WEB_FORM = 'web_form'
 /** Build contact route query for AI Integration CTAs. */
 export function aiIntegrationContactQuery(locale, packageId = null) {
   const service =
-    locale === 'es' ? 'Consultoría de Integración de IA' : 'AI Integration Consulting'
+    locale === 'es' ? 'AI Tech en tu empresa' : 'AI Tech for your company'
   const query = {
     service,
     locale,
@@ -28,4 +28,20 @@ export function aiIntegrationContactQuery(locale, packageId = null) {
   }
   if (packageId) query.package = packageId
   return query
+}
+
+/** Book-demo query from /ai-integration — avoids JPilot-focused booking copy. */
+export function aiIntegrationBookDemoQuery(locale) {
+  const service =
+    locale === 'es' ? 'AI Tech en tu empresa' : 'AI Tech for your company'
+  return {
+    source: 'ai-integration',
+    locale,
+    service,
+    topic:
+      locale === 'es'
+        ? 'Llamada de 20 min — AI Tech'
+        : '20-min call — AI Tech',
+    enquiry: locale === 'es' ? 'Llamada de descubrimiento' : 'Discovery call',
+  }
 }

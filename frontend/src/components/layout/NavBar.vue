@@ -63,7 +63,7 @@ const menuOpen = ref(false)
 const links = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
-  { to: '/ai-integration', label: 'AI Integration' },
+  { to: '/ai-integration', label: 'AI Tech' },
   { to: '/products', label: 'Products' },
   { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },
@@ -146,7 +146,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 6px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 4px;
 }
 .nav-link {
   display: inline-flex;
@@ -154,13 +156,15 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   justify-content: center;
   min-height: 48px;
   min-width: 48px;
+  flex-shrink: 0;
+  white-space: nowrap;
   font-family: var(--font-heading);
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.75);
-  padding: 8px 16px;
+  padding: 8px 12px;
   border-radius: 6px;
   transition: var(--nt-transition);
   text-decoration: none;
@@ -223,6 +227,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .mobile-nav-link {
   display: flex;
   align-items: center;
+  white-space: nowrap;
   min-height: 48px;
   font-family: var(--font-heading);
   font-size: 1rem;

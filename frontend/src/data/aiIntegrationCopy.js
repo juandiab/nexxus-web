@@ -2,50 +2,106 @@
 export const AI_INTEGRATION_LOCALE_KEY = 'nexxus-ai-integration-locale'
 
 export const AI_INTEGRATION_SERVICE = {
-  en: 'AI Integration Consulting',
-  es: 'Consultoría de Integración de IA',
+  en: 'AI Tech for your company',
+  es: 'AI Tech en tu empresa',
 }
 
 export const AI_INTEGRATION_COPY = {
   en: {
     seo: {
-      title: 'AI Integration Consulting | Nexxus Tech',
+      title: 'AI Tech for your company | Nexxus Tech',
       description:
-        'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, retainer. Talk to us at business@nexxus-tech.com',
+        'AI automation for small and medium businesses — customer communication on WhatsApp and email, sales follow‑up, internal processes, and a website agent that updates your site in real time. Founder‑led, LatAm and Spain. business@nexxus-tech.com',
     },
     toggle: { en: 'EN', es: 'ES', aria: 'Page language' },
     hero: {
-      label: 'Consulting',
-      h1Before: 'Integrate AI into the work',
-      h1Highlight: 'you already do',
+      label: 'AI automation for small and medium businesses',
+      h1Before: 'AI Tech for',
+      h1Highlight: 'your company',
       subtitle:
-        'Manual processes, lost hours, and silos do not need a two-year transformation. We put bots and apps on real workflows — then we measure.',
+        'We automate the work that already costs you hours — answering customers, following up on sales, running the day-to-day, and keeping your website current. Real workflows, a human in charge, results you can measure.',
+      positioningLine:
+        'You don\'t need to know AI. We guide you through the whole process so you integrate it safely.',
       primaryCta: 'Request a consult',
-      secondaryCta: 'Book a discovery call',
+      secondaryCta: 'Book a 20‑min call',
+    },
+    useCases: {
+      label: 'Where it pays',
+      title: 'Four places where it pays for itself',
+      subtitle: 'We start where your team already loses hours — not with a demo.',
+      items: [
+        {
+          id: 'customers',
+          icon: 'pi pi-comments',
+          flowLabel: 'Customers',
+          title: 'Customer communication',
+          desc: 'First response on WhatsApp, email, and web forms — sorted, answered, and passed to your team when a person needs to step in.',
+          bullets: [
+            'WhatsApp, email, and form inbox handled',
+            'Order and status updates sent for you',
+            'Handed to a person when it matters',
+          ],
+        },
+        {
+          id: 'sales',
+          icon: 'pi pi-chart-line',
+          flowLabel: 'Sales',
+          title: 'Sales',
+          desc: 'Every lead answered and followed up, quotes drafted, reminders sent — so nothing sits in a spreadsheet because someone was busy.',
+          bullets: [
+            'Leads answered and qualified fast',
+            'Quote drafts and follow‑ups',
+            'Reminders so no deal goes cold',
+          ],
+        },
+        {
+          id: 'operations',
+          icon: 'pi pi-cog',
+          flowLabel: 'Processes',
+          title: 'Internal processes',
+          desc: 'The copy‑paste between tools your team does every week — quotes into the system, invoices into the spreadsheet, approvals by email.',
+          bullets: [
+            'Forms and emails into your systems',
+            'Invoices, orders, and approvals routed',
+            'Weekly admin done without a person typing',
+          ],
+        },
+        {
+          id: 'website',
+          icon: 'pi pi-globe',
+          flowLabel: 'Web',
+          title: 'Your website',
+          desc: 'An agent on your site that adds, updates, and removes content in real time — products, prices, hours, promotions — without waiting for a developer.',
+          bullets: [
+            'Publish or change a page from a message',
+            'Products, hours, and offers always current',
+            'You approve, it publishes',
+          ],
+        },
+      ],
     },
     audience: {
       label: 'For Whom',
-      title: 'Ops, product, support, finance, and IT',
+      title: 'For teams of 5 to 100 that already sell and serve customers',
       subtitle:
-        'Mid-market and enterprise ops, product, support, finance, and IT. LatAm, Spain, and global teams. Principal-led, not a slide-deck shop.',
+        'You have customers, orders, and a small team with no spare hours. We don\'t run two‑year transformations — we take one task off your plate, prove it works, then the next. LatAm and Spain, led by the founders.',
+      guidanceLine:
+        'You don\'t need to know AI. We guide you through the whole process so you integrate it safely.',
       tags: [
-        'Operations',
-        'Product',
-        'Support',
-        'Finance',
-        'IT',
-        'Mid-market',
-        'Enterprise',
+        'Owner / founder',
+        'Ops lead',
+        'Sales team',
+        'Customer service',
+        '5–100 people',
         'LatAm',
         'Spain',
-        'Global teams',
       ],
     },
     packages: {
       label: 'What We Do',
-      title: 'Four ways to start — no toy demos',
+      title: 'Four ways to start',
       subtitle:
-        'Each engagement has a clear duration, outcome, and deliverables. We automate real work, not slide decks.',
+        'Customer communication, sales follow‑up, internal processes, and your website — start with one, grow when it pays.',
       cta: 'Request a consult',
       items: [
         {
@@ -57,7 +113,7 @@ export const AI_INTEGRATION_COPY = {
           bullets: [
             'Process and pain inventory',
             '1–3 automation quick wins',
-            'Written roadmap, not a deck graveyard',
+            'A written plan you can act on, not a slide deck',
           ],
         },
         {
@@ -67,31 +123,32 @@ export const AI_INTEGRATION_COPY = {
           icon: 'pi pi-play',
           outcome: 'One real workflow automated end to end, with a metric.',
           bullets: [
-            'One bot or app in production use',
-            'Hours saved / errors avoided / lead time',
-            'Humans stay in the loop',
+            'One bot, agent, or app your team uses daily',
+            'Hours saved, errors avoided, faster response — measured',
+            'A person stays in charge',
           ],
         },
         {
           id: 'system',
-          name: 'System',
+          name: 'Rollout',
           duration: '2–3 months',
           icon: 'pi pi-sitemap',
-          outcome: 'Several flows, integrations, and a handoff your team can run.',
+          outcome:
+            'Several workflows connected — customers, sales, processes, website — and your team running them.',
           bullets: [
             'More than one workflow',
             'Integrations with the tools you already have',
-            'No hero dependency',
+            'Doesn\'t depend on one person (or on us)',
           ],
         },
         {
           id: 'retainer',
-          name: 'Retainer',
+          name: 'Monthly plan',
           duration: 'Ongoing',
           icon: 'pi pi-refresh',
-          outcome: 'Monthly roadmap after the system is live — new bots, monitoring, support.',
+          outcome: 'Once it\'s live: new automations, monitoring, and support each month.',
           bullets: [
-            'Continuous improvement, not vague “maintenance”',
+            'Ongoing improvements, not vague "maintenance"',
             'Agreed monthly scope',
             'Same principals who built it',
           ],
@@ -100,89 +157,153 @@ export const AI_INTEGRATION_COPY = {
     },
     process: {
       label: 'How We Work',
-      title: 'Diagnose → Pilot → System → Retainer',
+      title: 'The path: Diagnose → Pilot → Rollout → Monthly plan',
       subtitle:
-        'We start small, measure, then scale. AI amplifies specialists; it does not silently replace them.',
+        'Start small, measure, then grow. AI takes the repetitive work off your people; it doesn\'t replace them.',
+      pipelineCaption:
+        'Four steps, one measured path from diagnosis to ongoing support.',
+      workflow: {
+        caption: 'Real workflows — intake, decision, action, human oversight.',
+        nodes: [
+          { id: 'intake', label: 'Request' },
+          { id: 'decide', label: 'Decide' },
+          { id: 'act', label: 'Act' },
+          { id: 'human', label: 'Human review' },
+        ],
+      },
       steps: [
-        { name: 'Diagnose', desc: 'Map processes, pains, and where automation pays.' },
-        { name: 'Pilot', desc: 'One workflow in production with a measurable outcome.' },
-        { name: 'System', desc: 'Scale flows, integrate tools, hand off to your team.' },
-        { name: 'Retainer', desc: 'Monthly roadmap — new bots, monitoring, support.' },
+        { name: 'Diagnose', desc: 'Map what your team does by hand and where automation pays.' },
+        { name: 'Pilot', desc: 'One workflow live, with a number that proves it.' },
+        { name: 'Rollout', desc: 'Connect more flows and tools; your team runs them.' },
+        { name: 'Monthly plan', desc: 'New automations, monitoring, and support each month.' },
       ],
-      jpilotBefore: 'For ADC / NetScaler / F5-heavy environments,',
-      jpilotLink: 'JPilot',
-      jpilotAfter:
-        'can accelerate automation — a light bridge, not a requirement for every engagement.',
-      visualTitle: 'Human-in-the-loop by design',
+      visualTitle: 'A person stays in charge',
       principles: [
-        'Start small, measure, then scale',
-        'Specialists stay in the loop',
-        'No black-box automation',
-        'Integrations with tools you already use',
+        'You don\'t need to be an AI team — we stay with you',
+        'Start small, measure, then grow',
+        'Your team approves what matters',
+        'No black‑box automation — you see what it does',
+        'Works with the tools you already use',
+        'Your data stays in your accounts',
       ],
     },
     proof: {
-      label: 'Proof',
-      title: 'Principal-led delivery, global reach',
+      label: 'Who does the work',
+      title: 'Founder‑led, remote, 20+ countries',
       subtitle:
-        'The same credentials behind our cloud and security work — applied to operational AI integration.',
+        'The same founders who scope your project build it and stay on it. No juniors handed your account after the sale.',
       stats: [
         { value: '15+', label: 'Years of Experience' },
         { value: '20+', label: 'Countries Served' },
         { value: '100+', label: 'Projects Delivered' },
-        { value: '100%', label: 'Remote Capable' },
+        { value: '100%', label: '100% remote' },
       ],
-      industries: ['Finance', 'Defense', 'Telecom', 'Government', 'Enterprise', 'Fortune 500'],
     },
     cta: {
       label: "Let's Talk",
       title: "Tell us where the work hurts. We'll tell you where AI pays.",
       bodyBefore: 'Reach us at',
       bodyAfter:
-        'or use the contact form — we respond within 24 hours on business days.',
+        'or use the contact form — we reply within 24 hours on business days and tell you straight if it doesn\'t make sense for you.',
       primaryCta: 'Request a consult',
-      secondaryCta: 'Book a discovery call',
+      secondaryCta: 'Book a 20‑min call',
     },
   },
   es: {
     seo: {
-      title: 'Consultoría de Integración de IA | Nexxus Tech',
+      title: 'AI Tech en tu empresa | Nexxus Tech',
       description:
-        'Consultoría principal-led de integración de IA — bots y apps en operaciones reales. Diagnóstico, piloto, sistema, retainer. Escríbenos a business@nexxus-tech.com',
+        'Automatización con IA para PYMEs: comunicación con clientes por WhatsApp y correo, seguimiento comercial, procesos internos y un agente que actualiza tu web en tiempo real. Con los fundadores al frente, LatAm y España. business@nexxus-tech.com',
     },
     toggle: { en: 'EN', es: 'ES', aria: 'Idioma de la página' },
     hero: {
-      label: 'Consultoría',
-      h1Before: 'Integra la IA en el trabajo',
-      h1Highlight: 'que ya haces',
+      label: 'Automatización con IA para PYMEs',
+      h1Before: 'AI Tech',
+      h1Highlight: 'en tu empresa',
       subtitle:
-        'Procesos manuales, horas perdidas y silos no necesitan una transformación de dos años. Ponemos bots y apps en flujos reales — y medimos.',
+        'Automatizamos el trabajo que ya te cuesta horas: responder a clientes, dar seguimiento a ventas, llevar el día a día y mantener tu web al día. Flujos reales, una persona al mando y resultados que se miden.',
+      positioningLine:
+        'No necesitas saber de IA. Te guiamos en todo el proceso para que la integres de forma segura.',
       primaryCta: 'Solicitar consulta',
-      secondaryCta: 'Reservar llamada de descubrimiento',
+      secondaryCta: 'Agendar una llamada de 20 min',
+    },
+    useCases: {
+      label: 'Dónde paga',
+      title: 'Cuatro lugares donde se paga solo',
+      subtitle: 'Empezamos donde tu equipo ya pierde horas, no con una demo.',
+      items: [
+        {
+          id: 'customers',
+          icon: 'pi pi-comments',
+          flowLabel: 'Clientes',
+          title: 'Comunicación con clientes',
+          desc: 'Primera respuesta en WhatsApp, correo y formularios web: se ordena, se responde y pasa a tu equipo cuando hace falta una persona.',
+          bullets: [
+            'WhatsApp, correo y formularios atendidos',
+            'Avisos de pedido y estado enviados por ti',
+            'Pasa a una persona cuando importa',
+          ],
+        },
+        {
+          id: 'sales',
+          icon: 'pi pi-chart-line',
+          flowLabel: 'Ventas',
+          title: 'Ventas',
+          desc: 'Cada lead respondido y con seguimiento, cotizaciones o presupuestos listos, recordatorios enviados; nada se queda en una hoja porque alguien estaba ocupado.',
+          bullets: [
+            'Leads respondidos y calificados rápido',
+            'Borradores de presupuesto y seguimiento',
+            'Recordatorios para que ninguna venta se enfríe',
+          ],
+        },
+        {
+          id: 'operations',
+          icon: 'pi pi-cog',
+          flowLabel: 'Procesos',
+          title: 'Procesos internos',
+          desc: 'El copiar y pegar entre herramientas que tu equipo hace cada semana: presupuestos al sistema, facturas a la hoja de cálculo, aprobaciones por correo.',
+          bullets: [
+            'Formularios y correos a tus sistemas',
+            'Facturas, pedidos y aprobaciones en su sitio',
+            'Tareas semanales sin que nadie las teclee',
+          ],
+        },
+        {
+          id: 'website',
+          icon: 'pi pi-globe',
+          flowLabel: 'Web',
+          title: 'Tu sitio web',
+          desc: 'Un agente en tu web que publica, cambia y quita contenido en tiempo real: productos, precios, horarios, promociones, sin esperar a un desarrollador.',
+          bullets: [
+            'Publica o cambia una página desde un mensaje',
+            'Productos, horarios y ofertas siempre al día',
+            'Tú apruebas, él publica',
+          ],
+        },
+      ],
     },
     audience: {
       label: 'Para quién',
-      title: 'Operaciones, producto, soporte, finanzas e IT',
+      title: 'Para equipos de 5 a 100 personas que ya venden y atienden clientes',
       subtitle:
-        'Mid-market y enterprise en operaciones, producto, soporte, finanzas e IT. Equipos en LatAm, España y globales. Liderado por principals, no una tienda de slides.',
+        'Tienes clientes, pedidos y un equipo pequeño sin horas de sobra. No hacemos transformaciones de dos años: te quitamos una tarea, demostramos que funciona y vamos a la siguiente. LatAm y España, con los fundadores al frente.',
+      guidanceLine:
+        'No necesitas saber de IA. Te guiamos en todo el proceso para que la integres de forma segura.',
       tags: [
-        'Operaciones',
-        'Producto',
-        'Soporte',
-        'Finanzas',
-        'IT',
-        'Mid-market',
-        'Enterprise',
+        'Dueño/a o fundador/a',
+        'Responsable de operaciones',
+        'Equipo comercial',
+        'Atención al cliente',
+        '5–100 personas',
         'LatAm',
         'España',
-        'Equipos globales',
       ],
     },
     packages: {
       label: 'Qué hacemos',
-      title: 'Cuatro formas de empezar — sin demos de juguete',
+      title: 'Cuatro formas de empezar',
       subtitle:
-        'Cada engagement tiene duración, resultado y entregables claros. Automatizamos trabajo real, no slides.',
+        'Comunicación con clientes, seguimiento comercial, procesos internos y tu web: empieza por uno y crece cuando se pague.',
       cta: 'Solicitar consulta',
       items: [
         {
@@ -194,7 +315,7 @@ export const AI_INTEGRATION_COPY = {
           bullets: [
             'Inventario de procesos y dolores',
             '1–3 quick wins de automatización',
-            'Roadmap escrito, no un cementerio de decks',
+            'Un plan escrito que puedes usar, no una presentación',
           ],
         },
         {
@@ -204,32 +325,33 @@ export const AI_INTEGRATION_COPY = {
           icon: 'pi pi-play',
           outcome: 'Un flujo real automatizado de punta a punta, con una métrica.',
           bullets: [
-            'Un bot o app en uso en producción',
-            'Horas ahorradas / errores evitados / lead time',
-            'Humanos en el loop',
+            'Un bot, agente o app que tu equipo usa a diario',
+            'Horas ahorradas, errores evitados, respuesta más rápida: medido',
+            'Una persona sigue al mando',
           ],
         },
         {
           id: 'system',
-          name: 'Sistema',
+          name: 'Implementación',
           duration: '2–3 meses',
           icon: 'pi pi-sitemap',
-          outcome: 'Varios flujos, integraciones y un handoff que tu equipo puede operar.',
+          outcome:
+            'Varios flujos conectados (clientes, ventas, procesos, web) y tu equipo operándolos.',
           bullets: [
             'Más de un workflow',
             'Integraciones con las herramientas que ya tienes',
-            'Sin dependencia de un héroe',
+            'No depende de una sola persona (ni de nosotros)',
           ],
         },
         {
           id: 'retainer',
-          name: 'Retainer',
+          name: 'Acompañamiento mensual',
           duration: 'Continuo',
           icon: 'pi pi-refresh',
           outcome:
-            'Roadmap mensual después de que el sistema esté en marcha — nuevos bots, monitoreo, soporte.',
+            'Cuando ya está en marcha: nuevas automatizaciones, monitoreo y soporte cada mes.',
           bullets: [
-            'Mejora continua, no “mantenimiento” vago',
+            'Mejoras continuas, no un "mantenimiento" vago',
             'Alcance mensual acordado',
             'Los mismos principals que lo construyeron',
           ],
@@ -238,48 +360,56 @@ export const AI_INTEGRATION_COPY = {
     },
     process: {
       label: 'Cómo trabajamos',
-      title: 'Diagnóstico → Piloto → Sistema → Retainer',
+      title: 'El camino: Diagnóstico → Piloto → Implementación → Acompañamiento',
       subtitle:
-        'Empezamos chico, medimos, después escalamos. La IA amplifica a especialistas; no los reemplaza en silencio.',
+        'Empezamos en pequeño, medimos y después crecemos. La IA le quita el trabajo repetitivo a tu gente; no la reemplaza.',
+      pipelineCaption:
+        'Cuatro pasos, un camino medido del diagnóstico al soporte continuo.',
+      workflow: {
+        caption: 'Flujos reales — intake, decisión, acción, supervisión humana.',
+        nodes: [
+          { id: 'intake', label: 'Solicitud' },
+          { id: 'decide', label: 'Decide' },
+          { id: 'act', label: 'Actúa' },
+          { id: 'human', label: 'Revisión humana' },
+        ],
+      },
       steps: [
-        { name: 'Diagnóstico', desc: 'Mapeamos procesos, dolores y dónde paga la automatización.' },
-        { name: 'Piloto', desc: 'Un workflow en producción con un resultado medible.' },
-        { name: 'Sistema', desc: 'Escalamos flujos, integramos herramientas, handoff a tu equipo.' },
-        { name: 'Retainer', desc: 'Roadmap mensual — nuevos bots, monitoreo, soporte.' },
+        { name: 'Diagnóstico', desc: 'Mapeamos lo que tu equipo hace a mano y dónde paga automatizar.' },
+        { name: 'Piloto', desc: 'Un flujo en marcha, con un número que lo demuestra.' },
+        { name: 'Implementación', desc: 'Conectamos más flujos y herramientas; tu equipo los opera.' },
+        { name: 'Acompañamiento', desc: 'Nuevas automatizaciones, monitoreo y soporte cada mes.' },
       ],
-      jpilotBefore: 'En entornos ADC / NetScaler / F5-heavy,',
-      jpilotLink: 'JPilot',
-      jpilotAfter:
-        'puede acelerar la automatización — un puente ligero, no un requisito en cada engagement.',
-      visualTitle: 'Humanos en el loop por diseño',
+      visualTitle: 'Una persona sigue al mando',
       principles: [
-        'Empezar chico, medir, después escalar',
-        'Especialistas en el loop',
-        'Sin automatización caja negra',
-        'Integraciones con las herramientas que ya usas',
+        'No hace falta un equipo de IA: vamos con ustedes',
+        'Empezar en pequeño, medir, después crecer',
+        'Tu equipo aprueba lo que importa',
+        'Sin cajas negras: ves lo que hace',
+        'Funciona con las herramientas que ya usas',
+        'Tus datos se quedan en tus cuentas',
       ],
     },
     proof: {
-      label: 'Prueba',
-      title: 'Entrega principal-led, alcance global',
+      label: 'Quién hace el trabajo',
+      title: 'Los fundadores al frente, remoto, 20+ países',
       subtitle:
-        'Las mismas credenciales detrás de nuestro trabajo cloud y security — aplicadas a integración operacional de IA.',
+        'Los mismos fundadores que definen tu proyecto lo construyen y lo siguen. Sin juniors a los que te pasan después de la venta.',
       stats: [
         { value: '15+', label: 'Años de experiencia' },
         { value: '20+', label: 'Países atendidos' },
         { value: '100+', label: 'Proyectos entregados' },
-        { value: '100%', label: 'Remoto posible' },
+        { value: '100%', label: '100% remoto' },
       ],
-      industries: ['Finanzas', 'Defensa', 'Telecom', 'Gobierno', 'Enterprise', 'Fortune 500'],
     },
     cta: {
       label: 'Hablemos',
       title: 'Cuéntanos dónde duele el trabajo. Te decimos dónde la IA paga.',
       bodyBefore: 'Escríbenos a',
       bodyAfter:
-        'o usa el formulario de contacto — respondemos en 24 horas en días hábiles.',
+        'o usa el formulario de contacto: respondemos en 24 horas en días hábiles y te decimos claro si no tiene sentido para ti.',
       primaryCta: 'Solicitar consulta',
-      secondaryCta: 'Reservar llamada de descubrimiento',
+      secondaryCta: 'Agendar una llamada de 20 min',
     },
   },
 }

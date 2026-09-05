@@ -65,8 +65,8 @@
                   <option value="Zero-Trust Architecture">Zero-Trust Architecture</option>
                   <option value="Multicloud Security">Multicloud Security</option>
                   <option value="AI & Automation">AI & Automation</option>
-                  <option value="AI Integration Consulting">AI Integration Consulting</option>
-                  <option value="Consultoría de Integración de IA">Consultoría de Integración de IA</option>
+                  <option value="AI Tech for your company">AI Tech for your company</option>
+                  <option value="AI Tech en tu empresa">AI Tech en tu empresa</option>
                   <option value="Citrix Virtual Apps & Desktops">Citrix Virtual Apps & Desktops</option>
                   <option value="Other / Discovery Call">Other / Discovery Call</option>
                 </select>
@@ -200,7 +200,7 @@ const errorMessage = ref('')
 const expertise = [
   'WAF Policy Design', 'NetScaler ADC', 'F5 BIG-IP',
   'Zero-Trust', 'Okta / Azure AD', 'AWS Security',
-  'Multicloud Security', 'AI Automation', 'AI Integration Consulting',
+  'Multicloud Security', 'AI Automation', 'AI Tech for your company',
   'Citrix Cloud', 'DaaS / CVAD', 'GSLB', 'API Security',
 ]
 
