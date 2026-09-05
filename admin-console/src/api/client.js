@@ -306,6 +306,145 @@ export async function listJpilotLeads() {
   return adminApiRequest('/jpilot/leads')
 }
 
+function buildLeadQuery(params = {}) {
+  const search = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      search.set(key, String(value))
+    }
+  })
+  const q = search.toString()
+  return q ? `?${q}` : ''
+}
+
+export async function listLeads(params = {}) {
+  return adminApiRequest(`/leads${buildLeadQuery(params)}`)
+}
+
+export async function getLead(id) {
+  return adminApiRequest(`/leads/${encodeURIComponent(id)}`)
+}
+
+export async function createLead(payload) {
+  return adminApiRequest('/leads', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateLead(id, payload) {
+  return adminApiRequest(`/leads/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function addLeadNote(id, payload) {
+  return adminApiRequest(`/leads/${encodeURIComponent(id)}/notes`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function archiveLead(id) {
+  return adminApiRequest(`/leads/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  })
+}
+
+export async function listLeadsApiKeys() {
+  return adminApiRequest('/leads-api-keys')
+}
+
+export async function createLeadsApiKey(payload) {
+  return adminApiRequest('/leads-api-keys', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function revokeLeadsApiKey(id) {
+  return adminApiRequest(`/leads-api-keys/${encodeURIComponent(id)}/revoke`, {
+    method: 'POST',
+  })
+}
+
+export async function rotateLeadsApiKey(id) {
+  const token = getToken()
+  const headers = { 'Content-Type': 'application/json' }
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  const res = await fetch(
+    `${ADMIN_API_BASE}/leads-api-keys/${encodeURIComponent(id)}/rotate`,
+    { method: 'POST', headers }
+  )
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    const detail = err.detail
+    const message = Array.isArray(detail)
+      ? detail.map((d) => d.msg).join(', ')
+      : detail || 'Request failed'
+    const error = new Error(message)
+    error.status = res.status
+    throw error
+  }
+  return res.json()
+}
+
+export async function downloadLeadProposalFile(leadId, proposalId, filename = 'proposal.pdf') {
+  const token = getToken()
+  const headers = {}
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  const res = await fetch(
+    `${ADMIN_API_BASE}/leads/${encodeURIComponent(leadId)}/proposals/${encodeURIComponent(proposalId)}/file`,
+    { headers }
+  )
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    const detail = err.detail
+    const message = Array.isArray(detail)
+      ? detail.map((d) => d.msg).join(', ')
+      : detail || 'Download failed'
+    throw new Error(message)
+  }
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
+export async function exportLeadsCsv(params = {}) {
+  const token = getToken()
+  const headers = {}
+  if (token) headers.Authorization = `Bearer ${token}`
+  const res = await fetch(`${ADMIN_API_BASE}/leads/export.csv${buildLeadQuery(params)}`, {
+    headers,
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    const detail = err.detail
+    const message = Array.isArray(detail)
+      ? detail.map((d) => d.msg).join(', ')
+      : detail || 'Export failed'
+    throw new Error(message)
+  }
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `leads-${new Date().toISOString().slice(0, 10)}.csv`
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
 export async function fetchScStudioServers() {
   return request('/scstudio/servers')
 }

@@ -20,6 +20,14 @@ class ContactRequest(BaseModel):
     company: str = ""
     service: str = ""
     message: str
+    locale: Literal["en", "es"] = "en"
+    source_page: str = ""
+    package_interest: str = ""
+    utm_source: str = ""
+    utm_medium: str = ""
+    utm_campaign: str = ""
+    utm_term: str = ""
+    utm_content: str = ""
 
     @field_validator("name", "message")
     @classmethod
@@ -27,6 +35,21 @@ class ContactRequest(BaseModel):
         if not v.strip():
             raise ValueError("Field cannot be empty")
         return v.strip()
+
+    @field_validator(
+        "company",
+        "service",
+        "source_page",
+        "package_interest",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+    )
+    @classmethod
+    def strip_optional(cls, v: str) -> str:
+        return (v or "").strip()
 
     @field_validator("message")
     @classmethod

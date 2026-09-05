@@ -55,6 +55,28 @@ const routes = [
     },
   },
   {
+    path: '/leads',
+    name: 'leads',
+    component: () => import('@/views/LeadsView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresSetup: true,
+      requiresAdmin: true,
+      title: 'Leads',
+    },
+  },
+  {
+    path: '/leads-api-keys',
+    name: 'leads-api-keys',
+    component: () => import('@/views/LeadsApiKeysView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresSetup: true,
+      requiresAdmin: true,
+      title: 'Leads API keys',
+    },
+  },
+  {
     path: '/jpilot',
     name: 'jpilot',
     component: () => import('@/views/JpilotLeadsView.vue'),

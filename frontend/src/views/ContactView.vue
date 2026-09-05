@@ -65,6 +65,8 @@
                   <option value="Zero-Trust Architecture">Zero-Trust Architecture</option>
                   <option value="Multicloud Security">Multicloud Security</option>
                   <option value="AI & Automation">AI & Automation</option>
+                  <option value="AI Integration Consulting">AI Integration Consulting</option>
+                  <option value="Consultoría de Integración de IA">Consultoría de Integración de IA</option>
                   <option value="Citrix Virtual Apps & Desktops">Citrix Virtual Apps & Desktops</option>
                   <option value="Other / Discovery Call">Other / Discovery Call</option>
                 </select>
@@ -163,11 +165,33 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 import SocialLinks from '@/components/shared/SocialLinks.vue'
 import { loadJpbotDraft, clearJpbotDraft } from '@/utils/jpbotDraft.js'
 
-const form = reactive({ name: '', email: '', company: '', service: '', message: '' })
+const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']
+
+function readUtmParams(query) {
+  const utm = {}
+  for (const key of UTM_KEYS) {
+    const value = query[key]
+    if (typeof value === 'string' && value.trim()) utm[key] = value.trim()
+  }
+  return utm
+}
+
+const form = reactive({
+  name: '',
+  email: '',
+  company: '',
+  service: '',
+  message: '',
+  locale: 'en',
+  source_page: '',
+  package_interest: '',
+  ...Object.fromEntries(UTM_KEYS.map((k) => [k, ''])),
+})
 const errors = reactive({ name: '', email: '', message: '' })
 const submitting = ref(false)
 const submitStatus = ref('')
@@ -176,9 +200,11 @@ const errorMessage = ref('')
 const expertise = [
   'WAF Policy Design', 'NetScaler ADC', 'F5 BIG-IP',
   'Zero-Trust', 'Okta / Azure AD', 'AWS Security',
-  'Multicloud Security', 'AI Automation', 'Citrix Cloud',
-  'DaaS / CVAD', 'GSLB', 'API Security',
+  'Multicloud Security', 'AI Automation', 'AI Integration Consulting',
+  'Citrix Cloud', 'DaaS / CVAD', 'GSLB', 'API Security',
 ]
+
+const route = useRoute()
 
 const validate = () => {
   let valid = true
@@ -194,6 +220,21 @@ const validate = () => {
 }
 
 onMounted(() => {
+  const serviceQuery = route.query.service
+  if (typeof serviceQuery === 'string' && serviceQuery.trim()) {
+    form.service = serviceQuery.trim()
+  }
+  if (route.query.locale === 'es' || route.query.locale === 'en') {
+    form.locale = route.query.locale
+  }
+  if (typeof route.query.source === 'string' && route.query.source.trim()) {
+    form.source_page = route.query.source.trim()
+  }
+  if (typeof route.query.package === 'string' && route.query.package.trim()) {
+    form.package_interest = route.query.package.trim()
+  }
+  Object.assign(form, readUtmParams(route.query))
+
   const draft = loadJpbotDraft()
   if (!draft) return
   if (draft.name) form.name = draft.name
@@ -215,6 +256,10 @@ const handleSubmit = async () => {
     submitStatus.value = 'success'
     clearJpbotDraft()
     form.name = form.email = form.company = form.service = form.message = ''
+    form.locale = 'en'
+    form.source_page = ''
+    form.package_interest = ''
+    UTM_KEYS.forEach((key) => { form[key] = '' })
   } catch (err) {
     submitStatus.value = 'error'
     errorMessage.value = err.response?.data?.detail || 'Something went wrong. Please try emailing us directly.'

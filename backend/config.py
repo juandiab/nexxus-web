@@ -19,6 +19,12 @@ class Settings(BaseSettings):
         default="https://api.deepseek.com",
         validation_alias="DEEPSEEK_BASE_URL",
     )
+    leads_api_key: str = Field(default="", validation_alias="LEADS_API_KEY")
+    leads_api_keys: str = Field(default="", validation_alias="LEADS_API_KEYS")
+    admin_console_url: str = Field(
+        default="https://nexxus-tech.com/adminconsole",
+        validation_alias="ADMIN_CONSOLE_URL",
+    )
 
 
 settings = Settings()

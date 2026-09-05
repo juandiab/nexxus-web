@@ -8,7 +8,9 @@ from fastapi import APIRouter, HTTPException
 
 from models.chat import ChatProfile
 from models.contact import ContactRequest, ContactResponse, JpilotInterestRequest
+from models.lead import WebFormLeadInput
 from services.jpilot_leads import upsert_jpilot_lead
+from services.leads_store import create_web_form_lead, map_service_to_package
 from services.jpbot_email import (
     build_team_jpbot_html,
     build_team_plain_text,
@@ -266,7 +268,38 @@ async def _send_email(
     )
 
 
+async def _persist_contact_lead(data: ContactRequest) -> None:
+    company = (data.company or "").strip() or data.name.strip() or "Unknown"
+    package = data.package_interest.strip().lower() if data.package_interest else ""
+    if package not in ("diagnostic", "pilot", "system", "retainer"):
+        package = map_service_to_package(data.service)
+    notes = data.message.strip()
+    if data.source_page:
+        notes = f"[Source: {data.source_page}]\n\n{notes}"
+    try:
+        await create_web_form_lead(
+            WebFormLeadInput(
+                company_name=company,
+                contact_name=data.name.strip(),
+                contact_email=data.email,
+                locale=data.locale,
+                package_interest=package or "unknown",
+                notes=notes,
+                utm_source=data.utm_source,
+                utm_medium=data.utm_medium,
+                utm_campaign=data.utm_campaign,
+                utm_term=data.utm_term,
+                utm_content=data.utm_content,
+            )
+        )
+    except Exception as exc:
+        print(f"[LEADS] Failed to persist contact lead: {exc}")
+
+
 async def deliver_contact_enquiry(data: ContactRequest) -> ContactResponse:
+    await _persist_contact_lead(data)
+    # TODO: notify business@nexxus-tech.com on new web_form lead (team mail goes to CONTACT_TO)
+
     if not SMTP_USER or not SMTP_PASS:
         print(f"[CONTACT] (dev) Team notification → {CONTACT_TO}")
         print(f"[CONTACT] (dev) Auto-reply → {data.email}")
@@ -306,6 +339,28 @@ async def deliver_jpbot_enquiry(
     visitor_summary: str,
     transcript: str,
 ) -> ContactResponse:
+    company = (profile.company or "").strip() or profile.name.strip() or "Unknown"
+    notes_parts = [situation.strip()] if situation.strip() else []
+    if pain_points:
+        notes_parts.append("Pain points: " + "; ".join(pain_points))
+    if urgency:
+        notes_parts.append(f"Urgency: {urgency}")
+    if transcript.strip():
+        notes_parts.append(f"Transcript:\n{transcript.strip()}")
+    try:
+        await create_web_form_lead(
+            WebFormLeadInput(
+                company_name=company,
+                contact_name=profile.name.strip(),
+                contact_email=profile.email,
+                package_interest=map_service_to_package(profile.service),
+                notes="\n\n".join(notes_parts),
+            )
+        )
+    except Exception as exc:
+        print(f"[LEADS] Failed to persist JPbot lead: {exc}")
+    # TODO: notify business@nexxus-tech.com on new web_form lead
+
     priority = "CRITICAL" if "critical" in profile.criticality.lower() else "New"
     subject = f"[JPbot · {priority}] {profile.enquiry_type} — {profile.name}"
 

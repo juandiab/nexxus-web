@@ -18,5 +18,8 @@ frontend/public/videos/*-poster.jpg
 nginx/ssl/*
 !nginx/ssl/README.md
 
+# Lead proposal PDFs — private; served only via admin JWT download
+backend/data/lead-proposals/
+
 # Stray artifact from `git fetch` run at the repo root
 FETCH_HEAD

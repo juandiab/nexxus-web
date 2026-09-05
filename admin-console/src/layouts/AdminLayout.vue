@@ -57,6 +57,10 @@ const navItems = computed(() => {
   if (canAccessBlog.value) {
     items.push({ to: '/blogs', label: 'Blogs' })
   }
+  if (isAdmin.value) {
+    items.push({ to: '/leads', label: 'Leads' })
+    items.push({ to: '/leads-api-keys', label: 'Leads keys' })
+  }
   if (isAdmin.value) items.push({ to: '/jpilot', label: 'JPilot' })
   if (canAccessSettings.value) {
     items.push({ to: '/scstudio', label: 'SC Studio' })

@@ -18,6 +18,12 @@ const routes = [
     meta: { seo: ROUTE_SEO.services }
   },
   {
+    path: '/ai-integration',
+    name: 'ai-integration',
+    component: () => import('@/views/AiIntegrationView.vue'),
+    meta: { seo: ROUTE_SEO.aiIntegration }
+  },
+  {
     path: '/products',
     name: 'products',
     component: () => import('@/views/ProductsView.vue'),

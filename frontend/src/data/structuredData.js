@@ -309,6 +309,20 @@ export function contactPageSchema() {
   }
 }
 
+export function aiIntegrationPageSchema() {
+  return {
+    '@type': 'Service',
+    '@id': `${SITE_URL}/ai-integration#service`,
+    name: 'AI Integration Consulting',
+    description:
+      'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, and retainer engagements.',
+    url: `${SITE_URL}/ai-integration`,
+    provider: { '@id': `${SITE_URL}/#organization` },
+    areaServed: ORGANIZATION.areaServed,
+    serviceType: 'AI Integration Consulting',
+  }
+}
+
 export function faqPageSchema() {
   return {
     '@type': 'FAQPage',
@@ -354,6 +368,18 @@ export function jsonLdForRoute(routeName, extra = {}) {
           ...breadcrumbSchema([
             { name: 'Home', url: '/' },
             { name: 'Services', url: '/services' },
+          ]),
+        },
+      ]
+    case 'ai-integration':
+      return [
+        ...base,
+        { '@context': SCHEMA_CONTEXT, ...aiIntegrationPageSchema() },
+        {
+          '@context': SCHEMA_CONTEXT,
+          ...breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'AI Integration Consulting', url: '/ai-integration' },
           ]),
         },
       ]

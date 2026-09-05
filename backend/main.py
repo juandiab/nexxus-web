@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config import settings
-from routers import contact, blog, blog_admin, chat, chat_admin, jpilot_admin
+from routers import contact, blog, blog_admin, chat, chat_admin, jpilot_admin, leads_admin, leads_api, leads_api_keys_admin
 
 app = FastAPI(
     title="Nexxus Tech API",
@@ -27,6 +27,9 @@ app.include_router(blog_admin.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(chat_admin.router, prefix="/api")
 app.include_router(jpilot_admin.router, prefix="/api")
+app.include_router(leads_admin.router, prefix="/api")
+app.include_router(leads_api.router, prefix="/api")
+app.include_router(leads_api_keys_admin.router, prefix="/api")
 
 
 @app.get("/api/health")

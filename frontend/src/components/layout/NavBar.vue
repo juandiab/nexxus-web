@@ -63,6 +63,7 @@ const menuOpen = ref(false)
 const links = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
+  { to: '/ai-integration', label: 'AI Integration' },
   { to: '/products', label: 'Products' },
   { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },

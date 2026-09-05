@@ -108,6 +108,13 @@ export const SERVICES = [
       'AI-assisted NetScaler administration, WAF policy drafting, configuration drift detection, and LLM-driven security operations with human review guardrails.',
     url: `${SITE_URL}/services#ai`,
   },
+  {
+    id: 'ai-integration',
+    name: 'AI Integration Consulting',
+    description:
+      'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, and retainer engagements.',
+    url: `${SITE_URL}/ai-integration`,
+  },
 ]
 
 export const SOFTWARE_PRODUCTS = [
@@ -169,6 +176,12 @@ export const ROUTE_SEO = {
     description:
       'Expert WAF & API protection, NetScaler ADC, Zero-Trust architecture, multicloud security, and AI automation — every engagement led by a principal architect.',
     path: '/services',
+  },
+  aiIntegration: {
+    title: 'AI Integration Consulting | Nexxus Tech',
+    description:
+      'Principal-led AI integration consulting — bots and apps on real operations. Diagnostic, pilot, system, retainer. Talk to us at business@nexxus-tech.com',
+    path: '/ai-integration',
   },
   products: {
     title: 'JPilot — AI Management Platform for Network Appliances',

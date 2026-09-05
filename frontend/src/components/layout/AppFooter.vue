@@ -30,6 +30,7 @@
             <li><RouterLink to="/services#zerotrust">Zero-Trust Architecture</RouterLink></li>
             <li><RouterLink to="/services#cloud">Cloud Security</RouterLink></li>
             <li><RouterLink to="/services#ai">AI & Automation</RouterLink></li>
+            <li><RouterLink to="/ai-integration">AI Integration Consulting</RouterLink></li>
           </ul>
         </nav>
 

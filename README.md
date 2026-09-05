@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.30** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.31** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,16 @@
 ---
 
 ## Changelog
+
+### v0.31 — 2026-09-05
+- **AI Integration** — public consulting page at `/ai-integration` with EN | ES locale toggle; nav, footer, sitemap, structured data, and `ROUTE_SEO` entry
+- **Admin Leads CRM** — consulting pipeline at `/adminconsole/leads` (admin role): list/filter, detail with timeline and notes, manual create/edit, CSV export, soft archive, proposal PDF download
+- **Leads API keys** — generate, revoke, and rotate bot keys at `/adminconsole/leads-api-keys`; raw key shown once at create/rotate; stored hashed in MongoDB (`leadsApiKeys`)
+- **Leads ingestion API** — service-authenticated routes at `/api/v1/leads` with header `X-Nexxus-Leads-Key` (or `Authorization: Bearer`); optional `X-Nexxus-Agent` (`leads` | `chief-of-staff`); create/search/patch leads and upload draft proposal PDFs
+- **Web form leads** — `POST /api/contact` and JPbot `POST /api/chat/submit` upsert leads with `source=web_form`, `status=new`
+- **Proposal storage** — PDFs saved under `./backend/data/lead-proposals/` (container `/app/data/lead-proposals/`); not served publicly — admin JWT download only
+- **Leads bot flow** — bot POSTs research → uploads draft proposal → JP reviews/sends offline → bot PATCHes `proposal_status` when sent
+- **Docs** — [backend/README.md](backend/README.md) (ingestion API + curl examples), [admin-console/README.md](admin-console/README.md) (admin UI contract); optional break-glass `LEADS_API_KEY` in `.env.example`
 
 ### v0.30 — 2026-08-23
 - **About / Global Presence** — Spain added as the fifth country card (grid widened to 5 columns); country lists in the footer, contact page, FAQ, and SEO copy updated to match (Vue + React)
@@ -247,6 +257,7 @@ Nexxus Tech products can be licensed through this stack. The design keeps sensit
 - Manage admin users (create, deactivate, password reset, passkey management)
 - SC Studio server registrations and license-sync API keys (admin only)
 - Blog post management and AI assistant settings (admin / blog roles)
+- **Leads** — consulting CRM at `/adminconsole/leads`; bot API keys at `/adminconsole/leads-api-keys` (see [Leads CRM overview](#leads-crm-overview))
 
 **Configuration**
 
@@ -260,6 +271,29 @@ curl -s https://nexxus-tech.com/licensing/health
 ```
 
 For local development with hot reload, use `docker-compose.dev.yml` (see repo).
+
+---
+
+## Leads CRM overview
+
+Consulting leads from the public site, JPbot, and the Leads bot share one MongoDB-backed pipeline. Operators manage them in the admin console; automation uses the ingestion API.
+
+| Surface | URL | Purpose |
+|---|---|---|
+| AI Integration | `/ai-integration` | Public consulting landing (EN \| ES) |
+| Contact / JPbot | `/contact`, chat widget | Creates leads with `source=web_form` |
+| Admin Leads | `/adminconsole/leads` | Human CRM — list, detail, notes, export, proposal download |
+| Leads API keys | `/adminconsole/leads-api-keys` | Generate/revoke/rotate `X-Nexxus-Leads-Key` values (hashed in Mongo) |
+| Ingestion API | `/api/v1/leads` | Bot create/search/patch + proposal PDF upload |
+| Proposal files | `./backend/data/lead-proposals/` | Private PDF storage (not in git) |
+
+**Typical bot flow**
+
+1. **Research** — Leads bot POSTs company/contact/research to `/api/v1/leads` (idempotency key supported).
+2. **Draft** — Bot uploads a draft PDF via `POST /api/v1/leads/{id}/proposals`; JP reviews in admin.
+3. **Send** — JP sends the proposal offline; bot PATCHes `proposal_status` (e.g. `sent`) when complete.
+
+Full API reference and curl examples: **[backend/README.md](backend/README.md)**. Admin UI contract: **[admin-console/README.md](admin-console/README.md)**.
 
 ### 2. Ensure SSL certs are in place
 Same layout as NSAgent — place `cert.crt` (full chain) and `cert.key` in `nginx/ssl/`. See **[nginx/ssl/README.md](nginx/ssl/README.md)** for conversion steps, verification commands, and Docker volume notes.
@@ -346,7 +380,7 @@ website/
 │   ├── Dockerfile
 │   ├── src/views/LicensingActivateView.vue
 │   └── …                     ← Home, Services, About, Blog, Contact
-├── admin-console/            ← Operator UI (/adminconsole)
+├── admin-console/            ← Operator UI (/adminconsole); see admin-console/README.md
 ├── licensing/                ← Licensing + activation + sync API
 │   ├── main.py
 │   ├── routers/
@@ -356,11 +390,15 @@ website/
     ├── Dockerfile
     ├── main.py               ← FastAPI app
     ├── routers/
-    │   ├── contact.py        ← Contact form → email
+    │   ├── contact.py        ← Contact form → email + web_form lead
     │   ├── blog.py           ← Blog API (JSON-backed)
-    │   └── chat.py           ← JPbot chat (DeepSeek)
+    │   ├── chat.py           ← JPbot chat (DeepSeek) + web_form lead
+    │   ├── leads_admin.py    ← Admin JWT CRUD (/api/admin/leads)
+    │   ├── leads_api.py      ← Bot ingestion (/api/v1/leads)
+    │   └── leads_api_keys_admin.py
     └── data/
-        └── blog_posts.json   ← Add posts here
+        ├── blog_posts.json   ← Add posts here
+        └── lead-proposals/   ← Proposal PDFs (gitignored)
 ```
 
 ---
