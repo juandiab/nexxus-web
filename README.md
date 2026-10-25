@@ -1,6 +1,6 @@
 # Nexxus Tech Website
 
-**Version 0.32** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
+**Version 0.33** — Full-stack website for **nexxus-tech.com** — WAF · NetScaler · Cloud Security · AI
 
 ## Stack
 | Layer | Technology |
@@ -14,6 +14,16 @@
 ---
 
 ## Changelog
+
+### v0.33 - 2026-10-25
+- **Spanish (es)** - full site translation in a lightweight in-house i18n module (`frontend/src/i18n`, messages in `i18n/messages/es.js`); English stays the default and English copy is unchanged; values sent to the backend remain English
+- **Global EN/ES switch** - language switch in the desktop and mobile navbar controls every page, including `/ai-integration`
+- **Persistence** - the choice is saved in `localStorage` (`nexxus-locale`) and survives reloads and navigation; an earlier choice made on the AI Tech page is honored on first load; `<html lang>` follows the active language
+- **SEO** - Spanish titles and descriptions when `es` is active (`i18n/seo.js`); canonical URLs and JSON-LD unchanged
+- **Contact link** - AI Tech contact links pass the active language to `/contact` (`?locale=es|en`), which preselects it in the form
+- **AI Tech** - the separate page-level EN | ES toggle on `/ai-integration` was removed; the page follows the global switch
+- **Rollback (frontend image)** - previous images are kept on webserver01: `docker tag nexxus-web-frontend:i18n-es-8372819 nexxus-web-frontend:latest` (Spanish with the old AI Tech toggle) or `docker tag nexxus-web-frontend:pre-i18n-es-20261025 nexxus-web-frontend:latest` (v0.32, before Spanish), then `cd /opt/nexxus-web && docker compose up -d --no-build --no-deps frontend`
+- **Rollback (git)** - undo on `main` with `git revert` of the release commits (rollback point: tag `backup-pre-i18n-es-20261025`); never force-push `main`
 
 ### v0.32 — 2026-09-05
 - **AI Tech** — public page at `/ai-integration` refocused for SMB/PYME: EN | ES locale toggle, four use-case cards (customer communication, sales, internal processes, website agent), `CenterFlow` hero visual, engagement pipeline and workflow graph; “you don’t need to know AI” positioning; JPilot/ADC bridge removed from this page
