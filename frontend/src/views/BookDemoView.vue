@@ -15,9 +15,9 @@
       <div class="container scheduler-wrap reveal">
         <AppointmentScheduler :src="scheduleUrl" :min-height="720" />
         <p class="scheduler-note">
-          Prefer to chat first?
-          <router-link to="/contact">Contact us</router-link>
-          or use JPbot on any page.
+          {{ t('Prefer to chat first?') }}
+          <router-link to="/contact">{{ t('Contact us') }}</router-link>
+          {{ t('or use JPbot on any page.') }}
         </p>
       </div>
     </section>
@@ -30,6 +30,9 @@ import { useRoute } from 'vue-router'
 import AppointmentScheduler from '@/components/shared/AppointmentScheduler.vue'
 import { buildDemoBookingUrl } from '@/utils/demoBooking.js'
 import { GOOGLE_APPOINTMENT_SCHEDULE_URL } from '@/config/site.js'
+import { locale, useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const route = useRoute()
 
@@ -38,8 +41,8 @@ const isAiIntegrationBooking = computed(
 )
 
 const hero = computed(() => {
+  const es = locale.value === 'es'
   if (isAiIntegrationBooking.value) {
-    const es = route.query.locale === 'es'
     return es
       ? {
           label: 'Agendar llamada',
@@ -57,13 +60,21 @@ const hero = computed(() => {
         }
   }
 
-  return {
-    label: 'Book a demo',
-    titleLine1: 'Schedule a',
-    titleHighlight: 'Live Walkthrough',
-    subtitle:
-      'Pick a time for a JPilot demo or services discovery call with a Nexxus principal architect. Remote worldwide — no obligation.',
-  }
+  return es
+    ? {
+        label: 'Agende una demo',
+        titleLine1: 'Programe un',
+        titleHighlight: 'recorrido en vivo',
+        subtitle:
+          'Elija un horario para una demo de JPilot o una llamada de descubrimiento de servicios con un arquitecto principal de Nexxus. Remoto, en todo el mundo y sin compromiso.',
+      }
+    : {
+        label: 'Book a demo',
+        titleLine1: 'Schedule a',
+        titleHighlight: 'Live Walkthrough',
+        subtitle:
+          'Pick a time for a JPilot demo or services discovery call with a Nexxus principal architect. Remote worldwide — no obligation.',
+      }
 })
 
 const scheduleUrl = computed(() => {

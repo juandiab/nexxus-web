@@ -3,12 +3,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">Native SSH terminal · iOS &amp; iPadOS</span>
+        <span class="section-label reveal">{{ t('Native SSH terminal · iOS & iPadOS') }}</span>
         <h1 class="reveal reveal-delay-1">ConneXt</h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          A native, beautiful SSH client for iPhone and iPad — Liquid Glass
-          navigation, split terminals, reusable imported keys, and an optional
-          Command Assistant. <strong>Free.</strong> No subscription. No in-app purchases.
+          {{ t('A native, beautiful SSH client for iPhone and iPad — Liquid Glass navigation, split terminals, reusable imported keys, and an optional Command Assistant.') }} <strong>{{ t('Free.') }}</strong> {{ t('No subscription. No in-app purchases.') }}
         </p>
         <div class="hero-actions reveal reveal-delay-3">
           <a
@@ -17,10 +15,10 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i class="pi pi-apple"></i> Free on the App Store
+            <i class="pi pi-apple"></i> {{ t('Free on the App Store') }}
           </a>
-          <RouterLink to="/connext/support" class="btn btn-secondary">Support</RouterLink>
-          <RouterLink to="/connext/privacy" class="btn btn-outline">Privacy Policy</RouterLink>
+          <RouterLink to="/connext/support" class="btn btn-secondary">{{ t('Support') }}</RouterLink>
+          <RouterLink to="/connext/privacy" class="btn btn-outline">{{ t('Privacy Policy') }}</RouterLink>
         </div>
       </div>
     </section>
@@ -28,31 +26,26 @@
     <section class="section connext-body">
       <div class="container connext-inner">
         <article class="connext-card reveal">
-          <h2>What it is</h2>
+          <h2>{{ t('What it is') }}</h2>
           <p>
-            ConneXt is a native SSH terminal for iPhone and iPad, created by
-            Juan Pablo Otalvaro at Nexxus-Tech. It is built for the people who
-            already live in a shell — not a generic chat wrapper dressed as a
-            terminal.
+            {{ t('ConneXt is a native SSH terminal for iPhone and iPad, created by Juan Pablo Otalvaro at Nexxus-Tech. It is built for the people who already live in a shell — not a generic chat wrapper dressed as a terminal.') }}
           </p>
           <ul class="connext-list">
-            <li>Free on the App Store — no subscription, no in-app purchases</li>
-            <li>Native iOS / iPadOS app with Liquid Glass navigation</li>
-            <li>No ConneXt accounts. Credentials stay on your device.</li>
+            <li>{{ t('Free on the App Store — no subscription, no in-app purchases') }}</li>
+            <li>{{ t('Native iOS / iPadOS app with Liquid Glass navigation') }}</li>
+            <li>{{ t('No ConneXt accounts. Credentials stay on your device.') }}</li>
           </ul>
         </article>
 
         <article class="connext-card reveal reveal-delay-1">
-          <h2>Who it’s for</h2>
+          <h2>{{ t('Who it’s for') }}</h2>
           <p>
-            Network engineers, SREs, and anyone who needs a serious SSH client
-            on iPhone or iPad — sessions you can actually work in, keys you
-            import once and reuse, and an optional assistant only if you want it.
+            {{ t('Network engineers, SREs, and anyone who needs a serious SSH client on iPhone or iPad — sessions you can actually work in, keys you import once and reuse, and an optional assistant only if you want it.') }}
           </p>
           <ul class="connext-list">
-            <li>Operators who jump on a host from a phone or iPad</li>
-            <li>Engineers who keep imported keys in the iOS Keychain</li>
-            <li>Anyone who wants a native client without a paywall</li>
+            <li>{{ t('Operators who jump on a host from a phone or iPad') }}</li>
+            <li>{{ t('Engineers who keep imported keys in the iOS Keychain') }}</li>
+            <li>{{ t('Anyone who wants a native client without a paywall') }}</li>
           </ul>
         </article>
       </div>
@@ -61,10 +54,10 @@
     <section class="section features-section">
       <div class="container">
         <div class="section-header-center reveal">
-          <span class="section-label">Capabilities</span>
-          <h2 class="section-title">What ConneXt does</h2>
+          <span class="section-label">{{ t('Capabilities') }}</span>
+          <h2 class="section-title">{{ t('What ConneXt does') }}</h2>
           <p class="section-subtitle section-subtitle-center">
-            The parts that matter on a phone or iPad — not a feature list for its own sake.
+            {{ t('The parts that matter on a phone or iPad — not a feature list for its own sake.') }}
           </p>
         </div>
         <div class="grid-3 feature-grid">
@@ -77,8 +70,8 @@
             <div class="feature-icon" aria-hidden="true">
               <i :class="feature.icon"></i>
             </div>
-            <h3>{{ feature.title }}</h3>
-            <p>{{ feature.body }}</p>
+            <h3>{{ t(feature.title) }}</h3>
+            <p>{{ t(feature.body) }}</p>
           </article>
         </div>
       </div>
@@ -87,10 +80,10 @@
     <section class="section shots-section">
       <div class="container">
         <div class="section-header-center reveal">
-          <span class="section-label">Screenshots</span>
-          <h2 class="section-title">On iPhone and iPad</h2>
+          <span class="section-label">{{ t('Screenshots') }}</span>
+          <h2 class="section-title">{{ t('On iPhone and iPad') }}</h2>
           <p class="section-subtitle section-subtitle-center">
-            App Store screenshots will land here. These frames mark the views we ship.
+            {{ t('App Store screenshots will land here. These frames mark the views we ship.') }}
           </p>
         </div>
         <div class="shots-grid">
@@ -100,11 +93,11 @@
             class="shot-frame reveal"
             :class="`reveal-delay-${(i % 4) + 1}`"
           >
-            <div class="shot-screen" :aria-label="`${shot.title} screenshot placeholder`">
-              <span class="shot-chrome">{{ shot.chrome }}</span>
+            <div class="shot-screen" :aria-label="t('{title} screenshot placeholder', { title: t(shot.title) })">
+              <span class="shot-chrome">{{ t(shot.chrome) }}</span>
               <pre class="shot-term">{{ shot.term }}<span class="ld-cursor"></span></pre>
             </div>
-            <figcaption>{{ shot.title }}</figcaption>
+            <figcaption>{{ t(shot.title) }}</figcaption>
           </figure>
         </div>
       </div>
@@ -113,11 +106,10 @@
     <section class="section cta-section">
       <div class="container">
         <div class="cta-box reveal">
-          <span class="section-label">Get ConneXt</span>
-          <h2>Free on the App Store</h2>
+          <span class="section-label">{{ t('Get ConneXt') }}</span>
+          <h2>{{ t('Free on the App Store') }}</h2>
           <p>
-            No trial. No upgrade path. Download ConneXt and connect to the
-            servers you configure.
+            {{ t('No trial. No upgrade path. Download ConneXt and connect to the servers you configure.') }}
           </p>
           <div class="cta-actions">
             <a
@@ -126,9 +118,9 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              <i class="pi pi-apple"></i> Free on the App Store
+              <i class="pi pi-apple"></i> {{ t('Free on the App Store') }}
             </a>
-            <RouterLink to="/connext/support" class="btn btn-outline">Get support</RouterLink>
+            <RouterLink to="/connext/support" class="btn btn-outline">{{ t('Get support') }}</RouterLink>
           </div>
         </div>
       </div>
@@ -142,9 +134,9 @@
           <RouterLink to="/">Nexxus-Tech</RouterLink>
         </p>
         <p class="copyright">
-          © {{ year }} Nexxus-Tech / Juan Pablo Otalvaro. All rights reserved.
+          © {{ year }} Nexxus-Tech / Juan Pablo Otalvaro. {{ t('All rights reserved.') }}
         </p>
-        <p class="disclaimer">{{ product.disclaimer }}</p>
+        <p class="disclaimer">{{ t(product.disclaimer) }}</p>
       </div>
     </section>
   </div>
@@ -152,6 +144,9 @@
 
 <script setup>
 import { products } from '@/data/products.js'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const product = products.find((p) => p.id === 'connext')
 const year = new Date().getFullYear()

@@ -1,13 +1,19 @@
 <template>
   <section class="logo-test-page">
     <div class="container">
-      <h1>Logo preview</h1>
+      <h1>{{ t('Logo preview') }}</h1>
       <p class="logo-test-note">
-        The navbar above uses the production wordmark on every route, including this page.
+        {{ t('The navbar above uses the production wordmark on every route, including this page.') }}
       </p>
     </div>
   </section>
 </template>
+
+<script setup>
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
+</script>
 
 <style scoped>
 .logo-test-page {

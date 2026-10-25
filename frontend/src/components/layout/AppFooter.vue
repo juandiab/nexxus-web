@@ -5,16 +5,14 @@
       <div class="footer-grid">
         <!-- Brand col -->
         <div class="footer-brand">
-          <RouterLink to="/" class="footer-logo" aria-label="Nexxus Tech — home">
+          <RouterLink to="/" class="footer-logo" :aria-label="t('Nexxus Tech — home')">
             <NxConnectionRings size="nav" class="footer-logo-mark" />
             <span class="footer-wordmark">
               <span class="footer-wordmark__nexxus">NEXXUS</span><span class="footer-wordmark__tech">TECH</span>
             </span>
           </RouterLink>
           <p class="footer-desc">
-            Empowering people and organizations through consulting, architecture,
-            shared knowledge, and AI-driven innovation. Inspiring growth, solving
-            complex challenges, and making expertise more accessible.
+            {{ t('Empowering people and organizations through consulting, architecture, shared knowledge, and AI-driven innovation. Inspiring growth, solving complex challenges, and making expertise more accessible.') }}
           </p>
           <div class="footer-social">
             <SocialLinks variant="icons" />
@@ -22,66 +20,66 @@
         </div>
 
         <!-- Services col -->
-        <nav class="footer-col" aria-label="Services">
-          <h3 class="footer-col-title">Services</h3>
+        <nav class="footer-col" :aria-label="t('Services')">
+          <h3 class="footer-col-title">{{ t('Services') }}</h3>
           <ul>
-            <li><RouterLink to="/services#waf">WAF & API Protection</RouterLink></li>
+            <li><RouterLink to="/services#waf">{{ t('WAF & API Protection') }}</RouterLink></li>
             <li><RouterLink to="/services#netscaler">NetScaler / ADC</RouterLink></li>
-            <li><RouterLink to="/services#zerotrust">Zero-Trust Architecture</RouterLink></li>
-            <li><RouterLink to="/services#cloud">Cloud Security</RouterLink></li>
-            <li><RouterLink to="/services#ai">AI & Automation</RouterLink></li>
+            <li><RouterLink to="/services#zerotrust">{{ t('Zero-Trust Architecture') }}</RouterLink></li>
+            <li><RouterLink to="/services#cloud">{{ t('Cloud Security') }}</RouterLink></li>
+            <li><RouterLink to="/services#ai">{{ t('AI & Automation') }}</RouterLink></li>
             <li><RouterLink to="/ai-integration" class="footer-link-nowrap">AI Tech</RouterLink></li>
           </ul>
         </nav>
 
         <!-- Products col -->
-        <nav class="footer-col" aria-label="Products">
-          <h3 class="footer-col-title">Products</h3>
+        <nav class="footer-col" :aria-label="t('Products')">
+          <h3 class="footer-col-title">{{ t('Products') }}</h3>
           <ul>
             <li><RouterLink to="/products#jpilot">JPilot</RouterLink></li>
             <li><RouterLink to="/connext">ConneXt</RouterLink></li>
             <li><RouterLink to="/cafeina">Cafeina</RouterLink></li>
-            <li><RouterLink to="/products">All Products</RouterLink></li>
+            <li><RouterLink to="/products">{{ t('All Products') }}</RouterLink></li>
           </ul>
         </nav>
 
         <!-- Company col -->
-        <nav class="footer-col" aria-label="Company">
-          <h3 class="footer-col-title">Company</h3>
+        <nav class="footer-col" :aria-label="t('Company')">
+          <h3 class="footer-col-title">{{ t('Company') }}</h3>
           <ul>
-            <li><RouterLink to="/about">About Us</RouterLink></li>
-            <li><RouterLink to="/faq">FAQ</RouterLink></li>
-            <li><RouterLink to="/blog">Blog & Insights</RouterLink></li>
-            <li><RouterLink to="/book-demo">Book a Demo</RouterLink></li>
-            <li><RouterLink to="/contact">Contact</RouterLink></li>
+            <li><RouterLink to="/about">{{ t('About Us') }}</RouterLink></li>
+            <li><RouterLink to="/faq">{{ t('FAQ') }}</RouterLink></li>
+            <li><RouterLink to="/blog">{{ t('Blog & Insights') }}</RouterLink></li>
+            <li><RouterLink to="/book-demo">{{ t('Book a Demo') }}</RouterLink></li>
+            <li><RouterLink to="/contact">{{ t('Contact') }}</RouterLink></li>
           </ul>
         </nav>
 
         <!-- Legal col -->
-        <nav class="footer-col" aria-label="Legal">
-          <h3 class="footer-col-title">Legal</h3>
+        <nav class="footer-col" :aria-label="t('Legal')">
+          <h3 class="footer-col-title">{{ t('Legal') }}</h3>
           <ul>
             <li>
-              <a href="https://jpilot.nexxus-tech.com/legal/privacy">Privacy</a>
+              <a href="https://jpilot.nexxus-tech.com/legal/privacy">{{ t('Privacy') }}</a>
             </li>
             <li>
-              <RouterLink to="/connext/privacy">ConneXt Privacy</RouterLink>
+              <RouterLink to="/connext/privacy">{{ t('ConneXt Privacy') }}</RouterLink>
             </li>
             <li>
-              <RouterLink to="/connext/support">ConneXt Support</RouterLink>
+              <RouterLink to="/connext/support">{{ t('ConneXt Support') }}</RouterLink>
             </li>
             <li>
-              <RouterLink to="/cafeina/privacy">Cafeina Privacy</RouterLink>
+              <RouterLink to="/cafeina/privacy">{{ t('Cafeina Privacy') }}</RouterLink>
             </li>
             <li>
-              <a href="https://jpilot.nexxus-tech.com/legal/terms">Terms of Use</a>
+              <a href="https://jpilot.nexxus-tech.com/legal/terms">{{ t('Terms of Use') }}</a>
             </li>
           </ul>
         </nav>
 
         <!-- Contact col -->
         <div class="footer-col">
-          <h3 class="footer-col-title">Contact</h3>
+          <h3 class="footer-col-title">{{ t('Contact') }}</h3>
           <ul class="contact-list">
             <li>
               <i class="pi pi-envelope"></i>
@@ -93,19 +91,19 @@
             </li>
             <li>
               <i class="pi pi-map-marker"></i>
-              <span>Colombia · UAE · UK · Spain · US</span>
+              <span>{{ t('Colombia · UAE · UK · Spain · US') }}</span>
             </li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; {{ new Date().getFullYear() }} Nexxus Tech. All rights reserved.</p>
+        <p>&copy; {{ new Date().getFullYear() }} Nexxus Tech. {{ t('All rights reserved.') }}</p>
         <p class="footer-bottom-right">
-          Specialized in <span class="highlight">WAF</span> ·
+          {{ t('Specialized in') }} <span class="highlight">WAF</span> ·
           <span class="highlight">NetScaler</span> ·
-          <span class="highlight">Cloud Security</span> ·
-          <span class="highlight">AI</span>
+          <span class="highlight">{{ t('Cloud Security') }}</span> ·
+          <span class="highlight">{{ t('AI') }}</span>
         </p>
       </div>
     </div>
@@ -115,6 +113,9 @@
 <script setup>
 import SocialLinks from '@/components/shared/SocialLinks.vue'
 import NxConnectionRings from '@/components/shared/NxConnectionRings.vue'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped>

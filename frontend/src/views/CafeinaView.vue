@@ -3,11 +3,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">Personal macOS utility</span>
+        <span class="section-label reveal">{{ t('Personal macOS utility') }}</span>
         <h1 class="reveal reveal-delay-1">Cafeina</h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          A lightweight menu bar app that keeps your Mac awake while enabled.
-          Built by Juan Pablo Otalvaro A. Requires macOS 13 or later.
+          {{ t('A lightweight menu bar app that keeps your Mac awake while enabled. Built by Juan Pablo Otalvaro A. Requires macOS 13 or later.') }}
         </p>
         <div class="hero-actions reveal reveal-delay-3">
           <a
@@ -16,13 +15,13 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i class="pi pi-github"></i> View on GitHub
+            <i class="pi pi-github"></i> {{ t('View on GitHub') }}
           </a>
           <RouterLink to="/cafeina/privacy" class="btn btn-secondary">
-            Privacy Policy
+            {{ t('Privacy Policy') }}
           </RouterLink>
           <a href="mailto:support@nexxus-tech.com" class="btn btn-outline">
-            <i class="pi pi-envelope"></i> Support
+            <i class="pi pi-envelope"></i> {{ t('Support') }}
           </a>
         </div>
       </div>
@@ -31,29 +30,25 @@
     <section class="section cafeina-body">
       <div class="container cafeina-inner">
         <article class="cafeina-card reveal">
-          <h2>What it is</h2>
+          <h2>{{ t('What it is') }}</h2>
           <p>
-            Cafeina is a personal native macOS menu bar utility. While enabled, it
-            uses system power assertions so your Mac stays awake. Preferences stay
-            on your device — Cafeina does not collect personal data.
+            {{ t('Cafeina is a personal native macOS menu bar utility. While enabled, it uses system power assertions so your Mac stays awake. Preferences stay on your device — Cafeina does not collect personal data.') }}
           </p>
           <ul class="cafeina-list">
-            <li>Native menu bar app for macOS 13+</li>
-            <li>Runs locally on your Mac</li>
-            <li>No accounts, analytics, or advertising SDKs</li>
+            <li>{{ t('Native menu bar app for macOS 13+') }}</li>
+            <li>{{ t('Runs locally on your Mac') }}</li>
+            <li>{{ t('No accounts, analytics, or advertising SDKs') }}</li>
           </ul>
         </article>
 
         <article class="cafeina-card reveal reveal-delay-1">
-          <h2>Support &amp; privacy</h2>
+          <h2>{{ t('Support & privacy') }}</h2>
           <p>
-            Hosted on the Nexxus Tech domain for privacy and support URLs only.
-            Cafeina is a personal app by Juan Pablo Otalvaro A., not a Nexxus Tech
-            company product.
+            {{ t('Hosted on the Nexxus Tech domain for privacy and support URLs only. Cafeina is a personal app by Juan Pablo Otalvaro A., not a Nexxus Tech company product.') }}
           </p>
           <ul class="cafeina-links">
             <li>
-              <RouterLink to="/cafeina/privacy">Cafeina Privacy Policy</RouterLink>
+              <RouterLink to="/cafeina/privacy">{{ t('Cafeina Privacy Policy') }}</RouterLink>
             </li>
             <li>
               <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
@@ -67,7 +62,7 @@
             </li>
           </ul>
           <p class="cafeina-disclaimer">
-            Cafeina is not affiliated with Caffeine or any similarly named apps.
+            {{ t('Cafeina is not affiliated with Caffeine or any similarly named apps.') }}
           </p>
         </article>
       </div>
@@ -76,6 +71,9 @@
 </template>
 
 <script setup>
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped>

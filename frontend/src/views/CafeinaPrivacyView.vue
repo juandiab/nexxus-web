@@ -4,9 +4,9 @@
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
         <span class="section-label reveal">Cafeina</span>
-        <h1 class="reveal reveal-delay-1">Cafeina Privacy Policy</h1>
+        <h1 class="reveal reveal-delay-1">{{ t('Cafeina Privacy Policy') }}</h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          Effective date: August 17, 2026
+          {{ t('Effective date: August 17, 2026') }}
         </p>
       </div>
     </section>
@@ -15,53 +15,43 @@
       <div class="container privacy-inner">
         <article class="privacy-prose reveal">
           <p class="lede">
-            Cafeina does not collect, store, transmit, or sell personal data.
-            There are no analytics, tracking, accounts, or advertising SDKs.
+            {{ t('Cafeina does not collect, store, transmit, or sell personal data. There are no analytics, tracking, accounts, or advertising SDKs.') }}
           </p>
 
-          <h2>Who we are</h2>
+          <h2>{{ t('Who we are') }}</h2>
           <p>
-            Cafeina is a personal macOS menu bar utility developed by
-            <strong>Juan Pablo Otalvaro A</strong>. Support and privacy pages are
-            hosted on the Nexxus Tech website for App Store compliance and contact
-            convenience. Cafeina is not a Nexxus Tech company product.
+            {{ t('Cafeina is a personal macOS menu bar utility developed by') }}
+            <strong>Juan Pablo Otalvaro A</strong>. {{ t('Support and privacy pages are hosted on the Nexxus Tech website for App Store compliance and contact convenience. Cafeina is not a Nexxus Tech company product.') }}
           </p>
 
-          <h2>What Cafeina does locally</h2>
+          <h2>{{ t('What Cafeina does locally') }}</h2>
           <p>
-            Cafeina runs entirely on your Mac. While enabled, it keeps the Mac
-            awake using system power assertions. Optional Open at Login uses
-            standard macOS APIs. Preferences remain on-device; Cafeina may store
-            a first-run hint in UserDefaults and does not sync preferences to any
-            remote service.
+            {{ t('Cafeina runs entirely on your Mac. While enabled, it keeps the Mac awake using system power assertions. Optional Open at Login uses standard macOS APIs. Preferences remain on-device; Cafeina may store a first-run hint in UserDefaults and does not sync preferences to any remote service.') }}
           </p>
 
-          <h2>Data collection</h2>
+          <h2>{{ t('Data collection') }}</h2>
           <p>
-            Cafeina does not collect personal information. It does not create user
-            accounts, does not include analytics or crash reporters that send
-            identifying data, and does not use advertising or tracking SDKs.
+            {{ t('Cafeina does not collect personal information. It does not create user accounts, does not include analytics or crash reporters that send identifying data, and does not use advertising or tracking SDKs.') }}
           </p>
 
-          <h2>Third-party sharing</h2>
+          <h2>{{ t('Third-party sharing') }}</h2>
           <p>
-            Cafeina does not share data with third parties because it does not
-            collect or transmit personal data.
+            {{ t('Cafeina does not share data with third parties because it does not collect or transmit personal data.') }}
           </p>
 
-          <h2>Contact</h2>
+          <h2>{{ t('Contact') }}</h2>
           <p>
-            Questions about this policy or Cafeina:
+            {{ t('Questions about this policy or Cafeina:') }}
             <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
           </p>
 
-          <h2>Disclaimer</h2>
+          <h2>{{ t('Disclaimer') }}</h2>
           <p>
-            Cafeina is not affiliated with Caffeine or any similarly named apps.
+            {{ t('Cafeina is not affiliated with Caffeine or any similarly named apps.') }}
           </p>
 
           <p class="back-link">
-            <RouterLink to="/cafeina">← Back to Cafeina</RouterLink>
+            <RouterLink to="/cafeina">{{ t('← Back to Cafeina') }}</RouterLink>
           </p>
         </article>
       </div>
@@ -70,6 +60,9 @@
 </template>
 
 <script setup>
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped>

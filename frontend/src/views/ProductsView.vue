@@ -41,35 +41,35 @@
       </div>
       <div class="container hero-inner">
         <div class="hero-lockup">
-          <p class="hero-eyebrow reveal">Introducing</p>
+          <p class="hero-eyebrow reveal">{{ t('Introducing') }}</p>
           <JpilotLogo
             variant="hero"
-            tagline="AI-assisted appliance management"
+            :tagline="t('AI-assisted appliance management')"
             class="hero-brand reveal"
           />
-          <h2 class="hero-title reveal">Operate NetScaler, Cisco, and F5 with confidence</h2>
+          <h2 class="hero-title reveal">{{ t('Operate NetScaler, Cisco, and F5 with confidence') }}</h2>
           <p class="hero-description reveal">
-            JPilot connects your appliance inventory to your own AI provider keys — so your team can plan, configure, and troubleshoot with vendor-aware tools, not generic chat.
+            {{ t('JPilot connects your appliance inventory to your own AI provider keys — so your team can plan, configure, and troubleshoot with vendor-aware tools, not generic chat.') }}
           </p>
           <p class="hero-subline reveal reveal-delay-1">
-            Free edition. Bring your own AI keys. Credentials never leave your network.
+            {{ t('Free edition. Bring your own AI keys. Credentials never leave your network.') }}
           </p>
           <div class="hero-stats reveal reveal-delay-1">
             <div v-for="stat in heroStats" :key="stat.label" class="hero-stat">
               <span class="hero-stat-value">{{ stat.value }}</span>
-              <span class="hero-stat-label">{{ stat.label }}</span>
+              <span class="hero-stat-label">{{ t(stat.label) }}</span>
             </div>
           </div>
           <div class="hero-actions reveal reveal-delay-1">
             <GlowButton v-if="!registered" variant="primary">
-              <a href="#register" class="btn btn-primary">Register for access</a>
+              <a href="#register" class="btn btn-primary">{{ t('Register for access') }}</a>
             </GlowButton>
             <GlowButton v-else variant="primary">
-              <a href="https://jpilot.nexxus-tech.com" class="btn btn-primary">Open JPilot</a>
+              <a href="https://jpilot.nexxus-tech.com" class="btn btn-primary">{{ t('Open JPilot') }}</a>
             </GlowButton>
             <GlowButton variant="secondary">
               <a :href="registered ? '#install' : '#register'" class="btn btn-secondary">
-                {{ registered ? 'Install JPilot' : 'Get install access' }}
+                {{ registered ? t('Install JPilot') : t('Get install access') }}
               </a>
             </GlowButton>
           </div>
@@ -88,11 +88,11 @@
     <!-- Early Access -->
     <section class="early-access-section section-light">
       <div class="container early-access-inner reveal">
-        <h2>Early adopters get a free license</h2>
+        <h2>{{ t('Early adopters get a free license') }}</h2>
         <p>
-          The Free edition lets your team explore JPilot with your own AI provider keys, on your own infrastructure. Install during Early Access and we'll issue a free license under our Terms of Use.
+          {{ t("The Free edition lets your team explore JPilot with your own AI provider keys, on your own infrastructure. Install during Early Access and we'll issue a free license under our Terms of Use.") }}
         </p>
-        <RouterLink to="/legal" class="early-access-terms-link">Read the Terms of Use</RouterLink>
+        <RouterLink to="/legal" class="early-access-terms-link">{{ t('Read the Terms of Use') }}</RouterLink>
       </div>
     </section>
 
@@ -100,21 +100,21 @@
     <section class="feature-section section-light">
       <div class="container feature-grid">
         <div class="feature-copy reveal">
-          <span class="feature-badge">Operations</span>
-          <h2>From design to execution</h2>
+          <span class="feature-badge">{{ t('Operations') }}</span>
+          <h2>{{ t('From design to execution') }}</h2>
           <p>
-            Start in Architect for structured discovery and formal design documents, then hand off to Operator for implementation — without leaving the conversation.
+            {{ t('Start in Architect for structured discovery and formal design documents, then hand off to Operator for implementation — without leaving the conversation.') }}
           </p>
           <ul class="feature-list">
-            <li>Guided jpilot-form blocks for load balancers and policies</li>
-            <li>Send to Operator from design deliverables in one click</li>
-            <li>Memory-guided RAG gates API and CLI usage before execution</li>
+            <li>{{ t('Guided jpilot-form blocks for load balancers and policies') }}</li>
+            <li>{{ t('Send to Operator from design deliverables in one click') }}</li>
+            <li>{{ t('Memory-guided RAG gates API and CLI usage before execution') }}</li>
           </ul>
         </div>
         <div class="feature-media reveal reveal-delay-1">
           <FeatureZoomImage
             src="/jpilot/feature-operations.png"
-            alt="JPilot design-to-execution workflow"
+            :alt="t('JPilot design-to-execution workflow')"
             :width="720"
             :height="480"
           />
@@ -126,21 +126,21 @@
     <section class="feature-section">
       <div class="container feature-grid feature-grid--reverse">
         <div class="feature-copy reveal">
-          <span class="feature-badge">Reliability</span>
-          <h2>Troubleshoot with context</h2>
+          <span class="feature-badge">{{ t('Reliability') }}</span>
+          <h2>{{ t('Troubleshoot with context') }}</h2>
           <p>
-            Analyst mode stays read-first while diagnostics, official documentation search, and appliance telemetry keep investigations grounded in your environment.
+            {{ t('Analyst mode stays read-first while diagnostics, official documentation search, and appliance telemetry keep investigations grounded in your environment.') }}
           </p>
           <ul class="feature-list">
-            <li>NetScaler ping, traceroute, port checks, and nsconmsg collection</li>
-            <li>Brave Search limited to vendor official domains per platform</li>
-            <li>Dual-pane chat with model-aware context usage rings</li>
+            <li>{{ t('NetScaler ping, traceroute, port checks, and nsconmsg collection') }}</li>
+            <li>{{ t('Brave Search limited to vendor official domains per platform') }}</li>
+            <li>{{ t('Dual-pane chat with model-aware context usage rings') }}</li>
           </ul>
         </div>
         <div class="feature-media reveal reveal-delay-1">
           <FeatureZoomImage
             src="/jpilot/feature-reliability.png"
-            alt="JPilot troubleshooting and diagnostics"
+            :alt="t('JPilot troubleshooting and diagnostics')"
             :width="720"
             :height="480"
           />
@@ -152,15 +152,15 @@
     <section class="feature-section section-light">
       <div class="container feature-grid">
         <div class="feature-copy reveal">
-          <h2>Your keys, your infrastructure</h2>
+          <h2>{{ t('Your keys, your infrastructure') }}</h2>
           <p>
-            Point JPilot at a local model (LM Studio) or your enterprise LLM (Azure OpenAI, AWS Bedrock, private endpoints). Traffic and appliance context stay inside your infrastructure — not a shared SaaS pool. You choose the provider and pay for inference.
+            {{ t('Point JPilot at a local model (LM Studio) or your enterprise LLM (Azure OpenAI, AWS Bedrock, private endpoints). Traffic and appliance context stay inside your infrastructure — not a shared SaaS pool. You choose the provider and pay for inference.') }}
           </p>
         </div>
         <div class="feature-media reveal reveal-delay-1">
           <FeatureZoomImage
             src="/jpilot/feature-isolation.png"
-            alt="JPilot enterprise isolation — credentials stay on your infrastructure"
+            :alt="t('JPilot enterprise isolation — credentials stay on your infrastructure')"
             :width="720"
             :height="480"
           />
@@ -172,15 +172,15 @@
     <section class="feature-section">
       <div class="container feature-grid feature-grid--reverse">
         <div class="feature-copy reveal">
-          <h2>Built on MCP</h2>
+          <h2>{{ t('Built on MCP') }}</h2>
           <p>
-            The copilot runs on a Model Context Protocol server with tools for the Next-Gen API, classic CLI over SSH, NITRO helpers, diagnostics, and SSL CSR generation. Architect, Operator, and Analyst workflows are shaped by NetScaler, Cisco, and F5 SME practice — plus recommended actions in the command menu.
+            {{ t('The copilot runs on a Model Context Protocol server with tools for the Next-Gen API, classic CLI over SSH, NITRO helpers, diagnostics, and SSL CSR generation. Architect, Operator, and Analyst workflows are shaped by NetScaler, Cisco, and F5 SME practice — plus recommended actions in the command menu.') }}
           </p>
         </div>
         <div class="feature-media reveal reveal-delay-1">
           <FeatureZoomImage
             src="/jpilot/feature-mcp.png"
-            alt="JPilot MCP server connecting the copilot to appliance tools"
+            :alt="t('JPilot MCP server connecting the copilot to appliance tools')"
             :width="720"
             :height="420"
           />
@@ -192,8 +192,8 @@
     <section class="platforms-section section-light">
       <div class="container platforms-inner">
         <div class="platforms-header reveal">
-          <h2>Supported platforms</h2>
-          <p>Register NetScaler ADC, SDX, Cisco IOS/XE, and F5 BIG-IP — one inventory, native CLI and API for each vendor.</p>
+          <h2>{{ t('Supported platforms') }}</h2>
+          <p>{{ t('Register NetScaler ADC, SDX, Cisco IOS/XE, and F5 BIG-IP — one inventory, native CLI and API for each vendor.') }}</p>
         </div>
         <ul class="platforms-grid reveal reveal-delay-1">
           <li v-for="vendor in supportedVendors" :key="vendor.name" class="platform-card">
@@ -202,11 +202,11 @@
               class="platform-badge"
               :class="vendor.status === 'available' ? 'platform-badge--available' : 'platform-badge--beta'"
             >
-              {{ vendor.status === 'available' ? 'Available' : 'Beta' }}
+              {{ vendor.status === 'available' ? t('Available') : t('Beta') }}
             </span>
           </li>
         </ul>
-        <p class="platforms-footnote reveal reveal-delay-2">More vendors coming soon.</p>
+        <p class="platforms-footnote reveal reveal-delay-2">{{ t('More vendors coming soon.') }}</p>
       </div>
     </section>
 
@@ -214,23 +214,23 @@
     <section id="register" class="cta-section">
       <div class="container cta-inner reveal">
         <template v-if="!registered">
-          <h2>Register for JPilot access</h2>
-          <p>Leave your details to unlock the install command and continue to the platform.</p>
+          <h2>{{ t('Register for JPilot access') }}</h2>
+          <p>{{ t('Leave your details to unlock the install command and continue to the platform.') }}</p>
           <JpilotRegisterForm class="cta-form" @registered="onRegistered" />
         </template>
         <template v-else>
-          <h2>You're registered</h2>
-          <p>Install JPilot with one command, then continue to the platform.</p>
+          <h2>{{ t("You're registered") }}</h2>
+          <p>{{ t('Install JPilot with one command, then continue to the platform.') }}</p>
           <div class="cta-install">
             <InstallBlock copy-id="footer" />
           </div>
         </template>
         <div class="cta-actions">
           <GlowButton v-if="registered" variant="primary">
-            <a href="https://jpilot.nexxus-tech.com" class="btn btn-primary">Open JPilot</a>
+            <a href="https://jpilot.nexxus-tech.com" class="btn btn-primary">{{ t('Open JPilot') }}</a>
           </GlowButton>
           <GlowButton variant="secondary">
-            <router-link to="/book-demo" class="btn btn-secondary">Book a demo</router-link>
+            <router-link to="/book-demo" class="btn btn-secondary">{{ t('Book a demo') }}</router-link>
           </GlowButton>
         </div>
       </div>
@@ -240,11 +240,11 @@
     <section class="disclaimer-section">
       <div class="container">
         <p class="product-support reveal">
-          Questions or need help? Email
+          {{ t('Questions or need help? Email') }}
           <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
         </p>
         <p class="product-disclaimer reveal">
-          JPilot is an independent product by Nexxus-Tech SAS. It is not affiliated with, endorsed by, sponsored by, or certified by Cloud Software Group (Citrix / NetScaler), Cisco Systems, F5 Networks, or their affiliates. NetScaler, Citrix, Cisco, F5 BIG-IP, and related names are trademarks of their respective owners and are used here only for identification and interoperability.
+          {{ t('JPilot is an independent product by Nexxus-Tech SAS. It is not affiliated with, endorsed by, sponsored by, or certified by Cloud Software Group (Citrix / NetScaler), Cisco Systems, F5 Networks, or their affiliates. NetScaler, Citrix, Cisco, F5 BIG-IP, and related names are trademarks of their respective owners and are used here only for identification and interoperability.') }}
         </p>
       </div>
     </section>
@@ -252,17 +252,15 @@
     <!-- ConneXt -->
     <section id="connext" class="cafeina-teaser-section">
       <div class="container cafeina-teaser reveal">
-        <span class="section-label">iOS &amp; iPadOS</span>
+        <span class="section-label">{{ t('iOS & iPadOS') }}</span>
         <h2>ConneXt</h2>
         <p>
-          A free native SSH terminal for iPhone and iPad. Liquid Glass navigation,
-          split terminals, reusable imported keys, and an optional Command Assistant.
-          No subscription. No in-app purchases.
+          {{ t('A free native SSH terminal for iPhone and iPad. Liquid Glass navigation, split terminals, reusable imported keys, and an optional Command Assistant. No subscription. No in-app purchases.') }}
         </p>
         <div class="cafeina-teaser-actions">
-          <RouterLink to="/connext" class="btn btn-primary">Learn more</RouterLink>
-          <RouterLink to="/connext/privacy" class="btn btn-secondary">Privacy Policy</RouterLink>
-          <RouterLink to="/connext/support" class="btn btn-outline">Support</RouterLink>
+          <RouterLink to="/connext" class="btn btn-primary">{{ t('Learn more') }}</RouterLink>
+          <RouterLink to="/connext/privacy" class="btn btn-secondary">{{ t('Privacy Policy') }}</RouterLink>
+          <RouterLink to="/connext/support" class="btn btn-outline">{{ t('Support') }}</RouterLink>
         </div>
       </div>
     </section>
@@ -270,15 +268,14 @@
     <!-- Cafeina -->
     <section id="cafeina" class="cafeina-teaser-section">
       <div class="container cafeina-teaser reveal">
-        <span class="section-label">Also available</span>
+        <span class="section-label">{{ t('Also available') }}</span>
         <h2>Cafeina</h2>
         <p>
-          A personal macOS menu bar utility that keeps your Mac awake while enabled.
-          Runs locally — no personal data collection. Requires macOS 13 or later.
+          {{ t('A personal macOS menu bar utility that keeps your Mac awake while enabled. Runs locally — no personal data collection. Requires macOS 13 or later.') }}
         </p>
         <div class="cafeina-teaser-actions">
-          <RouterLink to="/cafeina" class="btn btn-primary">Learn more</RouterLink>
-          <RouterLink to="/cafeina/privacy" class="btn btn-secondary">Privacy Policy</RouterLink>
+          <RouterLink to="/cafeina" class="btn btn-primary">{{ t('Learn more') }}</RouterLink>
+          <RouterLink to="/cafeina/privacy" class="btn btn-secondary">{{ t('Privacy Policy') }}</RouterLink>
           <a
             href="https://github.com/juandiab/Cafeina"
             class="btn btn-outline"
@@ -293,6 +290,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useI18n } from '@/i18n'
 import InstallBlock from '@/components/shared/InstallBlock.vue'
 import DemoVideo from '@/components/shared/DemoVideo.vue'
 import JpilotLogo from '@/components/shared/JpilotLogo.vue'
@@ -302,6 +300,8 @@ import MagicRings from '@/components/shared/MagicRings.vue'
 import GlowButton from '@/components/shared/GlowButton.vue'
 import FeatureZoomImage from '@/components/shared/FeatureZoomImage.vue'
 import { isJpilotRegistered, markJpilotRegistered } from '@/utils/jpilotRegistration.js'
+
+const { t } = useI18n()
 
 const JPILOT_REDIRECT = 'https://jpilot.nexxus-tech.com'
 

@@ -2,7 +2,7 @@
   <button
     type="button"
     class="feature-zoom-trigger"
-    :aria-label="`View larger: ${alt}`"
+    :aria-label="t('View larger: {alt}', { alt: t(alt) })"
     @click="open = true"
   >
     <img
@@ -27,7 +27,7 @@
         <button
           type="button"
           class="feature-lightbox-close"
-          aria-label="Close image"
+          :aria-label="t('Close image')"
           @click="close"
         >
           <i class="pi pi-times"></i>
@@ -40,6 +40,9 @@
 
 <script setup>
 import { onUnmounted, ref, watch } from 'vue'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 defineProps({
   src: { type: String, required: true },

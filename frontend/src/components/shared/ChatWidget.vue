@@ -16,7 +16,7 @@
               <span class="chat-name">JPbot</span>
               <span class="chat-status">
                 <span class="status-dot"></span>
-                Contact us · Nexxus Tech
+                {{ t('Contact us · Nexxus Tech') }}
               </span>
             </div>
           </div>
@@ -25,12 +25,12 @@
               type="button"
               class="chat-resize"
               @click="toggleChatSize"
-              :aria-label="chatSize === 'expanded' ? 'Use smaller chat window' : 'Use full screen chat'"
-              :title="chatSize === 'expanded' ? 'Smaller window' : 'Full screen'"
+              :aria-label="chatSize === 'expanded' ? t('Use smaller chat window') : t('Use full screen chat')"
+              :title="chatSize === 'expanded' ? t('Smaller window') : t('Full screen')"
             >
               <i :class="chatSize === 'expanded' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'"></i>
             </button>
-            <button class="chat-close" @click="closeChat" aria-label="Close chat">
+            <button class="chat-close" @click="closeChat" :aria-label="t('Close chat')">
               <i class="pi pi-times"></i>
             </button>
           </div>
@@ -53,9 +53,9 @@
               <div
                 v-if="msg.role === 'assistant'"
                 class="msg-content"
-                v-html="formatChatMessage(msg.content)"
+                v-html="formatChatMessage(displayMsg(msg))"
               ></div>
-              <p v-else>{{ msg.content }}</p>
+              <p v-else>{{ displayMsg(msg) }}</p>
             </div>
           </div>
           <div v-if="loading" class="chat-msg chat-msg--assistant">
@@ -75,7 +75,7 @@
           }"
         >
           <template v-if="intakePanel === 'enquiry_type'">
-            <label class="intake-panel-title">What do you need help with?</label>
+            <label class="intake-panel-title">{{ t('What do you need help with?') }}</label>
             <div class="enquiry-options">
               <button
                 v-for="opt in enquiryTypes"
@@ -87,8 +87,8 @@
               >
                 <i :class="['pi', opt.icon]"></i>
                 <span class="enquiry-option-text">
-                  <span class="enquiry-option-label">{{ opt.label }}</span>
-                  <span class="enquiry-option-desc">{{ opt.desc }}</span>
+                  <span class="enquiry-option-label">{{ t(opt.label) }}</span>
+                  <span class="enquiry-option-desc">{{ t(opt.desc) }}</span>
                 </span>
               </button>
             </div>
@@ -99,71 +99,71 @@
                 @click="confirmEnquiryType"
                 :disabled="!panelValues.enquiry_type"
               >
-                Continue
+                {{ t('Continue') }}
               </button>
             </div>
           </template>
 
           <template v-else-if="intakePanel === 'contact'">
-            <label class="intake-panel-title">Your contact details</label>
+            <label class="intake-panel-title">{{ t('Your contact details') }}</label>
             <form class="jpbot-contact-form" @submit.prevent="confirmContact">
               <div class="form-field">
-                <label for="jpbot-name">Full name <span class="req">*</span></label>
+                <label for="jpbot-name">{{ t('Full name') }} <span class="req">*</span></label>
                 <input
                   id="jpbot-name"
                   v-model="panelValues.name"
                   type="text"
                   autocomplete="name"
-                  placeholder="John Smith"
+                  :placeholder="t('John Smith')"
                 />
-                <span v-if="contactErrors.name" class="field-error">{{ contactErrors.name }}</span>
+                <span v-if="contactErrors.name" class="field-error">{{ t(contactErrors.name) }}</span>
               </div>
               <div class="form-field">
-                <label for="jpbot-email">Email <span class="req">*</span></label>
+                <label for="jpbot-email">{{ t('Email') }} <span class="req">*</span></label>
                 <input
                   id="jpbot-email"
                   v-model="panelValues.email"
                   type="email"
                   autocomplete="email"
-                  placeholder="you@company.com"
+                  :placeholder="t('you@company.com')"
                 />
-                <span v-if="contactErrors.email" class="field-error">{{ contactErrors.email }}</span>
+                <span v-if="contactErrors.email" class="field-error">{{ t(contactErrors.email) }}</span>
               </div>
               <div class="form-field">
-                <label for="jpbot-company">Company / organization <span class="req">*</span></label>
+                <label for="jpbot-company">{{ t('Company / organization') }} <span class="req">*</span></label>
                 <input
                   id="jpbot-company"
                   v-model="panelValues.company"
                   type="text"
                   autocomplete="organization"
-                  placeholder="Acme Corp"
+                  :placeholder="t('Acme Corp')"
                   required
                 />
-                <span v-if="contactErrors.company" class="field-error">{{ contactErrors.company }}</span>
+                <span v-if="contactErrors.company" class="field-error">{{ t(contactErrors.company) }}</span>
               </div>
-              <button type="submit" class="btn-intake btn-intake--continue">Continue</button>
+              <button type="submit" class="btn-intake btn-intake--continue">{{ t('Continue') }}</button>
             </form>
           </template>
 
           <template v-else-if="intakePanel === 'demo_details'">
-            <label class="intake-panel-title">Demo details</label>
+            <label class="intake-panel-title">{{ t('Demo details') }}</label>
             <form class="jpbot-contact-form" @submit.prevent="confirmDemoDetails">
               <div class="form-field">
-                <label for="jpbot-demo-interest">What would you like to see? <span class="req">*</span></label>
+                <label for="jpbot-demo-interest">{{ t('What would you like to see?') }} <span class="req">*</span></label>
                 <select id="jpbot-demo-interest" v-model="panelValues.demo_interest">
-                  <option value="">Select...</option>
+                  <option value="">{{ t('Select...') }}</option>
                   <option v-for="opt in demoInterests" :key="opt.value" :value="opt.value">
-                    {{ opt.label }}
+                    {{ t(opt.label) }}
                   </option>
                 </select>
               </div>
               <div class="form-field">
-                <label for="jpbot-demo-notes">Anything else we should know?</label>
+                <label for="jpbot-demo-notes">{{ t('Anything else we should know?') }}</label>
                 <textarea
                   id="jpbot-demo-notes"
                   v-model="panelValues.demo_notes"
                   rows="3"
-                  placeholder="Goals, platforms, or questions for the demo..."
+                  :placeholder="t('Goals, platforms, or questions for the demo...')"
                 ></textarea>
               </div>
               <button
@@ -171,53 +171,53 @@
                 class="btn-intake btn-intake--continue"
                 :disabled="!panelValues.demo_interest"
               >
-                Continue
+                {{ t('Continue') }}
               </button>
             </form>
           </template>
 
           <template v-else-if="intakePanel === 'service'">
-            <label for="jpbot-service">Service of interest</label>
+            <label for="jpbot-service">{{ t('Service of interest') }}</label>
             <select id="jpbot-service" v-model="panelValues.service">
-              <option value="">Select...</option>
-              <option v-for="s in services" :key="s" :value="s">{{ s }}</option>
+              <option value="">{{ t('Select...') }}</option>
+              <option v-for="s in services" :key="s" :value="s">{{ t(s) }}</option>
             </select>
-            <button class="btn-intake" @click="confirmService" :disabled="!panelValues.service">Continue</button>
+            <button class="btn-intake" @click="confirmService" :disabled="!panelValues.service">{{ t('Continue') }}</button>
           </template>
 
           <template v-else-if="intakePanel === 'criticality'">
-            <label for="jpbot-crit">How critical is this?</label>
+            <label for="jpbot-crit">{{ t('How critical is this?') }}</label>
             <select id="jpbot-crit" v-model="panelValues.criticality">
-              <option value="">Select...</option>
-              <option v-for="c in criticalityOptions" :key="c" :value="c">{{ c }}</option>
+              <option value="">{{ t('Select...') }}</option>
+              <option v-for="c in criticalityOptions" :key="c" :value="c">{{ t(c) }}</option>
             </select>
-            <button class="btn-intake" @click="confirmCriticality" :disabled="!panelValues.criticality">Continue</button>
+            <button class="btn-intake" @click="confirmCriticality" :disabled="!panelValues.criticality">{{ t('Continue') }}</button>
           </template>
 
           <template v-else-if="intakePanel === 'users'">
-            <label for="jpbot-users">Users affected</label>
+            <label for="jpbot-users">{{ t('Users affected') }}</label>
             <input
               id="jpbot-users"
               v-model="panelValues.users_affected"
               type="text"
-              placeholder="e.g. All staff (~200), admins only..."
+              :placeholder="t('e.g. All staff (~200), admins only...')"
             />
-            <button class="btn-intake" @click="confirmUsers" :disabled="!panelValues.users_affected.trim()">Continue</button>
+            <button class="btn-intake" @click="confirmUsers" :disabled="!panelValues.users_affected.trim()">{{ t('Continue') }}</button>
           </template>
 
           <template v-else-if="intakePanel === 'technologies'">
-            <label>Technologies involved</label>
+            <label>{{ t('Technologies involved') }}</label>
             <div class="tech-checkboxes">
-              <label v-for="t in technologyOptions" :key="t" class="tech-check">
-                <input type="checkbox" :value="t" v-model="panelValues.technologies" />
-                <span>{{ t }}</span>
+              <label v-for="tech in technologyOptions" :key="tech" class="tech-check">
+                <input type="checkbox" :value="tech" v-model="panelValues.technologies" />
+                <span>{{ t(tech) }}</span>
               </label>
             </div>
             <input
               v-if="panelValues.technologies.includes('Other')"
               v-model="panelValues.technology_other"
               type="text"
-              placeholder="Describe other technology..."
+              :placeholder="t('Describe other technology...')"
               class="tech-other"
             />
             <button
@@ -225,25 +225,25 @@
               @click="confirmTechnologies"
               :disabled="!panelValues.technologies.length"
             >
-              Continue
+              {{ t('Continue') }}
             </button>
           </template>
 
           <template v-else-if="intakePanel === 'version'">
-            <label for="jpbot-ver">Platform version <span class="optional">(optional)</span></label>
-            <input id="jpbot-ver" v-model="panelValues.platform_version" type="text" placeholder="e.g. 14.1, 13.1-48.47..." />
+            <label for="jpbot-ver">{{ t('Platform version') }} <span class="optional">{{ t('(optional)') }}</span></label>
+            <input id="jpbot-ver" v-model="panelValues.platform_version" type="text" :placeholder="t('e.g. 14.1, 13.1-48.47...')" />
             <div class="panel-actions">
-              <button type="button" class="btn-skip" @click="skipVersion">Skip</button>
-              <button class="btn-intake" @click="confirmVersion">Continue</button>
+              <button type="button" class="btn-skip" @click="skipVersion">{{ t('Skip') }}</button>
+              <button class="btn-intake" @click="confirmVersion">{{ t('Continue') }}</button>
             </div>
           </template>
 
           <template v-else-if="intakePanel === 'model'">
-            <label for="jpbot-model">Platform model <span class="optional">(optional)</span></label>
-            <input id="jpbot-model" v-model="panelValues.platform_model" type="text" placeholder="e.g. VPX, MPX, SDX..." />
+            <label for="jpbot-model">{{ t('Platform model') }} <span class="optional">{{ t('(optional)') }}</span></label>
+            <input id="jpbot-model" v-model="panelValues.platform_model" type="text" :placeholder="t('e.g. VPX, MPX, SDX...')" />
             <div class="panel-actions">
-              <button type="button" class="btn-skip" @click="skipModel">Skip</button>
-              <button class="btn-intake" @click="confirmModel">Continue</button>
+              <button type="button" class="btn-skip" @click="skipModel">{{ t('Skip') }}</button>
+              <button class="btn-intake" @click="confirmModel">{{ t('Continue') }}</button>
             </div>
           </template>
         </div>
@@ -255,23 +255,23 @@
             @click="submitEnquiry"
           >
             <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-send'"></i>
-            {{ submitting ? 'Sending...' : 'Send enquiry to Nexxus' }}
+            {{ submitting ? t('Sending...') : t('Send enquiry to Nexxus') }}
           </button>
           <p v-if="canSubmit" class="submit-hint submit-hint--ready">
-            You're all set — send when ready.
+            {{ t("You're all set — send when ready.") }}
           </p>
           <p v-else-if="allowEarlySubmit" class="submit-hint">
-            Done for now? You can send now — we'll email you if we need more.
+            {{ t("Done for now? You can send now — we'll email you if we need more.") }}
           </p>
-          <p v-else class="submit-hint">Share a brief description to continue.</p>
+          <p v-else class="submit-hint">{{ t('Share a brief description to continue.') }}</p>
           <router-link v-if="canSendEnquiry" to="/contact" class="contact-link" @click="prefillContact">
-            Or review on the contact page
+            {{ t('Or review on the contact page') }}
           </router-link>
         </div>
 
         <div v-else-if="phase === 'demo_booking'" class="chat-demo-bar">
           <p class="demo-booking-lead">
-            Pick a time below — your name, email, and demo notes are passed into the scheduler.
+            {{ t('Pick a time below — your name, email, and demo notes are passed into the scheduler.') }}
           </p>
           <button
             type="button"
@@ -280,22 +280,22 @@
             @click="openDemoScheduler"
           >
             <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-calendar'"></i>
-            {{ submitting ? 'Loading...' : 'Pick a time' }}
+            {{ submitting ? t('Loading...') : t('Pick a time') }}
           </button>
         </div>
 
         <div v-if="submitted" class="chat-success">
           <i class="pi pi-check-circle"></i>
           <p v-if="profile.enquiry_type === 'Book a demo'">
-            Demo details saved! Complete your booking in the scheduler. Check your inbox for a summary.
+            {{ t('Demo details saved! Complete your booking in the scheduler. Check your inbox for a summary.') }}
             <button type="button" class="demo-calendar-fallback" @click="showSchedulerModal = true">
-              Open scheduler again
+              {{ t('Open scheduler again') }}
             </button>
             <router-link :to="bookDemoPageLink" class="demo-calendar-fallback demo-calendar-fallback--link">
-              Or book on the demo page
+              {{ t('Or book on the demo page') }}
             </router-link>
           </p>
-          <p v-else>Enquiry sent! Check your inbox for a summary.</p>
+          <p v-else>{{ t('Enquiry sent! Check your inbox for a summary.') }}</p>
         </div>
 
         <div v-else-if="phase === 'discovery' && !submitted" class="chat-input-area">
@@ -313,7 +313,7 @@
         </div>
 
         <p class="chat-disclaimer">
-          Chat with JPbot to reach our team — WAF, NetScaler, Zero-Trust &amp; cloud security.
+          {{ t('Chat with JPbot to reach our team — WAF, NetScaler, Zero-Trust & cloud security.') }}
         </p>
       </div>
     </Transition>
@@ -332,11 +332,11 @@
             aria-labelledby="jpbot-scheduler-title"
           >
             <div class="scheduler-modal-header">
-              <h2 id="jpbot-scheduler-title">Pick a time</h2>
+              <h2 id="jpbot-scheduler-title">{{ t('Pick a time') }}</h2>
               <button
                 type="button"
                 class="scheduler-modal-close"
-                aria-label="Close scheduler"
+                :aria-label="t('Close scheduler')"
                 @click="closeSchedulerModal"
               >
                 <i class="pi pi-times"></i>
@@ -354,20 +354,20 @@
         v-if="showInvite && !isOpen"
         class="chat-invite-card"
         role="dialog"
-        aria-label="Contact us via chat"
+        :aria-label="t('Contact us via chat')"
       >
-        <button class="invite-close" @click="dismissInvite" aria-label="Dismiss">
+        <button class="invite-close" @click="dismissInvite" :aria-label="t('Dismiss')">
           <i class="pi pi-times"></i>
         </button>
         <div class="invite-icon"><i class="pi pi-comments"></i></div>
-        <p class="invite-eyebrow">Contact us</p>
-        <h3 class="invite-title">Chat with JPbot</h3>
+        <p class="invite-eyebrow">{{ t('Contact us') }}</p>
+        <h3 class="invite-title">{{ t('Chat with JPbot') }}</h3>
         <p class="invite-body">
-          Tell us about your project or issue — we'll collect the details and a Nexxus specialist will follow up.
+          {{ t("Tell us about your project or issue — we'll collect the details and a Nexxus specialist will follow up.") }}
         </p>
         <button class="invite-cta" @click="openFromInvite">
           <i class="pi pi-arrow-right"></i>
-          Start chat
+          {{ t('Start chat') }}
         </button>
       </div>
     </Transition>
@@ -376,10 +376,10 @@
       class="chat-bubble"
       @click="toggleChat"
       :class="{ active: isOpen, 'has-invite': showInvite && !isOpen }"
-      aria-label="Open chat to contact Nexxus Tech"
+      :aria-label="t('Open chat to contact Nexxus Tech')"
     >
       <span v-if="showInvite && !isOpen" class="bubble-badge" aria-hidden="true">1</span>
-      <span v-if="!isOpen" class="bubble-hint">Chat</span>
+      <span v-if="!isOpen" class="bubble-hint">{{ t('Chat') }}</span>
       <Transition name="icon-flip" mode="out-in">
         <i v-if="isOpen" key="close" class="pi pi-times"></i>
         <i v-else key="open" class="pi pi-comments"></i>
@@ -393,6 +393,9 @@
 import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import axios from 'axios'
 import { saveJpbotDraft } from '@/utils/jpbotDraft.js'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 import { formatChatMessage } from '@/utils/formatChatMessage.js'
 import { GOOGLE_APPOINTMENT_SCHEDULE_URL } from '@/config/site.js'
 import { buildDemoBookingUrl, buildDemoBookingSummary } from '@/utils/demoBooking.js'
@@ -586,6 +589,7 @@ const discoveryMessages = ref([])
 const messages = ref([
   {
     role: 'assistant',
+    i18n: true,
     content:
       "Hi! I'm **JPbot** — the fastest way to contact {{Nexxus Tech}}. First, choose **what kind of help** you need below.",
   },
@@ -616,12 +620,12 @@ const bookDemoPageLink = computed(() => {
 })
 
 const discoveryPlaceholder = computed(() => {
-  const t = profile.value.enquiry_type
-  if (t === 'New project / implementation') return 'Describe your project, migration, or goals...'
-  if (t === 'Assessment / discovery') return 'What should we assess or advise on?'
-  if (t === 'Troubleshooting / incident') return 'Describe symptoms, errors, impact...'
-  if (t === 'Support request') return 'What do you need help with?'
-  return 'Type your message...'
+  const kind = profile.value.enquiry_type
+  if (kind === 'New project / implementation') return t('Describe your project, migration, or goals...')
+  if (kind === 'Assessment / discovery') return t('What should we assess or advise on?')
+  if (kind === 'Troubleshooting / incident') return t('Describe symptoms, errors, impact...')
+  if (kind === 'Support request') return t('What do you need help with?')
+  return t('Type your message...')
 })
 
 const scrollToBottom = async () => {
@@ -642,8 +646,21 @@ const onChatWindowEntered = () => {
   settleChatLayout()
 }
 
-const pushAssistant = (content) => messages.value.push({ role: 'assistant', content })
-const pushUser = (content) => messages.value.push({ role: 'user', content })
+const pushAssistant = (content, extra = {}) => {
+  messages.value.push({ role: 'assistant', i18n: true, content, ...extra })
+}
+const pushUser = (content, extra = {}) => {
+  messages.value.push({ role: 'user', content, ...extra })
+}
+
+function displayMsg(msg) {
+  if (msg.i18nList) {
+    const joined = msg.i18nList.map((item) => t(item)).join(', ')
+    return msg.suffix ? `${joined} (${msg.suffix})` : joined
+  }
+  if (msg.i18n) return t(msg.content, msg.params, msg.paramI18n)
+  return msg.content
+}
 const isValidEmail = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)
 
 const showInvitePopup = () => {
@@ -748,8 +765,12 @@ const goToNextIntakePanel = () => {
 
 const startDiscovery = () => {
   phase.value = 'discovery'
-  const opener = `Thanks, ${profile.value.name}! ${discoveryPromptForType(profile.value.enquiry_type)}`
-  pushAssistant(opener)
+  const prompt = discoveryPromptForType(profile.value.enquiry_type)
+  const opener = `Thanks, ${profile.value.name}! ${prompt}`
+  pushAssistant('Thanks, {name}! {prompt}', {
+    params: { name: profile.value.name, prompt },
+    paramI18n: { prompt: true },
+  })
   discoveryMessages.value = [{ role: 'assistant', content: opener }]
   canSubmit.value = false
   allowEarlySubmit.value = false
@@ -762,7 +783,7 @@ const updateSubmitEligibility = () => {
 
 const confirmEnquiryType = () => {
   profile.value.enquiry_type = panelValues.value.enquiry_type
-  pushUser(profile.value.enquiry_type)
+  pushUser(profile.value.enquiry_type, { i18n: true })
   intakePanel.value = 'contact'
   pushAssistant(
     'Great. **Fill in your contact details** below — *name*, *email*, and *company*.'
@@ -819,7 +840,11 @@ const confirmDemoDetails = () => {
   profile.value.users_affected = 'Not applicable (demo booking)'
 
   const notesLabel = profile.value.demo_notes ? ` · ${profile.value.demo_notes}` : ''
-  pushUser(`${profile.value.service}${notesLabel}`)
+  pushUser('{service}{notes}', {
+    i18n: true,
+    params: { service: profile.value.service, notes: notesLabel },
+    paramI18n: { service: true },
+  })
 
   intakePanel.value = null
   phase.value = 'demo_booking'
@@ -866,14 +891,14 @@ const closeSchedulerModal = () => {
 
 const confirmService = () => {
   profile.value.service = panelValues.value.service
-  pushUser(profile.value.service)
+  pushUser(profile.value.service, { i18n: true })
   intakeQueue.value = [...(INTAKE_PANELS_BY_TYPE[profile.value.enquiry_type] || ['technologies'])]
   goToNextIntakePanel()
 }
 
 const confirmCriticality = () => {
   profile.value.criticality = panelValues.value.criticality
-  pushUser(profile.value.criticality)
+  pushUser(profile.value.criticality, { i18n: true })
   goToNextIntakePanel()
 }
 
@@ -886,32 +911,35 @@ const confirmUsers = () => {
 const confirmTechnologies = () => {
   profile.value.technologies = [...panelValues.value.technologies]
   profile.value.technology_other = panelValues.value.technology_other.trim()
-  const label = profile.value.technologies.join(', ')
-  pushUser(label + (profile.value.technology_other ? ` (${profile.value.technology_other})` : ''))
+  messages.value.push({
+    role: 'user',
+    i18nList: [...profile.value.technologies],
+    suffix: profile.value.technology_other,
+  })
   goToNextIntakePanel()
 }
 
 const skipVersion = () => {
   profile.value.platform_version = ''
-  pushUser('(version skipped)')
+  pushUser('(version skipped)', { i18n: true })
   goToNextIntakePanel()
 }
 
 const confirmVersion = () => {
   profile.value.platform_version = panelValues.value.platform_version.trim()
-  pushUser(profile.value.platform_version || '(not provided)')
+  pushUser(profile.value.platform_version || '(not provided)', { i18n: !profile.value.platform_version })
   goToNextIntakePanel()
 }
 
 const skipModel = () => {
   profile.value.platform_model = ''
-  pushUser('(model skipped)')
+  pushUser('(model skipped)', { i18n: true })
   goToNextIntakePanel()
 }
 
 const confirmModel = () => {
   profile.value.platform_model = panelValues.value.platform_model.trim()
-  pushUser(profile.value.platform_model || '(not provided)')
+  pushUser(profile.value.platform_model || '(not provided)', { i18n: !profile.value.platform_model })
   goToNextIntakePanel()
 }
 
@@ -926,7 +954,7 @@ const handleDiscovery = async (text) => {
       messages: discoveryMessages.value,
     })
     discoveryMessages.value.push({ role: 'assistant', content: data.reply })
-    pushAssistant(data.reply)
+    pushAssistant(data.reply, { i18n: false })
     canSubmit.value = Boolean(data.ready_to_submit)
     updateSubmitEligibility()
     if (canSubmit.value) saveDraft()
@@ -980,7 +1008,7 @@ const submitEnquiry = async () => {
   } catch (err) {
     const detail = err.response?.data?.detail
     const msg = Array.isArray(detail) ? detail.map((d) => d.msg || d).join(', ') : detail
-    pushAssistant(msg || 'Could not send. Try contact@nexxus-tech.com.')
+    pushAssistant(msg || 'Could not send. Try contact@nexxus-tech.com.', { i18n: !msg })
   } finally {
     submitting.value = false
     await scrollToBottom()

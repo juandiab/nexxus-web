@@ -5,7 +5,7 @@
         <span class="terminal-dot"></span>
         <span class="terminal-dot"></span>
         <span class="terminal-dot"></span>
-        <span class="terminal-title">{{ activePlatformMeta.terminalTitle }}</span>
+        <span class="terminal-title">{{ t(activePlatformMeta.terminalTitle) }}</span>
       </div>
       <div class="install-terminal-body">
         <pre class="install-command"><code><span v-if="activePlatform !== 'windows'" class="cmd-prompt">$ </span>{{ activeInstallCommand }}</code></pre>
@@ -13,16 +13,16 @@
           type="button"
           class="install-copy-btn"
           :class="{ copied: copiedId === copyId }"
-          :aria-label="`Copy ${activePlatformMeta.name} install command`"
+          :aria-label="t('Copy {name} install command', { name: activePlatformMeta.name })"
           @click="copyCommand(activeInstallCommand)"
         >
           <i :class="copiedId === copyId ? 'pi pi-check' : 'pi pi-copy'"></i>
-          {{ copiedId === copyId ? 'Copied' : 'Copy' }}
+          {{ copiedId === copyId ? t('Copied') : t('Copy') }}
         </button>
       </div>
     </div>
 
-    <div class="install-platform-tabs" role="tablist" aria-label="Install platform">
+    <div class="install-platform-tabs" role="tablist" :aria-label="t('Install platform')">
       <BorderGlow
         v-for="platform in platforms"
         :key="platform.id"
@@ -57,6 +57,9 @@
 <script setup>
 import { computed, onUnmounted, ref } from 'vue'
 import BorderGlow from '@/components/shared/BorderGlow.vue'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   copyId: {

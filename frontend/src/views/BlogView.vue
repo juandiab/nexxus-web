@@ -3,11 +3,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">Knowledge Hub</span>
-        <h1 class="reveal reveal-delay-1">Nexxus Tech<br /><span class="gradient-text">Blog & Insights</span></h1>
+        <span class="section-label reveal">{{ t('Knowledge Hub') }}</span>
+        <h1 class="reveal reveal-delay-1">Nexxus Tech<br /><span class="gradient-text">{{ t('Blog & Insights') }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          Deep dives into WAF, NetScaler, Zero-Trust, and AI-powered security —
-          written by practitioners who've deployed these technologies at global scale.
+          {{ t("Deep dives into WAF, NetScaler, Zero-Trust, and AI-powered security — written by practitioners who've deployed these technologies at global scale.") }}
         </p>
       </div>
     </section>
@@ -21,11 +20,11 @@
             :key="cat"
             :class="['filter-btn', { active: activeCategory === cat }]"
             @click="activeCategory = cat"
-          >{{ cat }}</button>
+          >{{ cat === 'All' ? t('All') : cat }}</button>
         </div>
 
         <div v-if="loading" class="loading-state">
-          <i class="pi pi-spin pi-spinner"></i> Loading posts...
+          <i class="pi pi-spin pi-spinner"></i> {{ t('Loading posts...') }}
         </div>
 
         <div v-else-if="filteredPosts.length" class="blog-grid">
@@ -39,7 +38,7 @@
               <div class="blog-card-overlay"></div>
               <span class="tag tag-on-cover">{{ post.category }}</span>
               <div v-if="post.featured" class="featured-badge">
-                <i class="pi pi-star-fill"></i> Featured
+                <i class="pi pi-star-fill"></i> {{ t('Featured') }}
               </div>
             </div>
             <div class="blog-card-body">
@@ -54,7 +53,7 @@
                   </div>
                 </div>
                 <div class="blog-meta">
-                  <span><i class="pi pi-clock"></i> {{ post.read_time }} min</span>
+                  <span><i class="pi pi-clock"></i> {{ post.read_time }} {{ t('min') }}</span>
                 </div>
               </div>
               <div class="blog-tags">
@@ -66,7 +65,7 @@
 
         <div v-else class="empty-state">
           <i class="pi pi-inbox"></i>
-          <p>No posts in this category yet. Check back soon!</p>
+          <p>{{ t('No posts in this category yet. Check back soon!') }}</p>
         </div>
       </div>
     </section>
@@ -76,12 +75,12 @@
       <div class="container">
         <div class="newsletter-box reveal">
           <div class="newsletter-content">
-            <span class="section-label">Stay Updated</span>
-            <h2>Get Security Insights Delivered</h2>
-            <p>Join security professionals receiving our latest WAF configurations, NetScaler tips, and AI automation guides.</p>
+            <span class="section-label">{{ t('Stay Updated') }}</span>
+            <h2>{{ t('Get Security Insights Delivered') }}</h2>
+            <p>{{ t('Join security professionals receiving our latest WAF configurations, NetScaler tips, and AI automation guides.') }}</p>
           </div>
           <RouterLink to="/contact" class="btn btn-primary">
-            <i class="pi pi-envelope"></i> Get in Touch to Subscribe
+            <i class="pi pi-envelope"></i> {{ t('Get in Touch to Subscribe') }}
           </RouterLink>
         </div>
       </div>
@@ -93,6 +92,9 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { coverColorClass } from '@/utils/coverColor.js'
+import { formatLocaleDate, useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const posts = ref([])
 const loading = ref(true)
@@ -109,7 +111,7 @@ const filteredPosts = computed(() => {
 })
 
 const formatDate = (d) =>
-  new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  formatLocaleDate(d, { year: 'numeric', month: 'long', day: 'numeric' })
 
 onMounted(async () => {
   try {

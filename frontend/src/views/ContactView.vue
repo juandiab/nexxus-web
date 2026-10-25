@@ -4,11 +4,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">Get in Touch</span>
-        <h1 class="reveal reveal-delay-1">Let's Start a<br /><span class="gradient-text">Conversation</span></h1>
+        <span class="section-label reveal">{{ t('Get in Touch') }}</span>
+        <h1 class="reveal reveal-delay-1">{{ t("Let's Start a") }}<br /><span class="gradient-text">{{ t('Conversation') }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          Whether you need a WAF assessment, a Zero-Trust roadmap, or just want to
-          explore what's possible — we're here. No pressure, no obligation.
+          {{ t("Whether you need a WAF assessment, a Zero-Trust roadmap, or just want to explore what's possible — we're here. No pressure, no obligation.") }}
         </p>
       </div>
     </section>
@@ -19,85 +18,85 @@
 
         <!-- Form -->
         <div class="contact-form-wrapper reveal">
-          <h2>Send Us a Message</h2>
-          <p class="form-subtitle">We respond within 24 hours on business days.</p>
+          <h2>{{ t('Send Us a Message') }}</h2>
+          <p class="form-subtitle">{{ t('We respond within 24 hours on business days.') }}</p>
 
           <form class="contact-form" @submit.prevent="handleSubmit">
             <div class="form-row">
               <div class="form-group">
-                <label>Full Name *</label>
+                <label>{{ t('Full Name *') }}</label>
                 <input
                   v-model="form.name"
                   type="text"
-                  placeholder="John Smith"
+                  :placeholder="t('John Smith')"
                   :class="{ error: errors.name }"
                   autocomplete="name"
                   aria-required="true"
                   required
                 />
-                <span v-if="errors.name" class="error-msg">{{ errors.name }}</span>
+                <span v-if="errors.name" class="error-msg">{{ t(errors.name) }}</span>
               </div>
               <div class="form-group">
-                <label>Email Address *</label>
+                <label>{{ t('Email Address *') }}</label>
                 <input
                   v-model="form.email"
                   type="email"
-                  placeholder="john@company.com"
+                  :placeholder="t('john@company.com')"
                   :class="{ error: errors.email }"
                   autocomplete="email"
                   aria-required="true"
                   required
                 />
-                <span v-if="errors.email" class="error-msg">{{ errors.email }}</span>
+                <span v-if="errors.email" class="error-msg">{{ t(errors.email) }}</span>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label>Company / Organization</label>
-                <input v-model="form.company" type="text" placeholder="Acme Corp" />
+                <label>{{ t('Company / Organization') }}</label>
+                <input v-model="form.company" type="text" :placeholder="t('Acme Corp')" />
               </div>
               <div class="form-group">
-                <label>Service Interest</label>
+                <label>{{ t('Service Interest') }}</label>
                 <select v-model="form.service">
-                  <option value="">Select a service...</option>
-                  <option value="WAF & API Protection">WAF & API Protection</option>
+                  <option value="">{{ t('Select a service...') }}</option>
+                  <option value="WAF & API Protection">{{ t('WAF & API Protection') }}</option>
                   <option value="NetScaler / ADC">NetScaler / ADC</option>
-                  <option value="Zero-Trust Architecture">Zero-Trust Architecture</option>
-                  <option value="Multicloud Security">Multicloud Security</option>
-                  <option value="AI & Automation">AI & Automation</option>
+                  <option value="Zero-Trust Architecture">{{ t('Zero-Trust Architecture') }}</option>
+                  <option value="Multicloud Security">{{ t('Multicloud Security') }}</option>
+                  <option value="AI & Automation">{{ t('AI & Automation') }}</option>
                   <option value="AI Tech for your company">AI Tech for your company</option>
                   <option value="AI Tech en tu empresa">AI Tech en tu empresa</option>
                   <option value="Citrix Virtual Apps & Desktops">Citrix Virtual Apps & Desktops</option>
-                  <option value="Other / Discovery Call">Other / Discovery Call</option>
+                  <option value="Other / Discovery Call">{{ t('Other / Discovery Call') }}</option>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label>Message *</label>
+              <label>{{ t('Message *') }}</label>
               <textarea
                 v-model="form.message"
                 rows="6"
-                placeholder="Tell us about your project, environment, or challenge..."
+                :placeholder="t('Tell us about your project, environment, or challenge...')"
                 :class="{ error: errors.message }"
                 aria-required="true"
                 required
               ></textarea>
-              <span v-if="errors.message" class="error-msg">{{ errors.message }}</span>
+              <span v-if="errors.message" class="error-msg">{{ t(errors.message) }}</span>
             </div>
 
             <!-- Success / Error alert -->
             <div v-if="submitStatus === 'success'" class="alert alert-success" role="status" aria-live="polite">
               <i class="pi pi-check-circle"></i>
-              Message sent! We'll be in touch within 24 hours.
+              {{ t("Message sent! We'll be in touch within 24 hours.") }}
             </div>
             <div v-if="submitStatus === 'error'" class="alert alert-error" role="alert" aria-live="assertive">
               <i class="pi pi-times-circle"></i>
-              {{ errorMessage }}
+              {{ t(errorMessage) }}
             </div>
 
             <button type="submit" class="btn btn-primary submit-btn" :disabled="submitting">
               <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-send'"></i>
-              {{ submitting ? 'Sending...' : 'Send Message' }}
+              {{ submitting ? t('Sending...') : t('Send Message') }}
             </button>
           </form>
         </div>
@@ -105,40 +104,40 @@
         <!-- Info panel -->
         <div class="contact-info reveal reveal-delay-2">
           <div class="info-card">
-            <h3>Contact Information</h3>
+            <h3>{{ t('Contact Information') }}</h3>
             <div class="info-items">
               <div class="info-item">
                 <div class="info-icon"><i class="pi pi-envelope"></i></div>
                 <div>
-                  <span class="info-label">Email</span>
+                  <span class="info-label">{{ t('Email') }}</span>
                   <a href="mailto:contact@nexxus-tech.com">contact@nexxus-tech.com</a>
                 </div>
               </div>
               <div class="info-item">
                 <div class="info-icon"><i class="pi pi-globe"></i></div>
                 <div>
-                  <span class="info-label">Website</span>
+                  <span class="info-label">{{ t('Website') }}</span>
                   <span>nexxus-tech.com</span>
                 </div>
               </div>
               <div class="info-item">
                 <div class="info-icon"><i class="pi pi-map-marker"></i></div>
                 <div>
-                  <span class="info-label">Global Presence</span>
-                  <span>Colombia · UAE · UK · Spain · US</span>
+                  <span class="info-label">{{ t('Global Presence') }}</span>
+                  <span>{{ t('Colombia · UAE · UK · Spain · US') }}</span>
                 </div>
               </div>
               <div class="info-item">
                 <div class="info-icon"><i class="pi pi-check"></i></div>
                 <div>
-                  <span class="info-label">Availability</span>
-                  <span>Remote engagements worldwide</span>
+                  <span class="info-label">{{ t('Availability') }}</span>
+                  <span>{{ t('Remote engagements worldwide') }}</span>
                 </div>
               </div>
             </div>
 
             <div class="social-section">
-              <span class="info-label">Social Media</span>
+              <span class="info-label">{{ t('Social Media') }}</span>
               <SocialLinks variant="labels" />
             </div>
           </div>
@@ -146,15 +145,15 @@
           <div class="response-card">
             <i class="pi pi-clock"></i>
             <div>
-              <strong>Quick Response</strong>
-              <p>We typically respond within 24 hours on business days. For urgent security matters, please indicate in your message.</p>
+              <strong>{{ t('Quick Response') }}</strong>
+              <p>{{ t('We typically respond within 24 hours on business days. For urgent security matters, please indicate in your message.') }}</p>
             </div>
           </div>
 
           <div class="expertise-card">
-            <span class="section-label">Areas of Engagement</span>
+            <span class="section-label">{{ t('Areas of Engagement') }}</span>
             <div class="expertise-list">
-              <span v-for="item in expertise" :key="item" class="tag">{{ item }}</span>
+              <span v-for="item in expertise" :key="item" class="tag">{{ t(item) }}</span>
             </div>
           </div>
         </div>
@@ -169,6 +168,9 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 import SocialLinks from '@/components/shared/SocialLinks.vue'
 import { loadJpbotDraft, clearJpbotDraft } from '@/utils/jpbotDraft.js'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']
 

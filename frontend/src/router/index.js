@@ -1,7 +1,10 @@
+import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { ROUTE_SEO } from '@/config/site.js'
 import { applySeo } from '@/utils/seo.js'
 import { jsonLdForRoute } from '@/data/structuredData.js'
+import { locale } from '@/i18n'
+import { localizedSeo } from '@/i18n/seo.js'
 import HomeView from '@/views/HomeView.vue'
 
 const routes = [
@@ -139,10 +142,10 @@ const router = createRouter({
   }
 })
 
-router.afterEach((to) => {
+function applyRouteSeo(to) {
   if (to.meta.dynamic) return
 
-  const seo = to.meta.seo
+  const seo = localizedSeo(to.name, to.meta.seo, locale.value)
   if (!seo) return
 
   applySeo({
@@ -155,6 +158,14 @@ router.afterEach((to) => {
     type: 'website',
     jsonLd: jsonLdForRoute(to.name),
   })
+}
+
+router.afterEach((to) => {
+  applyRouteSeo(to)
+})
+
+watch(locale, () => {
+  applyRouteSeo(router.currentRoute.value)
 })
 
 export default router

@@ -2,103 +2,103 @@
   <form class="jpilot-register" @submit.prevent="handleSubmit" novalidate>
     <div class="form-row">
       <div class="form-group">
-        <label for="jpilot-name">Name *</label>
+        <label for="jpilot-name">{{ t('Name *') }}</label>
         <input
           id="jpilot-name"
           v-model="form.name"
           type="text"
-          placeholder="Jane Smith"
+          :placeholder="t('Jane Smith')"
           autocomplete="name"
           :class="{ error: errors.name }"
           required
         />
-        <span v-if="errors.name" class="error-msg">{{ errors.name }}</span>
+        <span v-if="errors.name" class="error-msg">{{ t(errors.name) }}</span>
       </div>
       <div class="form-group">
-        <label for="jpilot-email">Email *</label>
+        <label for="jpilot-email">{{ t('Email *') }}</label>
         <input
           id="jpilot-email"
           v-model="form.email"
           type="email"
-          placeholder="jane@company.com"
+          :placeholder="t('jane@company.com')"
           autocomplete="email"
           :class="{ error: errors.email }"
           required
         />
-        <span v-if="errors.email" class="error-msg">{{ errors.email }}</span>
+        <span v-if="errors.email" class="error-msg">{{ t(errors.email) }}</span>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="jpilot-use-type">Use type *</label>
+        <label for="jpilot-use-type">{{ t('Use type *') }}</label>
         <select
           id="jpilot-use-type"
           v-model="form.use_type"
           :class="{ error: errors.use_type }"
           required
         >
-          <option value="" disabled>Select use type…</option>
-          <option value="company">Company</option>
-          <option value="consultant">Consultant</option>
-          <option value="personal">Personal use</option>
+          <option value="" disabled>{{ t('Select use type…') }}</option>
+          <option value="company">{{ t('Company') }}</option>
+          <option value="consultant">{{ t('Consultant') }}</option>
+          <option value="personal">{{ t('Personal use') }}</option>
         </select>
-        <span v-if="errors.use_type" class="error-msg">{{ errors.use_type }}</span>
+        <span v-if="errors.use_type" class="error-msg">{{ t(errors.use_type) }}</span>
       </div>
       <div class="form-group">
-        <label for="jpilot-country">Country *</label>
+        <label for="jpilot-country">{{ t('Country *') }}</label>
         <select
           id="jpilot-country"
           v-model="form.country"
           :class="{ error: errors.country }"
           required
         >
-          <option value="" disabled>Select country…</option>
+          <option value="" disabled>{{ t('Select country…') }}</option>
           <option v-for="country in countries" :key="country.code" :value="country.name">
             {{ country.name }}
           </option>
         </select>
-        <span v-if="errors.country" class="error-msg">{{ errors.country }}</span>
+        <span v-if="errors.country" class="error-msg">{{ t(errors.country) }}</span>
       </div>
     </div>
 
     <div v-if="showCompany" class="form-row">
       <div class="form-group">
-        <label for="jpilot-company">{{ companyLabel }}</label>
+        <label for="jpilot-company">{{ t(companyLabel) }}</label>
         <input
           id="jpilot-company"
           v-model="form.company"
           type="text"
-          :placeholder="companyPlaceholder"
+          :placeholder="t(companyPlaceholder)"
           autocomplete="organization"
           :class="{ error: errors.company }"
           :required="companyRequired"
         />
-        <span v-if="errors.company" class="error-msg">{{ errors.company }}</span>
+        <span v-if="errors.company" class="error-msg">{{ t(errors.company) }}</span>
       </div>
       <div v-if="showCompanySize" class="form-group">
-        <label for="jpilot-company-size">Company size *</label>
+        <label for="jpilot-company-size">{{ t('Company size *') }}</label>
         <select
           id="jpilot-company-size"
           v-model="form.company_size"
           :class="{ error: errors.company_size }"
           required
         >
-          <option value="" disabled>Select company size…</option>
+          <option value="" disabled>{{ t('Select company size…') }}</option>
           <option v-for="size in companySizes" :key="size" :value="size">{{ size }}</option>
         </select>
-        <span v-if="errors.company_size" class="error-msg">{{ errors.company_size }}</span>
+        <span v-if="errors.company_size" class="error-msg">{{ t(errors.company_size) }}</span>
       </div>
     </div>
 
     <div v-if="submitStatus === 'error'" class="alert alert-error" role="alert" aria-live="assertive">
       <i class="pi pi-times-circle"></i>
-      {{ errorMessage }}
+      {{ t(errorMessage) }}
     </div>
 
     <button type="submit" class="btn btn-primary submit-btn" :disabled="submitting">
       <i :class="submitting ? 'pi pi-spin pi-spinner' : 'pi pi-arrow-right'"></i>
-      {{ submitting ? 'Registering…' : 'Register and continue' }}
+      {{ submitting ? t('Registering…') : t('Register and continue') }}
     </button>
   </form>
 </template>
@@ -107,6 +107,9 @@
 import { computed, reactive, ref, watch } from 'vue'
 import axios from 'axios'
 import countries from '@/data/countries.json'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const emit = defineEmits(['registered'])
 const companySizes = ['1–10', '11–50', '51–200', '201–1000', '1000+']

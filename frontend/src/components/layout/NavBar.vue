@@ -8,22 +8,39 @@
           <span class="navbar-wordmark ld-cursor">
             <span class="navbar-wordmark__nexxus">NEXXUS</span><span class="navbar-wordmark__tech">TECH</span>
           </span>
-          <span class="navbar-tagline">Consulting . Cloud . Security . AI</span>
+          <span class="navbar-tagline">{{ t('Consulting . Cloud . Security . AI') }}</span>
         </span>
       </RouterLink>
 
       <!-- Desktop nav -->
-      <nav class="navbar-links" aria-label="Main navigation">
+      <nav class="navbar-links" :aria-label="t('Main navigation')">
         <RouterLink v-for="link in links" :key="link.to" :to="link.to" class="nav-link">
-          {{ link.label }}
+          {{ t(link.label) }}
         </RouterLink>
+        <div class="lang-switch" role="group" :aria-label="t('Language')">
+          <button
+            type="button"
+            class="lang-switch-btn"
+            :class="{ 'is-active': locale === 'en' }"
+            :aria-pressed="locale === 'en'"
+            @click="setLocale('en')"
+          >EN</button>
+          <span class="lang-switch-sep" aria-hidden="true">/</span>
+          <button
+            type="button"
+            class="lang-switch-btn"
+            :class="{ 'is-active': locale === 'es' }"
+            :aria-pressed="locale === 'es'"
+            @click="setLocale('es')"
+          >ES</button>
+        </div>
         <GlowButton variant="primary" class="nav-cta-glow">
-          <RouterLink to="/contact" class="btn btn-primary nav-cta">Get in Touch</RouterLink>
+          <RouterLink to="/contact" class="btn btn-primary nav-cta">{{ t('Get in Touch') }}</RouterLink>
         </GlowButton>
       </nav>
 
       <!-- Mobile hamburger -->
-      <button class="hamburger" @click="menuOpen = !menuOpen" aria-label="Toggle menu">
+      <button class="hamburger" @click="menuOpen = !menuOpen" :aria-label="t('Toggle menu')">
         <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
         <span :class="{ open: menuOpen }"></span>
@@ -32,7 +49,7 @@
 
     <!-- Mobile menu -->
     <Transition name="mobile-menu">
-      <div v-if="menuOpen" class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+      <div v-if="menuOpen" class="mobile-nav" role="navigation" :aria-label="t('Mobile navigation')">
         <RouterLink
           v-for="link in links"
           :key="link.to"
@@ -40,11 +57,28 @@
           class="mobile-nav-link"
           @click="menuOpen = false"
         >
-          {{ link.label }}
+          {{ t(link.label) }}
         </RouterLink>
+        <div class="lang-switch lang-switch--mobile" role="group" :aria-label="t('Language')">
+          <button
+            type="button"
+            class="lang-switch-btn"
+            :class="{ 'is-active': locale === 'en' }"
+            :aria-pressed="locale === 'en'"
+            @click="setLocale('en')"
+          >EN</button>
+          <span class="lang-switch-sep" aria-hidden="true">/</span>
+          <button
+            type="button"
+            class="lang-switch-btn"
+            :class="{ 'is-active': locale === 'es' }"
+            :aria-pressed="locale === 'es'"
+            @click="setLocale('es')"
+          >ES</button>
+        </div>
         <GlowButton variant="primary" class="mobile-nav-glow mobile-nav-cta-glow">
           <RouterLink to="/contact" class="btn btn-primary w-full" @click="menuOpen = false">
-            Get in Touch
+            {{ t('Get in Touch') }}
           </RouterLink>
         </GlowButton>
       </div>
@@ -56,6 +90,9 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import GlowButton from '@/components/shared/GlowButton.vue'
 import NxConnectionRings from '@/components/shared/NxConnectionRings.vue'
+import { useI18n } from '@/i18n'
+
+const { locale, setLocale, t } = useI18n()
 
 const isScrolled = ref(false)
 const menuOpen = ref(false)
@@ -173,6 +210,41 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .nav-link.router-link-active {
   color: var(--nt-white);
   background: rgba(0, 123, 167, 0.12);
+}
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  margin: 0 4px 0 8px;
+  flex-shrink: 0;
+}
+.lang-switch-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 8px 4px;
+  min-height: 48px;
+  min-width: 28px;
+  line-height: 1;
+}
+.lang-switch-btn:hover,
+.lang-switch-btn.is-active {
+  color: var(--nt-white);
+}
+.lang-switch-sep {
+  color: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.lang-switch--mobile {
+  margin: 4px 0 0;
+  padding: 0 16px;
 }
 .nav-cta-glow {
   margin-left: 6px;

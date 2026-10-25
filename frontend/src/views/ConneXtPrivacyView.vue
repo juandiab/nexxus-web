@@ -4,9 +4,9 @@
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
         <span class="section-label reveal">ConneXt</span>
-        <h1 class="reveal reveal-delay-1">ConneXt Privacy Policy</h1>
+        <h1 class="reveal reveal-delay-1">{{ t('ConneXt Privacy Policy') }}</h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          Effective date: August 18, 2026
+          {{ t('Effective date: August 18, 2026') }}
         </p>
       </div>
     </section>
@@ -15,73 +15,59 @@
       <div class="container privacy-inner">
         <article class="privacy-prose reveal">
           <p class="lede">
-            ConneXt does not create user accounts and does not sell personal data.
-            SSH credentials stay in the iOS Keychain on your device. Optional AI
-            keys stay on device; prompts go only to the provider you enable.
+            {{ t('ConneXt does not create user accounts and does not sell personal data. SSH credentials stay in the iOS Keychain on your device. Optional AI keys stay on device; prompts go only to the provider you enable.') }}
           </p>
 
-          <h2>Who we are</h2>
+          <h2>{{ t('Who we are') }}</h2>
           <p>
-            ConneXt is a free native SSH terminal for iPhone and iPad developed by
-            <strong>Juan Pablo Otalvaro</strong> at <strong>Nexxus-Tech</strong>.
-            These pages are published on the Nexxus Tech website so App Store
-            reviewers and users have a stable privacy URL.
+            {{ t('ConneXt is a free native SSH terminal for iPhone and iPad developed by') }}
+            <strong>Juan Pablo Otalvaro</strong> {{ t('at') }} <strong>Nexxus-Tech</strong>.
+            {{ t('These pages are published on the Nexxus Tech website so App Store reviewers and users have a stable privacy URL.') }}
           </p>
 
-          <h2>No ConneXt accounts</h2>
+          <h2>{{ t('No ConneXt accounts') }}</h2>
           <p>
-            ConneXt does not require, create, or host user accounts. There is no
-            ConneXt sign-in, no ConneXt cloud profile, and no ConneXt user
-            directory. We cannot reset a ConneXt password because the app does
-            not have one.
+            {{ t('ConneXt does not require, create, or host user accounts. There is no ConneXt sign-in, no ConneXt cloud profile, and no ConneXt user directory. We cannot reset a ConneXt password because the app does not have one.') }}
           </p>
 
-          <h2>SSH credentials and private keys</h2>
+          <h2>{{ t('SSH credentials and private keys') }}</h2>
           <p>
-            Host details, passwords, and private keys you import are stored in
-            the <strong>iOS Keychain on your device</strong>. ConneXt does not
-            upload those credentials to Nexxus-Tech or to any Nexxus-Tech server.
+            {{ t('Host details, passwords, and private keys you import are stored in the') }}
+            <strong>{{ t('iOS Keychain on your device') }}</strong>. {{ t('ConneXt does not upload those credentials to Nexxus-Tech or to any Nexxus-Tech server.') }}
           </p>
 
-          <h2>Connections you configure</h2>
+          <h2>{{ t('Connections you configure') }}</h2>
           <p>
-            SSH sessions go to the servers <strong>you</strong> add — the hosts,
-            ports, and identities you configure in the app. Nexxus-Tech does not
-            proxy those connections and does not receive session traffic.
+            {{ t('SSH sessions go to the servers') }} <strong>{{ t('you') }}</strong> {{ t('add — the hosts, ports, and identities you configure in the app. Nexxus-Tech does not proxy those connections and does not receive session traffic.') }}
           </p>
 
-          <h2>Optional Command Assistant</h2>
+          <h2>{{ t('Optional Command Assistant') }}</h2>
           <p>
-            Command Assistant is optional. If you enable it, you paste your own
-            API key for <strong>OpenAI</strong>, <strong>Gemini</strong>, or
-            <strong>Anthropic</strong>. That key stays on your device. Prompts
-            you send go only to the provider you turned on — not to Nexxus-Tech.
-            If you never enable the assistant, no prompts are sent to an AI
-            provider.
+            {{ t('Command Assistant is optional. If you enable it, you paste your own API key for') }}
+            <strong>OpenAI</strong>, <strong>Gemini</strong>, {{ t('or') }}
+            <strong>Anthropic</strong>. {{ t('That key stays on your device. Prompts you send go only to the provider you turned on — not to Nexxus-Tech. If you never enable the assistant, no prompts are sent to an AI provider.') }}
           </p>
 
-          <h2>What we do not do</h2>
+          <h2>{{ t('What we do not do') }}</h2>
           <p>
-            ConneXt does not sell personal data. It does not include advertising
-            SDKs. It does not build a Nexxus-Tech-side profile of your hosts,
-            keys, or session content.
+            {{ t('ConneXt does not sell personal data. It does not include advertising SDKs. It does not build a Nexxus-Tech-side profile of your hosts, keys, or session content.') }}
           </p>
 
-          <h2>Contact</h2>
+          <h2>{{ t('Contact') }}</h2>
           <p>
-            Questions about this policy or ConneXt:
+            {{ t('Questions about this policy or ConneXt:') }}
             <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
           </p>
 
-          <h2>Copyright</h2>
+          <h2>{{ t('Copyright') }}</h2>
           <p>
-            © {{ year }} Nexxus-Tech / Juan Pablo Otalvaro. All rights reserved.
+            © {{ year }} Nexxus-Tech / Juan Pablo Otalvaro. {{ t('All rights reserved.') }}
           </p>
 
           <p class="back-link">
-            <RouterLink to="/connext">← Back to ConneXt</RouterLink>
+            <RouterLink to="/connext">{{ t('← Back to ConneXt') }}</RouterLink>
             ·
-            <RouterLink to="/connext/support">Support</RouterLink>
+            <RouterLink to="/connext/support">{{ t('Support') }}</RouterLink>
           </p>
         </article>
       </div>
@@ -90,6 +76,9 @@
 </template>
 
 <script setup>
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 const year = new Date().getFullYear()
 </script>
 

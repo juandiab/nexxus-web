@@ -1,6 +1,6 @@
 <template>
   <div class="app-root">
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link">{{ t('Skip to main content') }}</a>
     <NavBar />
     <main id="main-content">
       <RouterView v-slot="{ Component }">
@@ -21,6 +21,9 @@ import Toast from 'primevue/toast'
 import NavBar from '@/components/layout/NavBar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import ChatWidget from '@/components/shared/ChatWidget.vue'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 // Global scroll-reveal
 onMounted(() => {

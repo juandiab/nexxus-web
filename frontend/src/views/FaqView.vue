@@ -3,11 +3,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">FAQ</span>
-        <h1 class="reveal reveal-delay-1">Frequently Asked<br /><span class="gradient-text">Questions</span></h1>
+        <span class="section-label reveal">{{ t('FAQ') }}</span>
+        <h1 class="reveal reveal-delay-1">{{ t('Frequently Asked') }}<br /><span class="gradient-text">{{ t('Questions') }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          Answers about our services, delivery model, global reach, and AI-powered tooling—
-          drawn from how we work with organizations worldwide.
+          {{ t('Answers about our services, delivery model, global reach, and AI-powered tooling— drawn from how we work with organizations worldwide.') }}
         </p>
       </div>
     </section>
@@ -18,10 +17,9 @@
 
       <div class="container faq-section-inner">
         <div class="faq-intro reveal">
-          <h2 id="faq-heading" class="faq-heading">Common Questions</h2>
+          <h2 id="faq-heading" class="faq-heading">{{ t('Common Questions') }}</h2>
           <p class="faq-subheading">
-            Principal-level expertise in WAF, NetScaler, Zero-Trust, multicloud security, and AI automation—
-            delivered remotely across 20+ countries.
+            {{ t('Principal-level expertise in WAF, NetScaler, Zero-Trust, multicloud security, and AI automation— delivered remotely across 20+ countries.') }}
           </p>
         </div>
 
@@ -44,22 +42,22 @@
                   toggleicon: { class: 'faq-toggle-icon' },
                 }"
               >
-                {{ faq.title }}
+                {{ t(faq.title) }}
               </AccordionHeader>
               <AccordionContent
                 class="faq-content"
                 :pt="{ content: { class: 'faq-content-inner' } }"
               >
-                <p>{{ faq.description }}</p>
+                <p>{{ t(faq.description) }}</p>
               </AccordionContent>
             </AccordionPanel>
           </Accordion>
         </div>
 
         <div class="faq-cta reveal reveal-delay-2">
-          <p>Still have a question about your environment or engagement?</p>
+          <p>{{ t('Still have a question about your environment or engagement?') }}</p>
           <RouterLink to="/contact" class="btn btn-primary">
-            <i class="pi pi-send"></i> Contact Us
+            <i class="pi pi-send"></i> {{ t('Contact Us') }}
           </RouterLink>
         </div>
       </div>
@@ -73,6 +71,9 @@ import AccordionPanel from 'primevue/accordionpanel'
 import AccordionHeader from 'primevue/accordionheader'
 import AccordionContent from 'primevue/accordioncontent'
 import { faqs } from '@/data/faqs.js'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped>

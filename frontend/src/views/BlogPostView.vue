@@ -20,7 +20,7 @@
             </div>
             <div class="post-info">
               <span><i class="pi pi-calendar"></i> {{ formatDate(post.date) }}</span>
-              <span><i class="pi pi-clock"></i> {{ post.read_time }} min read</span>
+              <span><i class="pi pi-clock"></i> {{ post.read_time }} {{ t('min read') }}</span>
             </div>
           </div>
         </div>
@@ -36,10 +36,10 @@
             <div class="markdown-body" v-html="renderedContent"></div>
             <div class="post-footer">
               <RouterLink to="/blog" class="btn btn-outline">
-                <i class="pi pi-arrow-left"></i> Back to Blog
+                <i class="pi pi-arrow-left"></i> {{ t('Back to Blog') }}
               </RouterLink>
               <RouterLink to="/contact" class="btn btn-primary">
-                <i class="pi pi-send"></i> Discuss with Us
+                <i class="pi pi-send"></i> {{ t('Discuss with Us') }}
               </RouterLink>
             </div>
           </article>
@@ -47,7 +47,7 @@
           <!-- Sidebar -->
           <aside class="post-sidebar">
             <div class="sidebar-card">
-              <h4>About the Author</h4>
+              <h4>{{ t('About the Author') }}</h4>
               <div class="sidebar-author">
                 <div class="author-avatar-lg">JP</div>
                 <div>
@@ -55,20 +55,20 @@
                   <span>{{ post.author_role }}</span>
                 </div>
               </div>
-              <p>Principal Cloud &amp; Security Architect with 15+ years across 20+ countries. Citrix SME. AWS Certified.</p>
+              <p>{{ t('Principal Cloud & Security Architect with 15+ years across 20+ countries. Citrix SME. AWS Certified.') }}</p>
               <RouterLink to="/about" class="btn btn-outline sidebar-btn">
-                Full Profile <i class="pi pi-arrow-right"></i>
+                {{ t('Full Profile') }} <i class="pi pi-arrow-right"></i>
               </RouterLink>
             </div>
             <div class="sidebar-card">
-              <h4>Need Help With This?</h4>
-              <p>We implement everything we write about. Let's talk about your specific environment.</p>
+              <h4>{{ t('Need Help With This?') }}</h4>
+              <p>{{ t("We implement everything we write about. Let's talk about your specific environment.") }}</p>
               <RouterLink to="/contact" class="btn btn-primary sidebar-btn">
-                <i class="pi pi-send"></i> Get a Consultation
+                <i class="pi pi-send"></i> {{ t('Get a Consultation') }}
               </RouterLink>
             </div>
             <div class="sidebar-card" v-if="relatedPosts.length">
-              <h4>Related Posts</h4>
+              <h4>{{ t('Related Posts') }}</h4>
               <div class="related-posts">
                 <div
                   v-for="rp in relatedPosts"
@@ -86,8 +86,8 @@
       </section>
     </div>
     <div v-else class="not-found">
-      <h2>Post not found.</h2>
-      <RouterLink to="/blog" class="btn btn-outline">Back to Blog</RouterLink>
+      <h2>{{ t('Post not found.') }}</h2>
+      <RouterLink to="/blog" class="btn btn-outline">{{ t('Back to Blog') }}</RouterLink>
     </div>
   </div>
 </template>
@@ -100,6 +100,9 @@ import { renderMarkdown } from '@/utils/renderMarkdown.js'
 import { coverColorClass } from '@/utils/coverColor.js'
 import { applySeo } from '@/utils/seo.js'
 import { jsonLdForRoute } from '@/data/structuredData.js'
+import { formatLocaleDate, locale, useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const post = ref(null)
@@ -107,7 +110,7 @@ const allPosts = ref([])
 const loading = ref(true)
 
 const formatDate = (d) =>
-  new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  formatLocaleDate(d, { year: 'numeric', month: 'long', day: 'numeric' })
 
 const renderedContent = computed(() =>
   post.value ? renderMarkdown(post.value.content, { skipTitle: post.value.title }) : ''
@@ -132,29 +135,49 @@ const fetchPost = async (slug) => {
     ])
     post.value = postRes.data
     allPosts.value = allRes.data
-    applySeo({
-      title: `${post.value.title} — Nexxus Tech Blog`,
-      description: post.value.excerpt,
-      path: `/blog/${post.value.slug}`,
-      type: 'article',
-      jsonLd: jsonLdForRoute('blog-post', { post: post.value }),
-    })
+    applyPostSeo()
   } catch {
     post.value = null
-    applySeo({
-      title: 'Post Not Found — Nexxus Tech Blog',
-      description: 'The requested blog post could not be found.',
-      path: `/blog/${slug}`,
-      noindex: true,
-      jsonLd: jsonLdForRoute('blog'),
-    })
+    applyMissingSeo(slug)
   } finally {
     loading.value = false
   }
 }
 
+function applyPostSeo() {
+  if (!post.value) return
+  applySeo({
+    title: locale.value === 'es'
+      ? `${post.value.title} — Blog de Nexxus Tech`
+      : `${post.value.title} — Nexxus Tech Blog`,
+    description: post.value.excerpt,
+    path: `/blog/${post.value.slug}`,
+    type: 'article',
+    jsonLd: jsonLdForRoute('blog-post', { post: post.value }),
+  })
+}
+
+function applyMissingSeo(slug) {
+  applySeo({
+    title: locale.value === 'es'
+      ? 'Artículo no encontrado — Blog de Nexxus Tech'
+      : 'Post Not Found — Nexxus Tech Blog',
+    description: locale.value === 'es'
+      ? 'No se encontró el artículo solicitado.'
+      : 'The requested blog post could not be found.',
+    path: `/blog/${slug}`,
+    noindex: true,
+    jsonLd: jsonLdForRoute('blog'),
+  })
+}
+
 onMounted(() => fetchPost(route.params.slug))
 watch(() => route.params.slug, (slug) => fetchPost(slug))
+watch(locale, () => {
+  if (loading.value) return
+  if (post.value) applyPostSeo()
+  else applyMissingSeo(route.params.slug)
+})
 </script>
 
 <style scoped>

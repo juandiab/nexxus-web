@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { GOOGLE_APPOINTMENT_SCHEDULE_URL } from '@/config/site.js'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   src: { type: String, default: '' },
@@ -19,7 +22,7 @@ const frameMinHeight = computed(() =>
   <div class="appointment-scheduler" :style="{ minHeight: frameMinHeight }">
     <iframe
       :src="iframeSrc"
-      :title="title"
+      :title="t(title)"
       class="appointment-scheduler__frame"
       frameborder="0"
       allow="clipboard-write"

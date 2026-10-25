@@ -4,11 +4,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">Our Expertise</span>
-        <h1 class="reveal reveal-delay-1">Expert Security &amp;<br /><span class="gradient-text">Delivery Services</span></h1>
+        <span class="section-label reveal">{{ t('Our Expertise') }}</span>
+        <h1 class="reveal reveal-delay-1">{{ t('Expert Security &') }}<br /><span class="gradient-text">{{ t('Delivery Services') }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          From WAF policy design to AI-driven infrastructure automation —
-          every engagement delivered at the principal architect level.
+          {{ t('From WAF policy design to AI-driven infrastructure automation — every engagement delivered at the principal architect level.') }}
         </p>
       </div>
     </section>
@@ -21,32 +20,32 @@
             <div class="service-detail-icon" :class="`service-accent-${svc.id}`">
               <i :class="svc.icon"></i>
             </div>
-            <span class="section-label">{{ svc.label }}</span>
-            <h2 class="section-title">{{ svc.title }}</h2>
-            <p class="section-subtitle">{{ svc.desc }}</p>
+            <span class="section-label">{{ t(svc.label) }}</span>
+            <h2 class="section-title">{{ t(svc.title) }}</h2>
+            <p class="section-subtitle">{{ t(svc.desc) }}</p>
             <div class="service-features">
               <div v-for="f in svc.features" :key="f" class="feature-item">
                 <i class="pi pi-check-circle"></i>
-                <span>{{ f }}</span>
+                <span>{{ t(f) }}</span>
               </div>
             </div>
             <div class="service-tags">
-              <span v-for="t in svc.tags" :key="t" class="tag">{{ t }}</span>
+              <span v-for="tag in svc.tags" :key="tag" class="tag">{{ t(tag) }}</span>
             </div>
             <RouterLink to="/contact" class="btn btn-primary">
-              Get a Consultation <i class="pi pi-arrow-right"></i>
+              {{ t('Get a Consultation') }} <i class="pi pi-arrow-right"></i>
             </RouterLink>
           </div>
           <div class="service-detail-visual reveal reveal-delay-2">
             <div class="visual-card">
               <div class="visual-header" :class="`service-accent-${svc.id}`">
                 <i :class="svc.icon" class="visual-icon"></i>
-                <h3>{{ svc.title }}</h3>
+                <h3>{{ t(svc.title) }}</h3>
               </div>
               <div class="visual-metrics">
                 <div v-for="m in svc.metrics" :key="m.label" class="metric">
-                  <span class="metric-value">{{ m.value }}</span>
-                  <span class="metric-label">{{ m.label }}</span>
+                  <span class="metric-value">{{ t(m.value) }}</span>
+                  <span class="metric-label">{{ t(m.label) }}</span>
                 </div>
               </div>
             </div>
@@ -60,11 +59,11 @@
       <div class="container">
         <div class="cta-box reveal">
           <div class="cta-glow"></div>
-          <span class="section-label">Ready to Start?</span>
-          <h2>Not sure which service you need?</h2>
-          <p>Let's have a discovery call. We'll assess your environment and recommend the right approach — no obligation.</p>
+          <span class="section-label">{{ t('Ready to Start?') }}</span>
+          <h2>{{ t('Not sure which service you need?') }}</h2>
+          <p>{{ t("Let's have a discovery call. We'll assess your environment and recommend the right approach — no obligation.") }}</p>
           <RouterLink to="/book-demo" class="btn btn-primary">
-            <i class="pi pi-calendar"></i> Book a Free Discovery Call
+            <i class="pi pi-calendar"></i> {{ t('Book a Free Discovery Call') }}
           </RouterLink>
         </div>
       </div>
@@ -73,6 +72,10 @@
 </template>
 
 <script setup>
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
+
 const services = [
   {
     id: 'waf',

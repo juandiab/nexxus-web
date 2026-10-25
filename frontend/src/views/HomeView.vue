@@ -7,41 +7,41 @@
       <div class="container hero-content">
         <div class="hero-badge reveal">
           <span class="glow-dot"></span>
-          <span>Trusted by Fortune 500 &amp; Government Agencies Worldwide</span>
+          <span>{{ t('Trusted by Fortune 500 & Government Agencies Worldwide') }}</span>
         </div>
         <h1 class="hero-title reveal reveal-delay-1">
-          Securing the World's<br />
-          <span class="gradient-text">Most Critical Applications</span>
+          {{ t("Securing the World's") }}<br />
+          <span class="gradient-text">{{ t('Most Critical Applications') }}</span>
         </h1>
         <p class="hero-subtitle reveal reveal-delay-2">
-          <strong>Making expertise more accessible.</strong><br />
-          Through consulting, shared knowledge, and <strong>AI-driven innovation</strong>.<br />
-          <strong>Helping people and organizations</strong> learn, grow, and solve complex challenges.<br />
-          <strong>Inspiring the next generation of technology leaders</strong> across <strong>20+ countries</strong>.
+          <strong>{{ t('Making expertise more accessible.') }}</strong><br />
+          {{ t('Through consulting, shared knowledge, and') }} <strong>{{ t('AI-driven innovation') }}</strong>.<br />
+          <strong>{{ t('Helping people and organizations') }}</strong> {{ t('learn, grow, and solve complex challenges.') }}<br />
+          <strong>{{ t('Inspiring the next generation of technology leaders') }}</strong> {{ t('across') }} <strong>{{ t('20+ countries') }}</strong>.
         </p>
         <div class="hero-actions reveal reveal-delay-3">
           <RouterLink to="/services" class="btn btn-primary">
-            <i class="pi pi-shield"></i> Explore Services
+            <i class="pi pi-shield"></i> {{ t('Explore Services') }}
           </RouterLink>
           <RouterLink to="/contact" class="btn btn-secondary">
-            <i class="pi pi-send"></i> Start a Project
+            <i class="pi pi-send"></i> {{ t('Start a Project') }}
           </RouterLink>
         </div>
         <div class="hero-tech-stack reveal reveal-delay-4">
-          <span class="tech-label">SPECIALIZED IN</span>
+          <span class="tech-label">{{ t('SPECIALIZED IN') }}</span>
           <div class="tech-pills">
             <span class="tech-pill">NetScaler WAF</span>
             <span class="tech-pill">F5 BIG-IP</span>
-            <span class="tech-pill">Zero-Trust</span>
-            <span class="tech-pill">AWS Security</span>
+            <span class="tech-pill">{{ t('Zero-Trust') }}</span>
+            <span class="tech-pill">{{ t('AWS Security') }}</span>
             <span class="tech-pill">Azure AD</span>
             <span class="tech-pill">Okta</span>
-            <span class="tech-pill">AI Automation</span>
+            <span class="tech-pill">{{ t('AI Automation') }}</span>
           </div>
         </div>
       </div>
       <div class="hero-scroll-hint">
-        <span>Scroll</span>
+        <span>{{ t('Scroll') }}</span>
         <div class="scroll-line"></div>
       </div>
     </section>
@@ -52,7 +52,7 @@
         <div class="stats-grid">
           <div v-for="stat in stats" :key="stat.label" class="stat-item reveal">
             <span class="stat-value">{{ stat.value }}</span>
-            <span class="stat-label">{{ stat.label }}</span>
+            <span class="stat-label">{{ t(stat.label) }}</span>
           </div>
         </div>
       </div>
@@ -62,11 +62,10 @@
     <section class="section services-section">
       <div class="container">
         <div class="section-header reveal">
-          <span class="section-label">What We Do</span>
-          <h2 class="section-title">Expert-Level Security &amp; Delivery</h2>
+          <span class="section-label">{{ t('What We Do') }}</span>
+          <h2 class="section-title">{{ t('Expert-Level Security & Delivery') }}</h2>
           <p class="section-subtitle">
-            From WAF policy design to AI-powered administration, we bring
-            principal-architect expertise to every engagement.
+            {{ t('From WAF policy design to AI-powered administration, we bring principal-architect expertise to every engagement.') }}
           </p>
         </div>
         <div class="services-grid">
@@ -79,19 +78,19 @@
             <div class="service-icon" :class="`service-icon-bg-${svc.id}`">
               <i :class="svc.icon"></i>
             </div>
-            <h3 class="service-title">{{ svc.title }}</h3>
-            <p class="service-desc">{{ svc.desc }}</p>
+            <h3 class="service-title">{{ t(svc.title) }}</h3>
+            <p class="service-desc">{{ t(svc.desc) }}</p>
             <div class="service-tags">
-              <span v-for="tag in svc.tags" :key="tag" class="tag">{{ tag }}</span>
+              <span v-for="tag in svc.tags" :key="tag" class="tag">{{ t(tag) }}</span>
             </div>
             <span class="service-arrow">
-              Learn more <i class="pi pi-arrow-right"></i>
+              {{ t('Learn more') }} <i class="pi pi-arrow-right"></i>
             </span>
           </div>
         </div>
         <div class="services-cta reveal">
           <RouterLink to="/services" class="btn btn-outline">
-            View All Services <i class="pi pi-arrow-right"></i>
+            {{ t('View All Services') }} <i class="pi pi-arrow-right"></i>
           </RouterLink>
         </div>
       </div>
@@ -101,11 +100,10 @@
     <section class="section section-dark products-section">
       <div class="container">
         <div class="section-header reveal section-header-center">
-          <span class="section-label">Our Products</span>
-          <h2 class="section-title">Technology That Empowers</h2>
+          <span class="section-label">{{ t('Our Products') }}</span>
+          <h2 class="section-title">{{ t('Technology That Empowers') }}</h2>
           <p class="section-subtitle section-subtitle-center">
-            Tools that serve as a bridge between people, knowledge, and technology—
-            so engineers can learn, grow, and move forward with confidence.
+            {{ t('Tools that serve as a bridge between people, knowledge, and technology— so engineers can learn, grow, and move forward with confidence.') }}
           </p>
         </div>
         <div
@@ -120,31 +118,31 @@
               <span v-else class="product-text-mark" aria-hidden="true">{{ product.name.slice(0, 1) }}</span>
         </div>
             <div class="product-feature-body">
-              <span class="section-label">{{ product.label }}</span>
+              <span class="section-label">{{ t(product.label) }}</span>
               <h3 class="product-feature-title">
                 {{ product.name }}
-                <span class="product-version">{{ product.edition }}</span>
+                <span class="product-version">{{ t(product.edition) }}</span>
               </h3>
-              <p class="product-feature-tagline">{{ product.tagline }}</p>
-              <p class="product-feature-desc">{{ product.excerpt }}</p>
+              <p class="product-feature-tagline">{{ t(product.tagline) }}</p>
+              <p class="product-feature-desc">{{ t(product.excerpt) }}</p>
               <div class="product-feature-tags">
-                <span v-for="tag in product.tags.slice(0, 4)" :key="tag" class="tag">{{ tag }}</span>
+                <span v-for="tag in product.tags.slice(0, 4)" :key="tag" class="tag">{{ t(tag) }}</span>
               </div>
             </div>
             <div class="product-feature-metrics">
               <div v-for="m in product.metrics" :key="m.label" class="product-metric">
-                <span class="product-metric-value">{{ m.value }}</span>
-                <span class="product-metric-label">{{ m.label }}</span>
+                <span class="product-metric-value">{{ t(m.value) }}</span>
+                <span class="product-metric-label">{{ t(m.label) }}</span>
               </div>
             </div>
           </div>
           <span class="product-feature-arrow">
-            Explore {{ product.name }} <i class="pi pi-arrow-right"></i>
+            {{ t('Explore {name}', { name: product.name }) }} <i class="pi pi-arrow-right"></i>
           </span>
         </div>
         <div class="products-cta reveal">
           <RouterLink to="/products" class="btn btn-outline">
-            View All Products <i class="pi pi-arrow-right"></i>
+            {{ t('View All Products') }} <i class="pi pi-arrow-right"></i>
           </RouterLink>
         </div>
       </div>
@@ -155,42 +153,38 @@
       <div class="container">
         <div class="why-grid">
           <div class="why-left reveal">
-            <span class="section-label">Why Nexxus Tech</span>
+            <span class="section-label">{{ t('Why Nexxus Tech') }}</span>
             <h2 class="section-title">
-              Principals Who<br />
-              <span class="highlight">Show Up &amp; Stay.</span>
+              {{ t('Principals Who') }}<br />
+              <span class="highlight">{{ t('Show Up & Stay.') }}</span>
             </h2>
             <p class="section-subtitle">
-              We don't send juniors. Every engagement is led by a principal architect
-              who works alongside your team — not above it. We've spent years in the
-              trenches of complex security and infrastructure work, and we believe
-              that expertise means little unless it helps people learn, grow, and
-              move forward with confidence.
+              {{ t("We don't send juniors. Every engagement is led by a principal architect who works alongside your team — not above it. We've spent years in the trenches of complex security and infrastructure work, and we believe that expertise means little unless it helps people learn, grow, and move forward with confidence.") }}
             </p>
             <div class="why-list">
               <div v-for="item in whyItems" :key="item.title" class="why-item">
                 <div class="why-check"><i class="pi pi-check"></i></div>
                 <div>
-                  <strong>{{ item.title }}</strong>
-                  <p>{{ item.desc }}</p>
+                  <strong>{{ t(item.title) }}</strong>
+                  <p>{{ t(item.desc) }}</p>
                 </div>
               </div>
             </div>
             <RouterLink to="/about" class="btn btn-primary">
-              Meet the Team <i class="pi pi-arrow-right"></i>
+              {{ t('Meet the Team') }} <i class="pi pi-arrow-right"></i>
             </RouterLink>
           </div>
           <div class="why-right reveal reveal-delay-2">
             <div class="globe-card">
               <div class="globe-header">
-                <span class="section-label">Global Reach</span>
-                <h3>20+ Countries.<br/>One Standard of Excellence.</h3>
+                <span class="section-label">{{ t('Global Reach') }}</span>
+                <h3>{{ t('20+ Countries.') }}<br/>{{ t('One Standard of Excellence.') }}</h3>
               </div>
               <div class="regions-grid">
                 <div v-for="region in regions" :key="region.name" class="region-item">
                   <i :class="region.icon"></i>
                   <div>
-                    <strong>{{ region.name }}</strong>
+                    <strong>{{ t(region.name) }}</strong>
                     <span>{{ region.clients }}</span>
                   </div>
                 </div>
@@ -205,11 +199,10 @@
     <section class="section section-light clients-section">
       <div class="container">
         <div class="section-header reveal section-header-center">
-          <span class="section-label">Key Engagements</span>
-          <h2 class="section-title section-title-navy">Trusted by Industry Leaders</h2>
+          <span class="section-label">{{ t('Key Engagements') }}</span>
+          <h2 class="section-title section-title-navy">{{ t('Trusted by Industry Leaders') }}</h2>
           <p class="section-subtitle section-subtitle-muted">
-            Delivered security transformations for organizations across
-            government, defense, finance, telecom, and aviation.
+            {{ t('Delivered security transformations for organizations across government, defense, finance, telecom, and aviation.') }}
           </p>
         </div>
         <div class="industries-grid">
@@ -221,7 +214,7 @@
             <div class="industry-icon">
               <i :class="ind.icon"></i>
             </div>
-            <h3>{{ ind.sector }}</h3>
+            <h3>{{ t(ind.sector) }}</h3>
             <p>{{ ind.clients }}</p>
           </div>
         </div>
@@ -233,11 +226,11 @@
       <div class="container">
         <div class="section-header-row reveal">
           <div>
-            <span class="section-label">Latest Insights</span>
-            <h2 class="section-title">From the Nexxus Tech Blog</h2>
+            <span class="section-label">{{ t('Latest Insights') }}</span>
+            <h2 class="section-title">{{ t('From the Nexxus Tech Blog') }}</h2>
           </div>
           <RouterLink to="/blog" class="btn btn-outline">
-            All Posts <i class="pi pi-arrow-right"></i>
+            {{ t('All Posts') }} <i class="pi pi-arrow-right"></i>
           </RouterLink>
         </div>
         <div class="blog-grid">
@@ -271,7 +264,7 @@
                 <h3 class="blog-title">{{ post.title }}</h3>
                 <p class="blog-excerpt">{{ post.excerpt }}</p>
                 <div class="blog-meta">
-                  <span><i class="pi pi-clock"></i> {{ post.read_time }} min read</span>
+                  <span><i class="pi pi-clock"></i> {{ post.read_time }} {{ t('min read') }}</span>
                   <span><i class="pi pi-calendar"></i> {{ formatDate(post.date) }}</span>
                 </div>
               </div>
@@ -286,18 +279,17 @@
       <div class="container">
         <div class="cta-box reveal">
           <div class="cta-glow"></div>
-          <span class="section-label">Ready to Get Started?</span>
+          <span class="section-label">{{ t('Ready to Get Started?') }}</span>
           <h2 class="cta-title">
-            Let's Secure Your<br /><span class="gradient-text">Infrastructure Together</span>
+            {{ t("Let's Secure Your") }}<br /><span class="gradient-text">{{ t('Infrastructure Together') }}</span>
           </h2>
           <p class="cta-desc">
-            Whether you need a WAF deployment, a Zero-Trust roadmap, or AI-powered
-            NetScaler automation — we're ready to help. Remote engagements worldwide.
+            {{ t("Whether you need a WAF deployment, a Zero-Trust roadmap, or AI-powered NetScaler automation — we're ready to help. Remote engagements worldwide.") }}
           </p>
           <div class="cta-actions">
             <GlowButton variant="primary">
               <RouterLink to="/contact" class="btn btn-primary">
-                <i class="pi pi-send"></i> Start a Conversation
+                <i class="pi pi-send"></i> {{ t('Start a Conversation') }}
               </RouterLink>
             </GlowButton>
             <GlowButton variant="outline">
@@ -319,6 +311,9 @@ import { products } from '@/data/products.js'
 import { coverColorClass } from '@/utils/coverColor.js'
 import JpilotLogo from '@/components/shared/JpilotLogo.vue'
 import GlowButton from '@/components/shared/GlowButton.vue'
+import { formatLocaleDate, useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const heroCanvas = ref(null)
 const blogPosts = ref([])
@@ -415,7 +410,7 @@ const industries = [
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const formatDate = (d) =>
-  new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  formatLocaleDate(d, { year: 'numeric', month: 'short', day: 'numeric' })
 
 // ── Fetch blog posts ──────────────────────────────────────────────────────────
 onMounted(async () => {

@@ -4,11 +4,10 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">About Nexxus Tech</span>
-        <h1 class="reveal reveal-delay-1">Built by Architects.<br /><span class="gradient-text">Trusted by Leaders.</span></h1>
+        <span class="section-label reveal">{{ t('About Nexxus Tech') }}</span>
+        <h1 class="reveal reveal-delay-1">{{ t('Built by Architects.') }}<br /><span class="gradient-text">{{ t('Trusted by Leaders.') }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          We exist to bring principal-level expertise to organizations that need it most —
-          from government defense ministries to global financial institutions.
+          {{ t('We exist to bring principal-level expertise to organizations that need it most — from government defense ministries to global financial institutions.') }}
         </p>
       </div>
     </section>
@@ -18,40 +17,32 @@
       <div class="container">
         <div class="vision-layout reveal">
           <div class="vision-intro">
-            <span class="section-label">Our Vision</span>
+            <span class="section-label">{{ t('Our Vision') }}</span>
             <h2 class="section-title vision-title">
-              People First.<br />
-              <span class="gradient-text">Technology Amplified.</span>
+              {{ t('People First.') }}<br />
+              <span class="gradient-text">{{ t('Technology Amplified.') }}</span>
             </h2>
           </div>
           <div class="vision-body">
             <p class="vision-lead">
-              Nexxus Tech exists to close the gap between complex technology and the people who need to master it.
+              {{ t('Nexxus Tech exists to close the gap between complex technology and the people who need to master it.') }}
             </p>
             <p>
-              We believe the most valuable outcome of any engagement isn't the solution we deliver — it's the team
-              that comes out the other side better prepared, more confident, and more capable of facing what comes
-              next. Watching people grow has always been the most rewarding part of this work. It still is.
+              {{ t("We believe the most valuable outcome of any engagement isn't the solution we deliver — it's the team that comes out the other side better prepared, more confident, and more capable of facing what comes next. Watching people grow has always been the most rewarding part of this work. It still is.") }}
             </p>
             <blockquote class="vision-quote">
               <p>
-                Artificial Intelligence does not replace human creativity. It amplifies it. The best tools enhance
-                what people are already capable of — and it is still people who bring judgment, experience,
-                creativity, and purpose to everything that matters.
+                {{ t('Artificial Intelligence does not replace human creativity. It amplifies it. The best tools enhance what people are already capable of — and it is still people who bring judgment, experience, creativity, and purpose to everything that matters.') }}
               </p>
             </blockquote>
             <p>
-              We build tools and deliver expertise at the intersection of Cloud, Security, and AI — not to replace
-              human judgment, but to amplify it.
+              {{ t('We build tools and deliver expertise at the intersection of Cloud, Security, and AI — not to replace human judgment, but to amplify it.') }}
             </p>
             <p>
-              More than technology, we strive to build a bridge between people, knowledge, and inspiration. Because
-              we believe the best solutions don't come from one expert or one team — they emerge when a community
-              shares what it knows, what it has lived, and what it dares to imagine.
+              {{ t("More than technology, we strive to build a bridge between people, knowledge, and inspiration. Because we believe the best solutions don't come from one expert or one team — they emerge when a community shares what it knows, what it has lived, and what it dares to imagine.") }}
             </p>
             <p class="vision-closing">
-              The future belongs to those who remain curious, keep learning, and are willing to help others grow.
-              That is why Nexxus Tech exists.
+              {{ t('The future belongs to those who remain curious, keep learning, and are willing to help others grow. That is why Nexxus Tech exists.') }}
             </p>
           </div>
         </div>
@@ -63,25 +54,21 @@
       <div class="container">
         <div class="mission-grid">
           <div class="reveal">
-            <span class="section-label">Our Mission</span>
-            <h2 class="section-title">Connecting Expertise<br />to Complex Problems</h2>
+            <span class="section-label">{{ t('Our Mission') }}</span>
+            <h2 class="section-title">{{ t('Connecting Expertise') }}<br />{{ t('to Complex Problems') }}</h2>
             <p class="section-subtitle">
-              Nexxus Tech was founded on a simple premise: the world's most critical infrastructure
-              deserves the best security minds, not the most available ones. We specialize in the
-              hardest problems — WAF policy at global scale, Zero-Trust for nation-state-level threats,
-              and AI automation for infrastructure that never sleeps.
+              {{ t("Nexxus Tech was founded on a simple premise: the world's most critical infrastructure deserves the best security minds, not the most available ones. We specialize in the hardest problems — WAF policy at global scale, Zero-Trust for nation-state-level threats, and AI automation for infrastructure that never sleeps.") }}
             </p>
             <p class="section-subtitle section-subtitle-spaced">
-              With a presence in Colombia, UAE, UK, Spain, and the US, we operate remotely but think globally —
-              having delivered engagements across 20+ countries and every major industry vertical.
+              {{ t('With a presence in Colombia, UAE, UK, Spain, and the US, we operate remotely but think globally — having delivered engagements across 20+ countries and every major industry vertical.') }}
             </p>
           </div>
           <div class="mission-values reveal reveal-delay-2">
             <div v-for="v in values" :key="v.title" class="value-item">
               <div class="value-icon"><i :class="v.icon"></i></div>
               <div>
-                <h4>{{ v.title }}</h4>
-                <p>{{ v.desc }}</p>
+                <h4>{{ t(v.title) }}</h4>
+                <p>{{ t(v.desc) }}</p>
               </div>
             </div>
           </div>
@@ -93,18 +80,18 @@
     <section class="section section-light team-section">
       <div class="container">
         <div class="section-header reveal section-header-center">
-          <span class="section-label">The Team</span>
-          <h2 class="section-title section-title-navy">Meet the Team</h2>
+          <span class="section-label">{{ t('The Team') }}</span>
+          <h2 class="section-title section-title-navy">{{ t('Meet the Team') }}</h2>
           <div class="team-controls">
             <button
               type="button"
               class="team-pause-btn"
-              :aria-label="teamPaused ? 'Resume team carousel' : 'Pause team carousel'"
+              :aria-label="teamPaused ? t('Resume team carousel') : t('Pause team carousel')"
               :aria-pressed="teamPaused"
               @click="toggleTeamAutoplay"
             >
               <i :class="teamPaused ? 'pi pi-play' : 'pi pi-pause'"></i>
-              {{ teamPaused ? 'Resume' : 'Pause' }}
+              {{ teamPaused ? t('Resume') : t('Pause') }}
             </button>
           </div>
         </div>
@@ -123,32 +110,32 @@
                     <span>{{ member.initials }}</span>
                   </div>
                   <div class="team-badges">
-                    <span v-for="badge in member.badges" :key="badge.label" class="tag" :class="{ 'tag-teal': badge.highlight }">{{ badge.label }}</span>
+                    <span v-for="badge in member.badges" :key="badge.label" class="tag" :class="{ 'tag-teal': badge.highlight }">{{ t(badge.label) }}</span>
                   </div>
                 </div>
                 <div class="team-card-right">
                   <h2 class="team-name">{{ member.name }}</h2>
-                  <p class="team-role">{{ member.role }}</p>
-                  <p class="team-tagline">{{ member.tagline }}</p>
-                  <p v-for="(paragraph, pIndex) in member.bio" :key="pIndex" class="team-bio" v-html="paragraph"></p>
+                  <p class="team-role">{{ t(member.role) }}</p>
+                  <p class="team-tagline">{{ t(member.tagline) }}</p>
+                  <p v-for="(paragraph, pIndex) in member.bio" :key="pIndex" class="team-bio" v-html="t(paragraph)"></p>
 
                   <div v-if="member.certs?.length" class="team-certs">
-                    <h4>Certifications</h4>
+                    <h4>{{ t('Certifications') }}</h4>
                     <div class="cert-grid">
                       <div v-for="c in member.certs" :key="c" class="cert-item">
                         <i class="pi pi-verified"></i>
-                        <span>{{ c }}</span>
+                        <span>{{ t(c) }}</span>
                       </div>
                     </div>
                   </div>
 
                   <div class="team-skills">
-                    <h4>Core Expertise</h4>
+                    <h4>{{ t('Core Expertise') }}</h4>
                     <div class="skills-grid">
                       <div v-for="skill in member.skills" :key="skill.category" class="skill-group">
-                        <span class="skill-category">{{ skill.category }}</span>
+                        <span class="skill-category">{{ t(skill.category) }}</span>
                         <div class="skill-tags">
-                          <span v-for="t in skill.items" :key="t" class="tag">{{ t }}</span>
+                          <span v-for="item in skill.items" :key="item" class="tag">{{ t(item) }}</span>
                         </div>
                       </div>
                     </div>
@@ -165,18 +152,17 @@
     <section class="section">
       <div class="container">
         <div class="section-header reveal section-header-center">
-          <span class="section-label">Global Presence</span>
-          <h2 class="section-title">Remote-First. Worldwide Reach.</h2>
+          <span class="section-label">{{ t('Global Presence') }}</span>
+          <h2 class="section-title">{{ t('Remote-First. Worldwide Reach.') }}</h2>
           <p class="section-subtitle section-subtitle-center">
-            With offices and presence in 5 countries and clients in 20+,
-            we operate wherever our clients need us — without compromise.
+            {{ t('With offices and presence in 5 countries and clients in 20+, we operate wherever our clients need us — without compromise.') }}
           </p>
         </div>
         <div class="presence-grid">
           <div v-for="p in presence" :key="p.country" class="presence-card card reveal">
             <div class="presence-flag">{{ p.flag }}</div>
-            <h3>{{ p.country }}</h3>
-            <p>{{ p.desc }}</p>
+            <h3>{{ t(p.country) }}</h3>
+            <p>{{ t(p.desc) }}</p>
           </div>
         </div>
       </div>
@@ -187,6 +173,9 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 import Carousel from 'primevue/carousel'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const TEAM_AUTOPLAY_MS = 3000
 const teamPage = ref(0)

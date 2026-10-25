@@ -4,7 +4,7 @@
     class="center-flow"
     :class="className"
     role="img"
-    :aria-label="ariaLabel"
+    :aria-label="t(ariaLabel)"
   >
     <svg
       class="center-flow__svg"
@@ -141,6 +141,9 @@ import {
   useId,
   watch,
 } from 'vue'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const BASE_GLOW = 40
 const FADE_THRESHOLD = 0.15

@@ -3,8 +3,8 @@
     <section class="page-hero">
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
-        <span class="section-label reveal">License Activation</span>
-        <h1 class="reveal reveal-delay-1">Activate Your<br /><span class="gradient-text">Application</span></h1>
+        <span class="section-label reveal">{{ t('License Activation') }}</span>
+        <h1 class="reveal reveal-delay-1">{{ t('Activate Your') }}<br /><span class="gradient-text">{{ t('Application') }}</span></h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">{{ ui.heroSubtitle }}</p>
       </div>
     </section>
@@ -354,6 +354,9 @@ import {
   splitBoldSegments,
   uiLocaleFor,
 } from '@/data/activation-i18n.js'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const locale = ref('en')

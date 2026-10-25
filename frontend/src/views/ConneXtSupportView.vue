@@ -4,9 +4,9 @@
       <div class="page-hero-bg"></div>
       <div class="container page-hero-content">
         <span class="section-label reveal">ConneXt</span>
-        <h1 class="reveal reveal-delay-1">ConneXt Support</h1>
+        <h1 class="reveal reveal-delay-1">{{ t('ConneXt Support') }}</h1>
         <p class="page-hero-subtitle reveal reveal-delay-2">
-          How to get help with the free native SSH terminal for iPhone and iPad.
+          {{ t('How to get help with the free native SSH terminal for iPhone and iPad.') }}
         </p>
       </div>
     </section>
@@ -14,43 +14,33 @@
     <section class="section support-body">
       <div class="container support-inner">
         <article class="support-card reveal">
-          <h2>What ConneXt is</h2>
+          <h2>{{ t('What ConneXt is') }}</h2>
           <p>
-            ConneXt is a free native SSH client for iPhone and iPad by
-            Juan Pablo Otalvaro (Nexxus-Tech). Liquid Glass navigation, split
-            terminals, reusable imported keys, and an optional Command Assistant
-            that uses your own OpenAI, Gemini, or Anthropic key. There is no
-            subscription and no in-app purchase.
+            {{ t('ConneXt is a free native SSH client for iPhone and iPad by Juan Pablo Otalvaro (Nexxus-Tech). Liquid Glass navigation, split terminals, reusable imported keys, and an optional Command Assistant that uses your own OpenAI, Gemini, or Anthropic key. There is no subscription and no in-app purchase.') }}
           </p>
         </article>
 
         <article class="support-card reveal reveal-delay-1">
-          <h2>Requirements</h2>
+          <h2>{{ t('Requirements') }}</h2>
           <ul class="support-list">
-            <li>An iPhone or iPad running iOS or iPadOS</li>
-            <li>A host you can reach over SSH (the servers you configure)</li>
-            <li>Optional: your own API key if you enable Command Assistant</li>
+            <li>{{ t('An iPhone or iPad running iOS or iPadOS') }}</li>
+            <li>{{ t('A host you can reach over SSH (the servers you configure)') }}</li>
+            <li>{{ t('Optional: your own API key if you enable Command Assistant') }}</li>
           </ul>
         </article>
 
         <article class="support-card reveal reveal-delay-2">
-          <h2>How to get help</h2>
-          <p>
-            Email
-            <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
-            with the device and iOS / iPadOS version, what you expected, and
-            what happened. There are no ConneXt accounts — we cannot reset an
-            app login because the app does not have one.
-          </p>
+          <h2>{{ t('How to get help') }}</h2>
+          <p v-html="t('Email <a href=&quot;mailto:support@nexxus-tech.com&quot;>support@nexxus-tech.com</a> with the device and iOS / iPadOS version, what you expected, and what happened. There are no ConneXt accounts — we cannot reset an app login because the app does not have one.')"></p>
           <ul class="support-links">
             <li>
               <a href="mailto:support@nexxus-tech.com">support@nexxus-tech.com</a>
             </li>
             <li>
-              <RouterLink to="/connext">ConneXt product page</RouterLink>
+              <RouterLink to="/connext">{{ t('ConneXt product page') }}</RouterLink>
             </li>
             <li>
-              <RouterLink to="/connext/privacy">Privacy Policy</RouterLink>
+              <RouterLink to="/connext/privacy">{{ t('Privacy Policy') }}</RouterLink>
             </li>
             <li>
               <RouterLink to="/">nexxus-tech.com</RouterLink>
@@ -59,15 +49,12 @@
         </article>
 
         <article class="support-card reveal reveal-delay-3">
-          <h2>Connection issues</h2>
+          <h2>{{ t('Connection issues') }}</h2>
           <p>
-            Sessions go to the servers you add. If a host will not connect,
-            check reachability from the device (VPN, firewall, DNS), the port,
-            and that the imported key or password is the one that host expects.
-            Nexxus-Tech does not proxy your SSH traffic.
+            {{ t('Sessions go to the servers you add. If a host will not connect, check reachability from the device (VPN, firewall, DNS), the port, and that the imported key or password is the one that host expects. Nexxus-Tech does not proxy your SSH traffic.') }}
           </p>
           <p class="copyright">
-            © {{ year }} Nexxus-Tech / Juan Pablo Otalvaro. All rights reserved.
+            © {{ year }} Nexxus-Tech / Juan Pablo Otalvaro. {{ t('All rights reserved.') }}
           </p>
         </article>
       </div>
@@ -76,6 +63,9 @@
 </template>
 
 <script setup>
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 const year = new Date().getFullYear()
 </script>
 
