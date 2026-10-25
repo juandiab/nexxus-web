@@ -3,7 +3,7 @@ import { AI_INTEGRATION_COPY } from '@/data/aiIntegrationCopy.js'
 import { applySeo } from '@/utils/seo.js'
 import { locale, setLocale as setGlobalLocale } from '@/i18n'
 
-/** /ai-integration locale. Follows the site-wide locale; the page toggle sets it. */
+/** /ai-integration locale. Follows the site-wide locale (set from the navbar switch). */
 export function useAiIntegrationLocale() {
   const copy = computed(() => AI_INTEGRATION_COPY[locale.value] ?? AI_INTEGRATION_COPY.en)
 

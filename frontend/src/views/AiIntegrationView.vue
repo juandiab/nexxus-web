@@ -1,35 +1,5 @@
 <template>
   <div class="ai-integration-page" :lang="locale">
-    <!-- Locale toggle -->
-    <div class="locale-bar">
-      <div class="container locale-bar-inner">
-        <div
-          class="locale-toggle"
-          role="group"
-          :aria-label="copy.toggle.aria"
-        >
-          <button
-            type="button"
-            class="locale-btn"
-            :class="{ active: locale === 'en' }"
-            :aria-pressed="locale === 'en'"
-            @click="setLocale('en')"
-          >
-            {{ copy.toggle.en }}
-          </button>
-          <button
-            type="button"
-            class="locale-btn"
-            :class="{ active: locale === 'es' }"
-            :aria-pressed="locale === 'es'"
-            @click="setLocale('es')"
-          >
-            {{ copy.toggle.es }}
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Hero -->
     <section class="page-hero">
       <div class="page-hero-bg" aria-hidden="true">
@@ -348,7 +318,7 @@ import { AI_INTEGRATION_SERVICE } from '@/data/aiIntegrationCopy.js'
 import { useAiIntegrationLocale } from '@/composables/useAiIntegrationLocale.js'
 import { aiIntegrationBookDemoQuery, aiIntegrationContactQuery } from '@/utils/leads.js'
 
-const { locale, copy, setLocale } = useAiIntegrationLocale()
+const { locale, copy } = useAiIntegrationLocale()
 
 const centerFlowShort = 'AI Tech'
 const centerFlowAria = computed(() => AI_INTEGRATION_SERVICE[locale.value])
@@ -371,48 +341,6 @@ function contactLink(packageId = null) {
 </script>
 
 <style scoped>
-.locale-bar {
-  position: relative;
-  z-index: 2;
-  background: var(--nt-dark);
-  border-bottom: 1px solid var(--nt-border);
-  padding: 8px 0;
-  margin-top: 88px;
-}
-.locale-bar-inner {
-  display: flex;
-  justify-content: flex-end;
-}
-.locale-toggle {
-  display: inline-flex;
-  border: 1px solid var(--nt-border);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--nt-dark-2);
-}
-.locale-btn {
-  min-width: 48px;
-  min-height: 36px;
-  padding: 6px 16px;
-  border: none;
-  background: transparent;
-  color: var(--nt-text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: var(--nt-transition);
-}
-.locale-btn:hover {
-  color: var(--nt-white);
-  background: rgba(0, 123, 167, 0.12);
-}
-.locale-btn.active {
-  color: var(--nt-white);
-  background: var(--nt-primary);
-}
-
 .page-hero {
   min-height: 55vh;
   display: flex;
@@ -421,6 +349,7 @@ function contactLink(packageId = null) {
   overflow: hidden;
   background: var(--nt-dark);
   padding: 48px 0 60px;
+  margin-top: 88px;
 }
 .page-hero-bg {
   position: absolute;
@@ -907,9 +836,6 @@ function contactLink(packageId = null) {
 }
 
 @media (max-width: 640px) {
-  .locale-bar-inner {
-    justify-content: center;
-  }
   .cta-box {
     padding: 40px 24px;
   }
