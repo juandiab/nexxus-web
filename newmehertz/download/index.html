@@ -1,0 +1,229 @@
+<!-- Colocar en la raíz pública de newmehertz.com como download/index.html (igual que support/). -->
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('nmh.theme');
+        document.documentElement.dataset.theme = (t === 'light') ? 'light' : 'dark';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <title>Descargar — NewMe Hertz</title>
+  <meta name="description" content="Descarga NewMe Hertz en el App Store. Deja tu nombre y tu correo electrónico.">
+  <link rel="canonical" href="https://www.newmehertz.com/download">
+  <meta name="theme-color" content="#08070C">
+  <link rel="icon" href="/assets/img/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/logo-256.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NewMe Hertz">
+  <meta property="og:title" content="Descargar — NewMe Hertz">
+  <meta property="og:description" content="Descarga NewMe Hertz en el App Store.">
+  <meta property="og:url" content="https://www.newmehertz.com/download">
+  <meta property="og:image" content="https://newmehertz.com/assets/img/logo.png">
+  <link rel="stylesheet" href="/assets/css/site-DVG-cqDW.css">
+  <style>
+    .dl {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      align-items: center;
+      padding-block: var(--space-8);
+    }
+    .dl__card {
+      width: min(100%, 560px);
+      margin-inline: auto;
+    }
+    .dl h1 {
+      font-size: var(--fs-700);
+      margin-bottom: var(--space-4);
+    }
+    .dl .lede { margin-bottom: var(--space-6); }
+    .dl .signup { margin-top: 0; max-width: none; }
+    .dl .check { margin-top: var(--space-5); }
+    .dl__actions { margin-top: var(--space-6); }
+    .dl__actions .specular-button { width: 100%; }
+    .dl__actions .specular-button:disabled { opacity: .65; cursor: progress; }
+    .dl__note {
+      margin: var(--space-5) 0 0;
+      font-size: var(--fs-200);
+      color: var(--text-low);
+    }
+    .hp {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient__blob"></span>
+    <span class="ambient__blob"></span>
+    <span class="ambient__blob"></span>
+    <span class="ambient__blob"></span>
+    <span class="ambient__blob"></span>
+    <div class="ambient__veil"></div>
+  </div>
+  <header class="nav">
+    <div class="wrap nav__in">
+      <a class="wordmark" href="/es/">
+        <img src="/assets/img/logo-mark-96.png" alt="" width="36" height="36">
+        <span class="wordmark__text">
+          <span class="wordmark__name">NewMe Hertz</span>
+          <span class="wordmark__sub">App Store</span>
+        </span>
+      </a>
+    </div>
+  </header>
+  <main id="main" class="dl">
+    <div class="wrap dl__card">
+      <p class="eyebrow">iPhone y Apple Watch</p>
+      <h1>Descarga la app</h1>
+      <p class="lede">Deja tu nombre y tu correo. Después te llevamos al App Store.</p>
+      <form class="signup" id="download-form" novalidate>
+        <div class="hp" aria-hidden="true">
+          <label for="website">Sitio web</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="name">Nombre</label>
+          <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" placeholder="Cómo te llamamos">
+          <span class="field__err" id="err-name" hidden></span>
+        </div>
+        <div class="field" style="margin-top:var(--space-5)">
+          <label for="email">Correo electrónico</label>
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" placeholder="tu@correo.com">
+          <span class="field__err" id="err-email" hidden></span>
+        </div>
+        <label class="check" for="send-info">
+          <input id="send-info" name="send_app_info" type="checkbox">
+          <span>enviar informacion de la app</span>
+        </label>
+        <p class="err" id="form-err" role="alert" hidden style="color:var(--ring-coral);margin-top:var(--space-4)"></p>
+        <div class="dl__actions">
+          <button class="specular-button specular-button--md btn-primary" type="submit" id="submit" style="--sb-radius:999px;--sb-tint:#ffffff;--sb-tint-opacity:0;--sb-blur:0px;--sb-text-color:#06070C">
+            <span class="specular-button__label">descargar</span>
+          </button>
+        </div>
+        <p class="dl__note">Guardamos el nombre y el correo de esta descarga. Puedes pedir que los borremos cuando quieras. <a class="link" href="/privacy">Privacidad</a>.</p>
+      </form>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var APP_STORE = "https://apps.apple.com/app/newme-hertz/id6799503609";
+      var EMAIL = /^[^@\s]{1,64}@[A-Za-z0-9.-]{1,180}\.[A-Za-z]{2,24}$/;
+      var form = document.getElementById("download-form");
+      var submit = document.getElementById("submit");
+      var formErr = document.getElementById("form-err");
+
+      function lang() {
+        var code = (navigator.language || "es").slice(0, 2).toLowerCase();
+        return code === "en" || code === "pt" ? code : "es";
+      }
+
+      function show(id, message) {
+        var el = document.getElementById(id);
+        var input = document.getElementById(id.replace("err-", ""));
+        if (!message) {
+          el.hidden = true;
+          el.textContent = "";
+          if (input) input.removeAttribute("aria-invalid");
+          return;
+        }
+        el.hidden = false;
+        el.textContent = message;
+        if (input) {
+          input.setAttribute("aria-invalid", "true");
+          input.setAttribute("aria-describedby", id);
+        }
+      }
+
+      function setFormError(message) {
+        if (!message) {
+          formErr.hidden = true;
+          formErr.textContent = "";
+          return;
+        }
+        formErr.hidden = false;
+        formErr.textContent = message;
+      }
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var name = document.getElementById("name").value.trim();
+        var email = document.getElementById("email").value.trim().toLowerCase();
+        var sendInfo = document.getElementById("send-info").checked;
+        var website = document.getElementById("website").value;
+        var nameError = name ? "" : "Escribe tu nombre.";
+        var emailError = EMAIL.test(email) ? "" : "Ese correo no parece válido.";
+        show("err-name", nameError);
+        show("err-email", emailError);
+        setFormError("");
+        if (nameError || emailError) {
+          (nameError ? document.getElementById("name") : document.getElementById("email")).focus();
+          return;
+        }
+        if (website) {
+          window.location.assign(APP_STORE);
+          return;
+        }
+        submit.disabled = true;
+        var body = {
+          name: name,
+          email: email,
+          country: "descarga-qr",
+          lang: lang(),
+          consent: true,
+          purposes: sendInfo ? ["app_info"] : [],
+          devices: [],
+          website: ""
+        };
+        fetch("/api/v1/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        }).then(function (response) {
+          if (response.status === 201 || response.status === 200) {
+            window.location.assign(APP_STORE);
+            return;
+          }
+          if (response.status === 429) {
+            setFormError("Demasiados intentos. Prueba dentro de un rato.");
+            submit.disabled = false;
+            return;
+          }
+          if (response.status === 422 && body.purposes.length) {
+            body.purposes = [];
+            return fetch("/api/v1/signup", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body)
+            }).then(function (retry) {
+              if (retry.status === 201 || retry.status === 200) {
+                window.location.assign(APP_STORE);
+                return;
+              }
+              setFormError("No pudimos guardar tus datos. Inténtalo otra vez.");
+              submit.disabled = false;
+            });
+          }
+          setFormError("No pudimos guardar tus datos. Inténtalo otra vez.");
+          submit.disabled = false;
+        }).catch(function () {
+          setFormError("Sin conexión con el servidor. Inténtalo otra vez.");
+          submit.disabled = false;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
